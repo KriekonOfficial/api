@@ -2,9 +2,10 @@
 
 namespace Core\Store\Database\Exception;
 
+use Core\APIError;
 use Core\ExceptionCode;
 
-class InvalidConfigException extends \Core\APIError
+class InvalidConfigException extends APIError
 {
 	public function __construct(string $message = '')
 	{

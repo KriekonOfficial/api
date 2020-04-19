@@ -2,9 +2,10 @@
 
 namespace Core\Logger\Exception;
 
+use Core\APIError;
 use Core\ExceptionCode;
 
-class LoggerException extends \Core\APIError
+class LoggerException extends APIError
 {
 	public function __construct(string $message = '')
 	{

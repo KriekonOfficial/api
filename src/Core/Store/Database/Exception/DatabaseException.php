@@ -2,9 +2,10 @@
 
 namespace Core\Store\Database\Exception;
 
+use Core\APIError;
 use Core\ExceptionCode;
 
-class DatabaseException extends \Core\APIError
+class DatabaseException extends APIError
 {
 	public function __construct(string $message = '')
 	{

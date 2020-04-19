@@ -2,10 +2,13 @@
 
 namespace Core\Request\Exception
 
-class RequestException extends \Core\APIError
+use Core\APIError;
+use Core\ExceptionCode;
+
+class RequestException extends APIError
 {
 	public function __construct(string $message = '', int $http_code = 500)
 	{
-		parent::contruct($message, $http_code, \Core\ExceptionCode::REQUEST);
+		parent::contruct($message, $http_code, ExceptionCode::REQUEST);
 	}
 }

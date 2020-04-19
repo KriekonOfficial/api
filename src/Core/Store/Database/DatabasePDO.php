@@ -5,7 +5,8 @@ namespace Core\Store\Database;
 use \PDO;
 use \PDOException;
 use Core\ErrorBase;
-use Core\Store\Database\Exception;
+use Core\Store\Database\Exception\DatabaseException;
+use Core\Store\Database\Exception\InvalidConfigException;
 use Core\Store\Database\Model\DBResult;
 
 class DatabasePDO extends ErrorBase implements Interfaces\DatabaseInterface
@@ -82,7 +83,7 @@ class DatabasePDO extends ErrorBase implements Interfaces\DatabaseInterface
 		}
 		catch (PDOException $e)
 		{
-			throw new Exception\DatabaseException($e->getMessage());
+			throw new DatabaseException($e->getMessage());
 		}
 
 		return false;
@@ -159,7 +160,7 @@ class DatabasePDO extends ErrorBase implements Interfaces\DatabaseInterface
 		if ($this->inTransaction())
 		{
 			$this->commitTransaction();
-			throw new Exception\DatabaseException('Unable to start a new transaction as there is already one that exists.');
+			throw new DatabaseException('Unable to start a new transaction as there is already one that exists.');
 		}
 		return $this->pdo->beginTransaction();
 	}
@@ -207,7 +208,7 @@ class DatabasePDO extends ErrorBase implements Interfaces\DatabaseInterface
 	{
 		if (!isset(MYSQL[$this->dbname]))
 		{
-			throw new Exception\InvalidConfigException('No Mysql Configuration set for this Database: ' . $this->dbname);
+			throw new InvalidConfigException('No Mysql Configuration set for this Database: ' . $this->dbname);
 		}
 
 		$dsn = 'mysql:host=' . MYSQL[$this->dbname]['host'] . ';dbname=' . $this->dbname . ';charset=' . MYSQL[$this->dbname]['charset'];
@@ -265,7 +266,7 @@ class DatabasePDO extends ErrorBase implements Interfaces\DatabaseInterface
 	{
 		if (!$this->isConnected())
 		{
-			throw new Exception\DatabaseException($this->dbname . ' is no longer connected');
+			throw new DatabaseException($this->dbname . ' is no longer connected');
 		}
 		return $this->query->execute();
 	}

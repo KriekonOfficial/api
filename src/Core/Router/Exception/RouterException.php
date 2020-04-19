@@ -2,9 +2,10 @@
 
 namespace Core\Router\Exception;
 
+use Core\APIError;
 use Core\ExceptionCode;
 
-class RouterException extends \Core\APIError
+class RouterException extends APIError
 {
 	public function __construct(string $message = '', int $http_code =  404)
 	{
