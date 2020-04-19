@@ -89,4 +89,11 @@ interface DatabaseInterface
 	* @return bool
 	*/
 	public function inTransaction() : bool;
+
+	/**
+	* Escape a string to be compliant with a sql statement.
+	* @param $value - That you wanna ensure no sql escaping.
+	* @return string|null on failure
+	*/
+	public function quote(string $value) : ?string;
 }
