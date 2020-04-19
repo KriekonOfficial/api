@@ -62,9 +62,10 @@ abstract class Entity extends ErrorBase
 
 	public function find($primary_key)
 	{
+		$count = 0;
 		$results = DBWrapper::PSingle('
 			SELECT * FROM ' . $this->getDBTable() . '
-			WHERE ' . $this->getDBPrimaryKey() . ' = ?', [$primary_key]);
+			WHERE ' . $this->getDBPrimaryKey() . ' = ?', [$primary_key], $count, $this->getDBName());
 
 		$model = $this->getModel();
 		$model->reset();
@@ -76,6 +77,11 @@ abstract class Entity extends ErrorBase
 			$property->setAccessible(true);
 			$property->setValue($model, $value);
 			$property->setAccessible(false);
+		}
+
+		if ($count == 1)
+		{
+			$model->setInitializedFlag(true);
 		}
 
 		$this->setModel($model);

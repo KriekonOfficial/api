@@ -36,7 +36,7 @@ class DBWrapper
 	* @param $database - The database you wanna execute this function on
 	* @return array
 	*/
-	public static function PExecute(string $sql, array $params = [], string $database = DEFAULT_DB) : array
+	public static function PExecute(string $sql, array $params = [], int &$out_count = 0, string $database = DEFAULT_DB) : array
 	{
 		$pool = self::getDBPool($database);
 
@@ -44,6 +44,7 @@ class DBWrapper
 		if ($pool->query($sql, $params))
 		{
 			$results = $pool->fetchAllResults();
+			$out_count = $pool->rowCount();
 		}
 		return $results;
 	}
@@ -55,7 +56,7 @@ class DBWrapper
 	* @param $database - The database you wanna execute this function on
 	* @return array
 	*/
-	public static function PSingle(string $sql, array $params = [], $database = DEFAULT_DB) : array
+	public static function PSingle(string $sql, array $params = [], int &$out_count = 0, $database = DEFAULT_DB) : array
 	{
 		$pool = self::getDBPool($database);
 
@@ -63,6 +64,7 @@ class DBWrapper
 		if ($pool->query($sql, $params))
 		{
 			$results = $pool->fetchResult();
+			$out_count = $pool->rowCount();
 		}
 		return $results;
 	}
@@ -73,7 +75,7 @@ class DBWrapper
 	* @param $database - The database you wanna execute this function on
 	* @return array
 	*/
-	public static function execute(string $sql, $database = DEFAULT_DB) : array
+	public static function execute(string $sql, int &$out_count = 0, $database = DEFAULT_DB) : array
 	{
 		$pool = self::getDBPool($database);
 
@@ -81,6 +83,7 @@ class DBWrapper
 		if ($pool->query($sql))
 		{
 			$results = $pool->fetchAllResults();
+			$out_count = $pool->rowCount();
 		}
 		return $results;
 	}
@@ -159,6 +162,13 @@ class DBWrapper
 		$pool = self::getDBPool($database);
 
 		return $pool->rollbackTransaction();
+	}
+
+	public static function quote(string $value) : ?string
+	{
+		$pool = self::getDBPool(DEFAULT_DB);
+
+		return $pool->quote($value);
 	}
 
 	private static function getDBPool(string $database) : \Core\Store\Database\DatabasePDO
