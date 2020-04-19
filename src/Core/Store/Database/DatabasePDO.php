@@ -195,6 +195,25 @@ class DatabasePDO extends ErrorBase implements Interfaces\DatabaseInterface
 		return $this->pdo->inTransaction();
 	}
 
+	/**
+	* Escape a string to be compliant with a sql statement.
+	* @param $value - That you wanna ensure no sql escaping.
+	* @return string|null on failure
+	*/
+	public function quote(string $value) : ?string
+	{
+		$quote = $this->pdo->quote($value);
+
+		/**
+		* Returns false if the driver does not support quoting this way.
+		*/
+		if ($quote === false)
+		{
+			return null;
+		}
+		return $quote;
+	}
+
 	////
 	// Private Routines
 	////
