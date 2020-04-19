@@ -2,13 +2,18 @@
 
 namespace Core\Logger;
 
-class DBLogger implements Interfaces\LoggerInterface
+use Core\Store\Database\Util\DBWrapper;
+use Core\Logger\Interfaces\LoggerInterface;
+use Core\Logger\Exception\LoggerException;
+use Core\Logger\Model\LogModel;
+
+class DBLogger implements LoggerInterface
 {
 	private const SUPPORTED_TABLES = ['log', 'log_ACCTID'];
 
 	private $model;
 	private $db_table = 'log';
-	public function __construct(Model\LogModel $model)
+	public function __construct(LogModel $model)
 	{
 		$this->model = $model;
 
@@ -19,7 +24,7 @@ class DBLogger implements Interfaces\LoggerInterface
 
 			if (!in_array($table, self::SUPPORTED_TABLES))
 			{
-				throw new Exception\LoggerException('Log attempt against a unsupported table: ' . $table);
+				throw new LoggerException('Log attempt against a unsupported table: ' . $table);
 			}
 			$this->db_table = $table;
 		}
@@ -92,6 +97,6 @@ class DBLogger implements Interfaces\LoggerInterface
     	{
     		$params[$association['type']] = $association['type_value'];
     	}
-    	\Core\Store\Database\Util\DBWrapper::insert($this->db_table, $params, $last_id, DEFAULT_LOG_DB);
+    	DBWrapper::insert($this->db_table, $params, $last_id, DEFAULT_LOG_DB);
     }
 }
