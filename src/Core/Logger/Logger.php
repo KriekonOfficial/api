@@ -1,6 +1,8 @@
 <?php
 namespace Core\Logger;
 
+use Core\Logger\Exception\LoggerExeception;
+
 class Logger
 {
 	public static function log(Model\LogModel $model, string $type = 'database') : void
@@ -12,7 +14,7 @@ class Logger
 			break;
 
 			default:
-				throw new Exception\LoggerExeception('Invalid Logger Type');
+				throw new LoggerExeception('Invalid Logger Type');
 			break;
 		}
 
