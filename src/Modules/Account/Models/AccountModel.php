@@ -34,7 +34,6 @@ class AccountModel extends Model
 	protected int $verified;
 	protected int $locked;
 
-
 	public function getACCTID() : int
 	{
 		return $this->ACCTID;
@@ -140,6 +139,20 @@ class AccountModel extends Model
 		return $this->getLocked() == self::LOCKED_ON;
 	}
 
+	////
+	// Abstract Functions
+	////
+
+	public function getPrimaryKey() : int
+	{
+		return $this->getACCTID();
+	}
+
+	public function setPrimaryKey(int $value) : void
+	{
+		$this->ACCTID = $value;
+	}
+
 	public function toArray() : array
 	{
 		return [
@@ -150,7 +163,7 @@ class AccountModel extends Model
 			'username' => $this->getUsername(),
 			'password_hash' => $this->getPasswordHash(),
 			'date_of_birth' => $this->getDateOfBirth(),
-			'registration_date' => $this->getRegistrationTime(),
+			'registration_time' => $this->getRegistrationTime(),
 			'verified' => $this->getVerified(),
 			'locked' => $this->getLocked()
 		];
@@ -175,5 +188,10 @@ class AccountModel extends Model
 		$this->setRegistrationTime($this->_registration_time);
 		$this->setVerified($this->_verified);
 		$this->setLocked($this->_locked);
+	}
+
+	protected function getEntityPath() : string
+	{
+		return '\Modules\Account\Account';
 	}
 }

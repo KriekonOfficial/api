@@ -2,18 +2,22 @@
 
 namespace Core\Entity;
 
-use \ReflectionClass;
-use Core\Entity\Exception\EntityAbstractException;
+use \InvalidArgumentException;
+use Core\Entity\Exception\EntityException;
 use Core\Store\Database\Util\DBWrapper;
 use Core\ErrorBase;
 use Core\ClassMetadata;
+use Core\Model\Model;
 
 abstract class Entity extends ErrorBase
 {
+	/**
+	* The database in where the db_table is located.
+	*/
 	protected string $db_name = 'kriekon';
 
 	/**
-	*
+	* The table that we will be manipulating
 	*/
 	protected string $db_table;
 
@@ -22,14 +26,17 @@ abstract class Entity extends ErrorBase
 	*/
 	protected string $db_primary_key;
 
+	/**
+	* Houses the namespace path to the model for the entity
+	*/
 	protected string $model_path;
+
+	/**
+	* Houses the model object based on the model path
+	*/
 	protected $model;
 
 	private $metadata;
-
-	abstract public function store() : bool;
-	abstract public function update(array $params = []) : bool;
-	abstract public function delete() : bool;
 
 	public function __construct($model = null)
 	{
@@ -45,27 +52,88 @@ abstract class Entity extends ErrorBase
 		$this->setModel($model);
 	}
 
-	protected function storeCommon() : bool
+	/**
+	* Takes all current values inside the model and inserts them into the db entity
+	* @throws EntityException - if the insertion query fails some how.
+	* @return an Instance of \Core\Model\Model
+	*/
+	public function store()
 	{
-		return true;
+		$model = $this->getModel();
+
+		$last_inserted_id = 0;
+		$result = DBWrapper::insert($this->getDBTable(), $model->toArray(), $last_inserted_id, $this->getDBName());
+		if ($result === false)
+		{
+			throw new EntityException('Unable to insert the model ' . get_class($model) . ' with values ' . var_export($model->toArray(), true));
+		}
+
+		$model->setPrimaryKey($last_inserted_id);
+		$model->setInitializedFlag(true);
+		$this->setModel($model);
+
+		return $model;
 	}
 
-	protected function updateCommon(array $params = []) : bool
+	/**
+	* Update the db entity based on the primary key of the model.
+	* @param $params - These are the fields that will be pulled from the model
+	* Ex ['registration_time', 'date_of_birth']
+	* @throws InvalidArgumentException - If the column does not exist inside the model.
+	* @return bool
+	*/
+	public function update(array $params = []) : bool
 	{
-		return true;
+		$model = $this->getModel();
+
+		$update_values = $model->toArray();
+
+		$update_params = [];
+		foreach ($params as $column)
+		{
+			if (!isset($update_values[$column]))
+			{
+				throw new InvalidArgumentException('That column: ' . $column . ' does not exist inside the model ' . get_class($model));
+			}
+			$update_params[$column] = $update_values[$column];
+		}
+		return DBWrapper::update($this->getDBTable(), $update_params, [$this->getDBPrimaryKey() => $model->getPrimaryKey()]);
 	}
 
-	protected function deleteCommon() : bool
+	/**
+	* Delete the entity based on the primary key of the model.
+	* @throws EntityException if the model object is not initialized
+	* @return bool
+	*/
+	public function delete() : bool
 	{
-		return true;
+		$model = $this->getModel();
+
+		if (!$model->isInitialized())
+		{
+			throw new EntityException('Unable to delete the model as it is not initialized. Model: ' . get_class($model));
+		}
+
+		$result = DBWrapper::delete($this->getDBTable(), [$this->getDBPrimaryKey() => $model->getPrimaryKey()]);
+		if ($result === true)
+		{
+			$model->reset();
+			$this->setModel($model);
+			return true;
+		}
+		return false;
 	}
 
-	public function find($primary_key)
+	/**
+	* @param pk_value - Primary key value, mixed types
+	* @return A model that extends an instance of Core\Model\Model
+	*/
+	public function find($pk_value)
 	{
 		$count = 0;
 		$results = DBWrapper::PSingle('
 			SELECT * FROM ' . $this->getDBTable() . '
-			WHERE ' . $this->getDBPrimaryKey() . ' = ?', [$primary_key], $count, $this->getDBName());
+			WHERE ' . $this->getDBPrimaryKey() . ' = ?', [$pk_value], $count, $this->getDBName());
 
 		$model = $this->getModel();
 		$model->reset();
@@ -104,11 +172,6 @@ abstract class Entity extends ErrorBase
 		return $this->db_primary_key;
 	}
 
-	public function getDBFields() : array
-	{
-		return $this->db_fields;
-	}
-
 	public function getModel()
 	{
 		return $this->model;
@@ -121,6 +184,10 @@ abstract class Entity extends ErrorBase
 
 	protected function setModel($model) : void
 	{
+		if (($model instanceof Model) === false)
+		{
+			throw new InvalidArgumentException('Model Object must extend \Core\Model\Model');
+		}
 		$this->model = $model;
 	}
 
