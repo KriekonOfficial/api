@@ -2,10 +2,11 @@
 namespace Core\Logger;
 
 use Core\Logger\Exception\LoggerExeception;
+use Core\Logger\Model\LogModel;
 
 class Logger
 {
-	public static function log(Model\LogModel $model, string $type = 'database') : void
+	public static function log(LogModel $model, string $type = 'database') : void
 	{
 		switch ($type)
 		{
