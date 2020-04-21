@@ -135,26 +135,9 @@ abstract class Entity extends ErrorBase
 			SELECT * FROM ' . $this->getDBTable() . '
 			WHERE ' . $this->getDBPrimaryKey() . ' = ?', [$pk_value], $count, $this->getDBName());
 
-		$model = $this->getModel();
-		$model->reset();
+		$this->setModelProperties($results, $count);
 
-		$reflection = $this->metadata->getReflection();
-		foreach ($results as $column => $value)
-		{
-			$property = $reflection->getProperty($column);
-			$property->setAccessible(true);
-			$property->setValue($model, $value);
-			$property->setAccessible(false);
-		}
-
-		if ($count == 1)
-		{
-			$model->setInitializedFlag(true);
-		}
-
-		$this->setModel($model);
-
-		return $model;
+		return $this->getModel();
 	}
 
 	public function getDBName() : string
@@ -194,5 +177,27 @@ abstract class Entity extends ErrorBase
 	protected function setModelPath(string $model_path) : void
 	{
 		$this->model_path = $model_path;
+	}
+
+	protected function setModelProperties(array $result, int $count) : void
+	{
+		$model = $this->getModel();
+		$model->reset();
+
+		$reflection = $this->metadata->getReflection();
+		foreach ($result as $column => $value)
+		{
+			$property = $reflection->getProperty($column);
+			$property->setAccessible(true);
+			$property->setValue($model, $value);
+			$property->setAccessible(false);
+		}
+
+		if ($count == 1)
+		{
+			$model->setInitializedFlag(true);
+		}
+
+		$this->setModel($model);
 	}
 }
