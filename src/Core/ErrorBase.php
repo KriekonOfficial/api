@@ -26,7 +26,7 @@ class ErrorBase
 	* Get the error array
 	* @return array
 	*/
-	public function getError() : array
+	final public function getError() : array
 	{
 		return $this->error;
 	}
@@ -35,7 +35,7 @@ class ErrorBase
 	* Get the error_internal array
 	* @return array
 	*/
-	public function getInternalError() : array
+	final public function getInternalError() : array
 	{
 		return $this->error_internal;
 	}
@@ -44,7 +44,7 @@ class ErrorBase
 	* Get the error_administer array
 	* @return array
 	*/
-	public function getAdministerError() : array
+	final public function getAdministerError() : array
 	{
 		return $this->error_administer;
 	}
@@ -54,7 +54,7 @@ class ErrorBase
 	* @param $type - What format should I output?
 	* @return string
 	*/
-	public function getErrors($type = 'text') : string
+	final public function getErrors($type = 'text') : string
 	{
 		return $this->formatError($this->error, $type);
 	}
@@ -64,7 +64,7 @@ class ErrorBase
 	* @param $type - What format should I output?
 	* @return string
 	*/
-	public function getInternalErrors($type = 'text') : string
+	final public function getInternalErrors($type = 'text') : string
 	{
 		return $this->formatError($this->error_internal, $type);
 	}
@@ -74,7 +74,7 @@ class ErrorBase
 	* @param $type - What format should I output?
 	* @return string
 	*/
-	public function getAdministerErrors($type = 'text') : string
+	final public function getAdministerErrors($type = 'text') : string
 	{
 		return $this->formatError($this->error_administer, $type);
 	}
@@ -83,7 +83,7 @@ class ErrorBase
 	* Returns the last element in the error array.
 	* @return string
 	*/
-	public function getLastError() : string
+	final public function getLastError() : string
 	{
 		$error = end($this->error);
 		return $error !== false ? $error : '';
@@ -93,7 +93,7 @@ class ErrorBase
 	* Returns the last element in the error_interal array.
 	* @return string
 	*/
-	public function getLastInternalError() : string
+	final public function getLastInternalError() : string
 	{
 		$error = end($this->error_internal);
 		return $error !== false ? $error : '';
@@ -103,7 +103,7 @@ class ErrorBase
 	* Returns the last element in the error_administer array.
 	* @return sting
 	*/
-	public function getLastAdministerError() : string
+	final public function getLastAdministerError() : string
 	{
 		$error = end($this->error_administer);
 		return $error !== false ? $error : '';
@@ -118,7 +118,7 @@ class ErrorBase
 	* @param $message
 	* @return void
 	*/
-	protected function addError(string $message) : void
+	final protected function addError(string $message) : void
 	{
 		$this->error[] = $message;
 	}
@@ -128,7 +128,7 @@ class ErrorBase
 	* @param $message
 	* @return void
 	*/
-	protected function addErrorAdminister(string $message) : void
+	final protected function addErrorAdminister(string $message) : void
 	{
 		$this->error_administer[] = $message;
 	}
@@ -138,7 +138,7 @@ class ErrorBase
 	* @param $message
 	* @return void
 	*/
-	protected function addErrorInternal(string $message) : void
+	final protected function addErrorInternal(string $message) : void
 	{
 		$this->error_internal[] = $message;
 	}
@@ -146,7 +146,7 @@ class ErrorBase
 	/**
 	* @return void
 	*/
-	protected function setError(array $error) : void
+	final protected function setError(array $error) : void
 	{
 		$this->error = $error;
 	}
@@ -155,7 +155,7 @@ class ErrorBase
 	* Set Administer error array
 	* @return void
 	*/
-	protected function setErrorAdminister(array $error) : void
+	final protected function setErrorAdminister(array $error) : void
 	{
 		$this->error_administer = $error;
 	}
@@ -164,7 +164,7 @@ class ErrorBase
 	* Set Internal developers array
 	* @return void
 	*/
-	protected function setErrorInternal(array $error) : void
+	final protected function setErrorInternal(array $error) : void
 	{
 		$this->error_internal = $error;
 	}
