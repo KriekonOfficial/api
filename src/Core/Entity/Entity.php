@@ -5,6 +5,7 @@ namespace Core\Entity;
 use \InvalidArgumentException;
 use Core\Entity\Exception\EntityException;
 use Core\Store\Database\Util\DBWrapper;
+use Core\Store\Database\Model\DBResult;
 use Core\ErrorBase;
 use Core\ClassMetadata;
 use Core\Model\Model;
@@ -14,7 +15,7 @@ abstract class Entity extends ErrorBase
 	/**
 	* The database in where the db_table is located.
 	*/
-	protected string $db_name = 'kriekon';
+	protected string $db_name = DEFAULT_DB;
 
 	/**
 	* The table that we will be manipulating
@@ -27,16 +28,16 @@ abstract class Entity extends ErrorBase
 	protected string $db_primary_key;
 
 	/**
-	* Houses the namespace path to the model for the entity
-	*/
-	protected string $model_path;
-
-	/**
 	* Houses the model object based on the model path
 	*/
 	protected $model;
 
 	private $metadata;
+
+	/**
+	* Houses the namespace path to the model for the entity
+	*/
+	abstract public function getModelPath() : string;
 
 	public function __construct($model = null)
 	{
@@ -131,11 +132,11 @@ abstract class Entity extends ErrorBase
 	public function find($pk_value)
 	{
 		$count = 0;
-		$results = DBWrapper::PSingle('
+		$results = DBWrapper::PResult('
 			SELECT * FROM ' . $this->getDBTable() . '
-			WHERE ' . $this->getDBPrimaryKey() . ' = ?', [$pk_value], $count, $this->getDBName());
+			WHERE ' . $this->getDBPrimaryKey() . ' = ?', [$pk_value], $this->getDBName());
 
-		$this->setModelProperties($results, $count);
+		$this->setModelProperties($results);
 
 		return $this->getModel();
 	}
@@ -160,11 +161,6 @@ abstract class Entity extends ErrorBase
 		return $this->model;
 	}
 
-	public function getModelPath() : string
-	{
-		return $this->model_path;
-	}
-
 	protected function setModel($model) : void
 	{
 		if (($model instanceof Model) === false)
@@ -174,18 +170,13 @@ abstract class Entity extends ErrorBase
 		$this->model = $model;
 	}
 
-	protected function setModelPath(string $model_path) : void
-	{
-		$this->model_path = $model_path;
-	}
-
-	protected function setModelProperties(array $result, int $count) : void
+	protected function setModelProperties(DBResult $result) : void
 	{
 		$model = $this->getModel();
 		$model->reset();
 
 		$reflection = $this->metadata->getReflection();
-		foreach ($result as $column => $value)
+		foreach ($result->getRecord() as $column => $value)
 		{
 			$property = $reflection->getProperty($column);
 			$property->setAccessible(true);
@@ -193,9 +184,13 @@ abstract class Entity extends ErrorBase
 			$property->setAccessible(false);
 		}
 
-		if ($count == 1)
+		if ($result->count() == 1)
 		{
 			$model->setInitializedFlag(true);
+		}
+		else if ($result->count() > 1)
+		{
+			throw new EntityException('Count is more than 1, there appears to be more than 1 record based off that: ' . get_class($this));
 		}
 
 		$this->setModel($model);
