@@ -22,7 +22,7 @@ class Validator extends ErrorBase
 	{
 		if (($model instanceof Model) === false)
 		{
-			throw new InvalidArgumentException('Construct parameter model does not extend an instanceof model ' . var_export($mode, true));
+			throw new InvalidArgumentException('Construct parameter model does not extend an instanceof model ' . var_export($model, true));
 		}
 
 		$this->model = $model;
