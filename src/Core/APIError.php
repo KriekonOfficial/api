@@ -2,7 +2,9 @@
 
 namespace Core;
 
-class APIError extends \Exception
+use \Exception;
+
+class APIError extends Exception
 {
 	protected $http_code = 500;
 
