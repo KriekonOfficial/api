@@ -12,8 +12,6 @@ class Validator extends ErrorBase
 {
 	protected $model;
 
-	private array $validators = [];
-
 	private array $rules = [];
 
 	protected bool $stop_on_first_validator_fail = true;
@@ -50,21 +48,6 @@ class Validator extends ErrorBase
 		return [];
 	}
 
-	final public function setValidators(array $validators) : void
-	{
-		$this->validators = $validators;
-	}
-
-	final public function addValidator(string $validator_function) : void
-	{
-		$this->validators[] = $validator_function;
-	}
-
-	final public function getValidators() : array
-	{
-		return $this->validators;
-	}
-
 	final public function getModel()
 	{
 		return $this->model;
@@ -75,10 +58,8 @@ class Validator extends ErrorBase
 		$failure = true;
 		$fields = $this->getModel()->toArray();
 
-		foreach ($this->getValidators() as $validator)
+		foreach ($this->getRules() as $validator => $rule_columns)
 		{
-			$rule_columns = $this->getRuleColumns($validator);
-
 			$result = true;
 
 			foreach ($rule_columns as $rule_column)

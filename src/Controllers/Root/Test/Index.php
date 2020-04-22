@@ -20,7 +20,6 @@ class Index extends \Core\Controller
 		$model->setPasswordHash(password_hash('password1234', PASSWORD_BCRYPT, array('cost' => 12)));
 
 		$validator = new \Modules\Account\Models\AccountValidator($model);
-		$validator->addValidator('validateEmail');
 		$validator->addRule('validateEmail', ['email']);
 		$validator->validate();
 
