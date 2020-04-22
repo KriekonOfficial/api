@@ -2,9 +2,11 @@
 
 namespace Core\Store\Database\Model;
 
+use \Iterator;
+use \Countable;
 use Core\Store\Database\Interfaces\DatabaseInterface;
 
-class DBResult implements \Iterator, \Countable
+class DBResult implements Iterator, Countable
 {
 	private $pdo_object;
 
@@ -14,6 +16,10 @@ class DBResult implements \Iterator, \Countable
 	public function __construct(DatabaseInterface $pdo_object)
 	{
 		$this->pdo_object = $pdo_object;
+		if ($this->count() >= 1)
+		{
+			$this->next();
+		}
 	}
 
 	/**
@@ -73,7 +79,7 @@ class DBResult implements \Iterator, \Countable
 	*/
 	public function rewind() : void
 	{
-		$this->next();
+		//$this->next();
 	}
 
 	////

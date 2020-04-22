@@ -24,7 +24,7 @@ class DatabasePDO extends ErrorBase implements Interfaces\DatabaseInterface
 	protected string $dbname;
 
 	protected int $count = 0;
-	protected $results;
+	protected $results = [];
 
 	public function __construct(string $dbname)
 	{
