@@ -12,12 +12,29 @@ class Validator extends ErrorBase
 {
 	protected $model;
 
+	/**
+	* Rules that the validators will run against the fields.
+	* [
+	*	'validator' => ['column1', 'column2']
+	* ]
+	*/
 	private array $rules = [];
 
+	/**
+	* Will continue to validate the rest of the validator values if one fails
+	* But will not validate any other validators if 1 fails.
+	*/
 	protected bool $stop_on_first_validator_fail = true;
 
+	/**
+	* If any rule in the validator fails, this will fail the whole function.
+	* If this is set to true.
+	*/
 	protected bool $stop_on_first_rule_fail = false;
 
+	/**
+	* @param $model - This must be an object that extends model.
+	*/
 	public function __construct($model)
 	{
 		if (($model instanceof Model) === false)
@@ -28,6 +45,11 @@ class Validator extends ErrorBase
 		$this->model = $model;
 	}
 
+	/**
+	* @param $validator - The validation function that will be run on the following columns
+	* @param $rule_columns - The fields to search for from the model array
+	* @return void
+	*/
 	final public function addRule(string $validator, array $rule_columns) : void
 	{
 		$this->rules[$validator] = $rule_columns;
@@ -38,6 +60,11 @@ class Validator extends ErrorBase
 		return $this->rules;
 	}
 
+	/**
+	* Gets the rule columns that are assigned to the validation function.
+	* @param $validator
+	* @return array
+	*/
 	final public function getRuleColumns(string $validator) : array
 	{
 		$rules = $this->getRules();
@@ -53,6 +80,10 @@ class Validator extends ErrorBase
 		return $this->model;
 	}
 
+	/**
+	* Validate the model values based on the validators and the rule column's specified
+	* @return bool true on succes or false on failure
+	*/
 	public function validate() : bool
 	{
 		$failure = true;
