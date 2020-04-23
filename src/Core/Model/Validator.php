@@ -10,6 +10,8 @@ use Core\Logger\LogLevel;
 
 class Validator extends ErrorBase
 {
+	use BaseValidator;
+
 	protected $model;
 
 	/**
@@ -19,6 +21,14 @@ class Validator extends ErrorBase
 	* ]
 	*/
 	private array $rules = [];
+
+	/**
+	* Additional arguments to be passed into the validator function
+	* [
+	*	'validator' => ['param1', 2]
+	* ]
+	*/
+	private array $validators = [];
 
 	/**
 	* Will continue to validate the rest of the validator values if one fails
@@ -75,6 +85,32 @@ class Validator extends ErrorBase
 		return [];
 	}
 
+	/**
+	* Add Validator additional params if needed
+	* @param $validator - The function that will be called.
+	* @param $params - The values that the validator will pass into it's function
+	* @return void
+	*/
+	final public function addValidator(string $validator, array $params = []) : void
+	{
+		$this->validators[$validator] = $params;
+	}
+
+	/**
+	* Get the values in the validator
+	* @param $validator - The validator that has values
+	* @return array
+	*/
+	final public function getValidator(string $validator) : array
+	{
+		return $this->validators[$validator] ?? [];
+	}
+
+	final public function getValidators() : array
+	{
+		return $this->validators;
+	}
+
 	final public function getModel()
 	{
 		return $this->model;
@@ -93,9 +129,13 @@ class Validator extends ErrorBase
 		{
 			$result = true;
 
+			$validator_params = $this->getValidator($validator);
 			foreach ($rule_columns as $rule_column)
 			{
-				$result = $result && call_user_func([$this, $validator], $fields[$rule_column]);
+				$params = $validator_params;
+				array_unshift($params, $fields[$rule_column]);
+
+				$result = $result && call_user_func_array([$this, $validator], $params);
 				if ($result === false && $this->isStopOnRuleFail())
 				{
 					break 2;

@@ -66,6 +66,10 @@ abstract class Model
 		$this->initialized_flag = $flag;
 	}
 
+	/**
+	* Create a DB Entity with the existing model
+	* @return An Child object that extends Entity
+	*/
 	public function createEntity()
 	{
 		$entity = $this->getEntityPath();

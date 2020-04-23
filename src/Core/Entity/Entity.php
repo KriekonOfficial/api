@@ -190,7 +190,7 @@ abstract class Entity extends ErrorBase
 		}
 		else if ($result->count() > 1)
 		{
-			throw new EntityException('Count is more than 1, there appears to be more than 1 record based off that: ' . get_class($this));
+			throw new EntityException('There appears to be more than 1 record based off the model: ' . get_class($this));
 		}
 
 		$this->setModel($model);

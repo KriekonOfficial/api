@@ -20,10 +20,12 @@ class Index extends \Core\Controller
 		$model->setPasswordHash(password_hash('password1234', PASSWORD_BCRYPT, array('cost' => 12)));
 
 		$validator = new \Modules\Account\Models\AccountValidator($model);
-		$validator->addRule('validateEmail', ['email']);
+		$validator->addValidator('minLength', [10]);
+		$validator->addRule('minLength', ['email']);
+		//$validator->addRule('validateEmail', ['email']);
 		$validator->validate();
 
-		\Core\Response\Dump::var($validator);
+		//\Core\Response\Dump::var($validator);
 
 		return new \Core\Response\ErrorResponse(500, 'test1234');
 	}
