@@ -8,10 +8,8 @@ use Core\Logger\Logger;
 use Core\Logger\Model\LogModel;
 use Core\Logger\LogLevel;
 
-class Validator extends ErrorBase
+class Validator extends BaseValidator
 {
-	use BaseValidator;
-
 	protected $model;
 
 	/**
