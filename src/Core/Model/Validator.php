@@ -8,7 +8,7 @@ use Core\Logger\Logger;
 use Core\Logger\Model\LogModel;
 use Core\Logger\LogLevel;
 
-class Validator extends BaseValidator
+class Validator extends ErrorBase
 {
 	protected $model;
 
@@ -23,7 +23,7 @@ class Validator extends BaseValidator
 	/**
 	* Additional arguments to be passed into the validator function
 	* [
-	*	'validator' => ['param1', 2]
+	*	'validator' => ['param1', 2, 3]
 	* ]
 	*/
 	private array $validators = [];

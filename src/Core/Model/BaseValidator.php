@@ -2,9 +2,7 @@
 
 namespace Core\Model;
 
-use Core\ErrorBase;
-
-class BaseValidator extends ErrorBase
+class BaseValidator extends Validator
 {
 	/**
 	* @return true on length greater than min|false on failure

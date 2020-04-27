@@ -2,10 +2,10 @@
 
 namespace Modules\Account\Models;
 
-use Core\Model\Validator;
+use Core\Model\BaseValidator;
 use Modules\Account\Account;
 
-class AccountValidator extends Validator
+class AccountValidator extends BaseValidator
 {
 	public function validateEmail($email) : bool
 	{
