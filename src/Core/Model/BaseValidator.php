@@ -11,7 +11,7 @@ class BaseValidator extends Validator
 	{
 		if (strlen($value) < $min)
 		{
-			$this->addError('Value is below the minimum length of ' . $min);
+			$this->addError(humanReadable($this->getCurrentEntityProperty()) . ' is below the minimum length of ' . $min);
 			return false;
 		}
 		return true;
@@ -24,7 +24,7 @@ class BaseValidator extends Validator
 	{
 		if (strlen($value) > $max)
 		{
-			$this->addError('Value has exceeded maximum length of ' . $max);
+			$this->addError(humanReadable($this->getCurrentEntityProperty()) . ' has exceeded maximum length of ' . $max);
 			return false;
 		}
 		return true;

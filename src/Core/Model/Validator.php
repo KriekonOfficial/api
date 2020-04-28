@@ -40,6 +40,8 @@ class Validator extends ErrorBase
 	*/
 	protected bool $stop_on_first_rule_fail = false;
 
+	private string $entity_property = '';
+
 	/**
 	* @param $model - This must be an object that extends model.
 	*/
@@ -133,6 +135,8 @@ class Validator extends ErrorBase
 				$params = $validator_params;
 				array_unshift($params, $fields[$rule_column]);
 
+				$this->setCurrentEntityProperty($rule_column);
+
 				$result = $result && call_user_func_array([$this, $validator], $params);
 				if ($result === false && $this->isStopOnRuleFail())
 				{
@@ -172,5 +176,15 @@ class Validator extends ErrorBase
 	final protected function isStopOnRuleFail() : bool
 	{
 		return $this->stop_on_first_rule_fail;
+	}
+
+	final protected function setCurrentEntityProperty(string $entity_property) : void
+	{
+		$this->entity_property = $entity_property;
+	}
+
+	final protected function getCurrentEntityProperty() : string
+	{
+		return $this->entity_property;
 	}
 }
