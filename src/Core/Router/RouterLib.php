@@ -6,18 +6,11 @@ use \GuzzleHttp\Psr7\ServerRequest;
 
 class RouterLib
 {
-	public static function camelCase($string, $delimiter = '_', $capitalizeFirstCharacter = true)
-	{
-		$str = str_replace($delimiter, '', ucwords($string, $delimiter));
-
-		if (!$capitalizeFirstCharacter)
-		{
-			$str = lcfirst($str);
-		}
-
-		return $str;
-	}
-
+    /**
+    * Allows for some to specify the first part of a url before we attempt to set an allowed version.
+    * If Version is empty we will fall back to see if it is allowed version
+    * If not an allowed version we fall back again to the Root Folder.
+    */
     public static function parseURI(RouterURI $uri) : RouterURI
     {
     	$server = Router::getRequest()::getServer();

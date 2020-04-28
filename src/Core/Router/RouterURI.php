@@ -36,7 +36,7 @@ class RouterURI
 	{
 		if (isset($url[1]))
 		{
-			$this->setDirectory(RouterLib::camelCase($url[1]));
+			$this->setDirectory(camelCase($url[1]));
 		}
 
 		$this->setControllerMethodParams($url, 2, 3);
@@ -49,7 +49,7 @@ class RouterURI
 
 		if (isset($url[0]))
 		{
-			$this->setDirectory(RouterLib::camelCase($url[0]));
+			$this->setDirectory(camelCase($url[0]));
 		}
 
 		$this->setControllerMethodParams($url, 1, 2);
@@ -78,7 +78,7 @@ class RouterURI
 	{
 		if (isset($url[$controller_pos]))
 		{
-			$this->setController(RouterLib::camelCase($url[$controller_pos]));
+			$this->setController(camelCase($url[$controller_pos]));
 		}
 
 		if (isset($url[$method_pos]))
