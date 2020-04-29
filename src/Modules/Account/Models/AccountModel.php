@@ -2,7 +2,7 @@
 
 namespace Modules\Account\Models;
 
-use \Core\Model\Model;
+use Core\Model\Model;
 
 class AccountModel extends Model
 {
