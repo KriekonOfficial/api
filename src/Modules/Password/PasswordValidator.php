@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Account\Models;
+namespace Modules\Password;
 
 use Core\Model\BaseValidator;
 

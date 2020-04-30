@@ -18,9 +18,9 @@ class Index extends \Core\Controller
 		$model->setDateOfBirth('1996-04-12');
 		$model->setRegistrationTime(date(DATEFORMAT_STANDARD));
 
-		$pass_model = new \Modules\Account\Models\PasswordModel('password1234');
+		$pass_model = new \Modules\Password\PasswordModel('password1234');
 
-		$pass_validator = new \Modules\Account\Models\PasswordValidator($pass_model);
+		$pass_validator = new \Modules\Password\PasswordValidator($pass_model);
 		$pass_validator->addValidator('minLength', [8]);
 		$pass_validator->addValidator('maxLength', [42]);
 		$pass_validator->addRule('minLength', ['password']);
