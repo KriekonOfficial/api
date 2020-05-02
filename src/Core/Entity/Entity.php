@@ -118,6 +118,7 @@ abstract class Entity extends ErrorBase
 		$result = DBWrapper::delete($this->getDBTable(), [$this->getDBPrimaryKey() => $model->getPrimaryKey()]);
 		if ($result === true)
 		{
+			$model->setInitializedFlag(false);
 			$model->reset();
 			$this->setModel($model);
 			return true;
