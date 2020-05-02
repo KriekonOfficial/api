@@ -21,7 +21,7 @@ class PasswordModel extends Model
 
 	public function generatePasswordHash(int $cost = 12) : string
 	{
-		return password_hash($this->getPassword(), PASSWORD_BCRYPT, $cost);
+		return password_hash($this->getPassword(), PASSWORD_BCRYPT, ['cost' => $cost]);
 	}
 
 	public function toArray() : array

@@ -9,6 +9,18 @@ class AccountValidator extends BaseValidator
 {
 	public function validateEmail(string $email) : bool
 	{
+		if (empty($email))
+		{
+			$this->addError('Email must be specified.');
+			return false;
+		}
+
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+		{
+			$this->addError('Not a valid email address');
+			return false;
+		}
+
 		$entity = new Account();
 		$model = $entity->findEmail($email);
 
