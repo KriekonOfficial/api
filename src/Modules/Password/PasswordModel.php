@@ -31,11 +31,6 @@ class PasswordModel extends Model
 		];
 	}
 
-	public static function verifyPasswordHash(string $password_hash, string $verify_hash) : bool
-	{
-		return password_verify($password_hash, $verify_hash);
-	}
-
 	public function setPrimaryKey(int $value) : void
 	{
 		throw new BadMethodCallException('Password Model function is not implemented');
