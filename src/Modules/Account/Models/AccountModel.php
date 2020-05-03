@@ -3,6 +3,7 @@
 namespace Modules\Account\Models;
 
 use Core\Model\Model;
+use Core\Util\TimeUtils;
 
 class AccountModel extends Model
 {
@@ -137,6 +138,13 @@ class AccountModel extends Model
 	public function isLocked() : bool
 	{
 		return $this->getLocked() == self::LOCKED_ON;
+	}
+
+	public function getAge() : int
+	{
+		$difference = TimeUtils::getAge($this->getDateOfBirth(), date(DATEFORMAT_STANDARD));
+
+		return $difference->y;
 	}
 
 	////

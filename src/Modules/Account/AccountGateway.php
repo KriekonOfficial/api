@@ -22,7 +22,11 @@ class AccountGateway extends ErrorBase
 		$this->model->setRegistrationTime(date(DATEFORMAT_STANDARD));
 
 		$account_validator = new AccountValidator($this->model);
+		$account_validator->addValidator('validateAge', [16]);
+
 		$account_validator->addRule('validateEmail', ['email']);
+		$account_validator->addRule('validateDateOfBirth', ['date_of_birth']);
+		$account_validator->addRule('validateAge', ['date_of_birth']);
 		if (!$account_validator->validate())
 		{
 			$this->addError($account_validator->getErrors());
@@ -36,6 +40,10 @@ class AccountGateway extends ErrorBase
 			$this->addError($password_validator->getErrors());
 			return false;
 		}
+
+		$entity = $this->model->createEntity();
+		$model = $entity->store();
+
 		return true;
 	}
 

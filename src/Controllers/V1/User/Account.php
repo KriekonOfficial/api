@@ -30,7 +30,7 @@ class Account extends Controller
 			return new ErrorResponse(400, $gateway->getErrors());
 		}
 
-		return new SuccessResponse(200, 'Welcome to Kriekon, an email verification code has been sent to ' . $model->getEmail() . '.');
+		return new SuccessResponse(200, [], 'Welcome to Kriekon, an email verification code has been sent to \'' . $model->getEmail() . '\'.');
 	}
 
 	public function login(Request $request)
