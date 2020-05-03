@@ -41,9 +41,9 @@ abstract class Entity extends ErrorBase
 
 	public function __construct($model = null)
 	{
-		$path = $this->getModelPath();
 		if ($model === null)
 		{
+			$path = $this->getModelPath();
 			$model = new $path;
 		}
 
