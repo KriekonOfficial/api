@@ -2,25 +2,32 @@
 
 namespace Modules\Account;
 
-use Core\Entity\Entity;
+use Core\Entity\DBEntity;
 use Modules\Account\Models\AccountModel;
 use Core\Store\Database\Util\DBWrapper;
 
-class Account extends Entity
+class Account extends DBEntity
 {
-	protected string $db_table = 'account';
-	protected string $db_primary_key = 'ACCTID';
-
 	public function getModelPath() : string
 	{
 		return '\Modules\Account\Models\AccountModel';
+	}
+
+	public function getCollectionTable() : string
+	{
+		return 'account';
+	}
+
+	public function getCollectionPrimaryKey() : string
+	{
+		return 'ACCTID';
 	}
 
 	public function findEmail(string $email) : AccountModel
 	{
 		$count = 0;
 		$results = DBWrapper::PResult('
-			SELECT * FROM ' . $this->getDBTable() . ' WHERE email = ?', [$email], $this->getDBName());
+			SELECT * FROM ' . $this->getCollectionTable() . ' WHERE email = ?', [$email], $this->getCollectionName());
 
 		$this->setModelProperties($results);
 

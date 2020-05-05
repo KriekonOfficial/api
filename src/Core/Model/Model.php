@@ -4,6 +4,7 @@ namespace Core\Model;
 
 use Core\Util\JSONWrapper;
 use \InvalidArgumentException;
+use Core\Entity\EntityInterface;
 
 abstract class Model
 {
@@ -68,9 +69,9 @@ abstract class Model
 
 	/**
 	* Create a DB Entity with the existing model
-	* @return An Child object that extends Entity
+	* @return EntityInterface
 	*/
-	public function createEntity()
+	public function createEntity() : EntityInterface
 	{
 		$entity = $this->getEntityPath();
 		if (!class_exists($entity))
