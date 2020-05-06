@@ -2,6 +2,10 @@
 
 namespace Core\Entity;
 
+use \InvalidArgumentException;
+use Core\Entity\Exception\EntityException;
+use Core\Store\Cache;
+
 abstract class CacheEntity extends Entity implements EntityInterface
 {
 	/**
@@ -10,21 +14,21 @@ abstract class CacheEntity extends Entity implements EntityInterface
 	abstract public function getModelPath() : string;
 
 	/**
-	* The table that we will be manipulating
+	* The collection that we will be manipulating
 	*/
 	abstract public function getCollectionTable() : string;
 
 	/**
-	* Primary key for the database table
+	* Primary key for the collection table
 	*/
 	abstract public function getCollectionPrimaryKey() : string;
 
 	/**
-	* The database in where the db_table is located.
+	* The cache collection
 	*/
 	public function getCollectionName() : string
 	{
-		return 'TODO';
+		return DEFAULT_DB;
 	}
 
 	/**

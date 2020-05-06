@@ -8,16 +8,16 @@ class AccountVerification extends CacheEntity
 {
 	public function getModelPath() : string
 	{
-		return '';
+		return '\Modules\Account\Models\VerificationModel';
 	}
 
 	public function getCollectionTable() : string
 	{
-		return '';
+		return 'account_verification';
 	}
 
 	public function getCollectionPrimaryKey() : string
 	{
-		return '';
+		return 'ACCTID';
 	}
 }

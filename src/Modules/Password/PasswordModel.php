@@ -48,7 +48,7 @@ class PasswordModel extends Model
 
 	public function reset() : void
 	{
-		throw new BadMethodCallException('Password Model function is not implemented');
+		$this->password = '';
 	}
 
 	public function toPublicArray() : array

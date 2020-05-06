@@ -186,7 +186,7 @@ class AccountModel extends Model
 
 	public function reset() : void
 	{
-		$this->ACCTID = $this->_ACCTID;
+		$this->setPrimaryKey($this->_ACCTID);
 		$this->setFirstName($this->_first_name);
 		$this->setLastName($this->_last_name);
 		$this->setEmail($this->_email);
