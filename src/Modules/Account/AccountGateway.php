@@ -5,8 +5,10 @@ namespace Modules\Account;
 use Core\ErrorBase;
 use Modules\Account\Models\AccountModel;
 use Modules\Account\Models\AccountValidator;
+use Modules\Account\Models\VerificationModel;
 use Modules\Password\PasswordModel;
 use Modules\Password\PasswordValidator;
+use Modules\Password\KeyGenerator;
 
 class AccountGateway extends ErrorBase
 {
@@ -43,6 +45,16 @@ class AccountGateway extends ErrorBase
 
 		$entity = $this->model->createEntity();
 		$model = $entity->store();
+
+		$verification = new VerificationModel();
+		$verification->setPrimaryKey($model->getACCTID());
+		$verification->setVerificationCode(KeyGenerator::generateToken(24));
+
+		$verification_entity = $verification->createEntity();
+		$verification->setDateExpire(date(DATEFORMAT_STANDARD, time() + $verification_entity->getEntityCacheTime()));
+		$verification_entity = $verification->createEntity();
+
+		$verification_entity->store();
 
 		return true;
 	}
