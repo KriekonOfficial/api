@@ -71,6 +71,7 @@ class VerificationModel extends Model
 	{
 		$this->setPrimaryKey($this->_ACCTID);
 		$this->setVerificationCode($this->_verification_code);
+		$this->setDateExpire($this->_date_expire);
 	}
 
 	protected function getEntityPath() : string

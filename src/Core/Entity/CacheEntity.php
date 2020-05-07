@@ -9,6 +9,11 @@ use Core\Store\Cache;
 abstract class CacheEntity extends Entity implements EntityInterface
 {
 	/**
+	* The amount of time in seconds the Entity is going to live in the cache.
+	*/
+	abstract public function getEntityCacheTime() : int;
+
+	/**
 	* Houses the namespace path to the model for the entity
 	*/
 	abstract public function getModelPath() : string;
@@ -38,7 +43,15 @@ abstract class CacheEntity extends Entity implements EntityInterface
 	*/
 	public function store()
 	{
+		$model = $this->getModel();
 
+		$cache = Cache::setArray($this->getKey(), $model->toArray(), $this->getEntityCacheTime());
+		if ($cache)
+		{
+			$model->setInitializedFlag(true);
+		}
+
+		return $model;
 	}
 
 	/**
@@ -50,7 +63,38 @@ abstract class CacheEntity extends Entity implements EntityInterface
 	*/
 	public function update(array $params = []) : bool
 	{
+		$model = $this->getModel();
 
+		if (!$model->isInitialized())
+		{
+			throw new EntityException('Unable to update model ' . get_class($model) . ' as it is not initialized');
+		}
+
+		$update_values = $model->toArray();
+
+		$update_params = [];
+		foreach ($params as $column)
+		{
+			if (!isset($update_values[$column]))
+			{
+				throw new InvalidArgumentException('That column: ' . $column . ' does not exist inside the model ' . get_class($model));
+			}
+			$update_params[$column] = $update_values[$column];
+		}
+
+		$array = Cache::getArray($this->getKey());
+
+		if ($array === null)
+		{
+			throw new EntityException('Cache entity no longer exists: Entity: ' . get_class($this) . ' Model: ' . get_class($model));
+		}
+
+		foreach ($update_params as $param => $value)
+		{
+			$array[$param] = $value;
+		}
+
+		return Cache::setArray($this->getKey(), $array, $this->getEntityCacheTime());
 	}
 
 	/**
@@ -60,7 +104,22 @@ abstract class CacheEntity extends Entity implements EntityInterface
 	*/
 	public function delete() : bool
 	{
+		$model = $this->getModel();
+		if (!$model->isInitialized())
+		{
+			throw new EntityException('Unable to delete model ' . get_class($model) . ' as it is not initialized');
+		}
 
+		if (!Cache::delete($this->getKey()))
+		{
+			return false;
+		}
+
+		$model->reset();
+		$model->setInitializedFlag(false);
+		$this->setModel($model);
+
+		return true;
 	}
 
 	/**
@@ -69,6 +128,55 @@ abstract class CacheEntity extends Entity implements EntityInterface
 	*/
 	public function find($pk_value)
 	{
+		$model = $this->getModel();
+		$model->setInitializedFlag(false);
+		$model->reset();
 
+		$record = Cache::getArray($this->getKey($pk_value));
+
+		if ($record === null)
+		{
+			return $model;
+		}
+
+		$reflection = $this->metadata->getReflection();
+		foreach ($record as $column => $value)
+		{
+			$property = $reflection->getProperty($column);
+			$property->setAccessible(true);
+			$property->setValue($model, $value);
+			$property->setAccessible(false);
+		}
+
+		if (count($record) === count($this->metadata->getProtectedFields()))
+		{
+			$model->setInitializedFlag(true);
+		}
+
+		$this->setModel($model);
+
+		return $model;
+	}
+
+	/**
+	* @throws EntityException if model object is not initialized
+	* @return string
+	*/
+	private function getKey(int $pk_value = 0) : string
+	{
+		$model = $this->getModel();
+
+		$key = $this->getCollectionName() . ':';
+		$key .= $this->getCollectionTable() . ':';
+		$key .= $this->getCollectionPrimaryKey() . ':';
+		$pk_key = $pk_value;
+		if ($pk_value == 0)
+		{
+			$pk_key = $model->getPrimaryKey();
+		}
+
+		$key .= $pk_key;
+
+		return $key;
 	}
 }

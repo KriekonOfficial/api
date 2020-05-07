@@ -20,4 +20,9 @@ class AccountVerification extends CacheEntity
 	{
 		return 'ACCTID';
 	}
+
+	public function getEntityCacheTime() : int
+	{
+		return ONE_DAY * 2;
+	}
 }

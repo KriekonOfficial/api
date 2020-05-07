@@ -2,13 +2,15 @@
 
 namespace Core\Store;
 
+use \Redis;
+
 class Cache
 {
 	private static $memory = null;
 
 	private function __construct()
 	{
-		self::$memory = new \Redis();
+		self::$memory = new Redis();
 		self::$memory->connect('127.0.0.1', 6379);
 	}
 
@@ -80,7 +82,7 @@ class Cache
 	* @param $key - Redis key to get the value of.
 	* @return array|null on failure
 	*/
-	public static function getArray(string $key)
+	public static function getArray(string $key) : ?array
 	{
 		$json = self::get($key);
 		if ($json === null)
