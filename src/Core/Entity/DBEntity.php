@@ -66,6 +66,11 @@ abstract class DBEntity extends Entity implements EntityInterface
 	{
 		$model = $this->getModel();
 
+		if (!$model->isInitialized())
+		{
+			throw new EntityException('Unable to delete the model as it is not initialized. Model: ' . get_class($model));
+		}
+
 		$update_values = $model->toArray();
 
 		$update_params = [];
@@ -124,6 +129,7 @@ abstract class DBEntity extends Entity implements EntityInterface
 	protected function setModelProperties(DBResult $result) : void
 	{
 		$model = $this->getModel();
+		$model->setInitializedFlag(false);
 		$model->reset();
 
 		$reflection = $this->metadata->getReflection();
