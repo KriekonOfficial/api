@@ -2,9 +2,13 @@
 
 namespace Modules\Auth;
 
-class Authentication extends \Core\ErrorBase implements \Core\Router\Interfaces\AuthInterface
+use Core\ErrorBase;
+use Core\Router\Interfaces\AuthInterface;
+use Core\Router\Route;
+
+class Authentication extends ErrorBase implements AuthInterface
 {
-	public function checkAuth(\Core\Router\Route $route) : bool
+	public function checkAuth(Route $route) : bool
 	{
 		return true;
 	}

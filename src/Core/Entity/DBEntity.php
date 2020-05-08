@@ -32,6 +32,11 @@ abstract class DBEntity extends Entity implements EntityInterface
 		return DEFAULT_DB;
 	}
 
+	public function getEntityCacheTime() : int
+	{
+		return 0;
+	}
+
 	/**
 	* Takes all current values inside the model and inserts them into the db entity
 	* @throws EntityException - if the insertion query fails some how.

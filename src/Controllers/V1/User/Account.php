@@ -18,8 +18,8 @@ class Account extends Controller
 		$input = $request->getRequestInput();
 
 		$model = new AccountModel();
-		$model->setEmail($input['email'] ?? '');
-		$model->setDateOfBirth($input['date_of_birth'] ?? '');
+		$model->setEmail(trim($input['email'] ?? ''));
+		$model->setDateOfBirth(trim($input['date_of_birth'] ?? ''));
 
 		$password = new PasswordModel($input['password'] ?? '');
 		$model->setPasswordHash($password->generatePasswordHash());

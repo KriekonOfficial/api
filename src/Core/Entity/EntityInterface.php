@@ -47,4 +47,9 @@ interface EntityInterface
 	* Primary key for the database table
 	*/
 	public function getCollectionPrimaryKey() : string;
+
+	/**
+	* The amount of time this entry can live in the cache, whether via Database or Redis
+	*/
+	public function getEntityCacheTime() : int;
 }
