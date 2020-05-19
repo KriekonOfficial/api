@@ -23,3 +23,9 @@ define('MYSQL',
 	]
 );
 define('DEVENV', true);
+
+define('EMAILS',
+	[
+		'noreply@kriekon.com' => '{JPyaU?fm2K2=HYz'
+	]
+);

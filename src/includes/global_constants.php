@@ -13,3 +13,6 @@ define('SITE_NAME', 'Kriekon');
 
 define('DEFAULT_DB', 'kriekon');
 define('DEFAULT_LOG_DB', 'kriekon_log');
+
+define('WWW_URL', 'https://www.kriekon.com');
+define('API_URL', 'https://api.kriekon.com');

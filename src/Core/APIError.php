@@ -8,6 +8,9 @@ class APIError extends Exception
 {
 	protected $http_code = 500;
 
+	/**
+	* Anything greater than or equal to http code 500 will be masked behind a hidden message to the user.
+	*/
 	public function __construct(string $message, int $http_code = 500, int $code = ExceptionCode::APIError)
 	{
 		$this->setHttpCode($http_code);
