@@ -1,9 +1,11 @@
 <?php
 namespace Core\Logger\Interfaces;
 
+use Core\Logger\Model\LogModel;
+
 interface LoggerInterface
 {
-    public function __construct(\Core\Logger\Model\LogModel $model);
+    public function __construct(LogModel $model);
 
 	/**
      * System is unusable.
