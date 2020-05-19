@@ -9,6 +9,7 @@ use Modules\Account\Models\VerificationModel;
 use Modules\Password\PasswordModel;
 use Modules\Password\PasswordValidator;
 use Modules\Password\KeyGenerator;
+use Core\Util\MailWrapper;
 
 class AccountGateway extends ErrorBase
 {
@@ -44,10 +45,10 @@ class AccountGateway extends ErrorBase
 		}
 
 		$entity = $this->model->createEntity();
-		$model = $entity->store();
+		$this->model = $entity->store();
 
 		$verification = new VerificationModel();
-		$verification->setPrimaryKey($model->getACCTID());
+		$verification->setPrimaryKey($this->model->getACCTID());
 		$verification->setVerificationCode(KeyGenerator::generateToken(24));
 
 		$verification_entity = $verification->createEntity();
@@ -56,10 +57,24 @@ class AccountGateway extends ErrorBase
 
 		$verification_entity->store();
 
+		$mail = new MailWrapper('noreply@kriekon.com', EMAILS['noreply@kriekon.com']);
+		$mail->addAddress($this->model->getEmail(), SITE_NAME);
+
+		$body = "Hello and welcome to the Social Network for Gamers!\n";
+		$body .= "In order to get your start talking to your fellow gamers we ask that you verify your email address :P.\n";
+		$body .= "Please click on our lovely link to verify your email.\n";
+		$body .= WWW_URL . '/user/verify/' . $verification->getVerificationCode();
+		$mail->send('Welcome to Kriekon!', $body);
+
 		return true;
 	}
 
 	public function login() : bool
+	{
+
+	}
+
+	public function verify(string $verification_code)
 	{
 
 	}
