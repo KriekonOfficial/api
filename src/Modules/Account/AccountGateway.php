@@ -61,9 +61,10 @@ class AccountGateway extends ErrorBase
 		$mail->addAddress($this->model->getEmail(), SITE_NAME);
 
 		$body = "Hello and welcome to the Social Network for Gamers!\n";
-		$body .= "In order to get your start talking to your fellow gamers we ask that you verify your email address :P.\n";
-		$body .= "Please click on our lovely link to verify your email.\n";
-		$body .= WWW_URL . '/user/verify/' . $verification->getVerificationCode();
+		$body .= "In order to get your start talking to your fellow gamers, we ask that you verify your email address :P.\n";
+		$body .= "Please click on our lovely link to verify your email.\n\n";
+		$body .= WWW_URL . '/user/verify/' . $verification->getVerificationCode() . "\n\n";
+		$body .= 'Thanks for joining Kriekon and we hope we see you more often! :)';
 		$mail->send('Welcome to Kriekon!', $body);
 
 		return true;
