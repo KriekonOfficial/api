@@ -5,6 +5,7 @@ namespace Core\Request;
 use Core\Router\Router;
 use Core\Request\Exception\RequestException;
 use \GuzzleHttp\Psr7\ServerRequest;
+use Core\Util\JSONWrapper;
 
 class Request
 {
@@ -29,7 +30,7 @@ class Request
 		}
 	}
 
-	public function getRequestInput() : array
+	public function getRequestInput() : RequestInput
 	{
 		$input = (string)self::getServer()->getBody();
 
@@ -38,13 +39,13 @@ class Request
 			return $_POST;
 		}*/
 
-		$decoded_json = json_decode($input, true);
+		$decoded_json = JSONWrapper::decode($input);
 
 		if (json_last_error() !== JSON_ERROR_NONE || $decoded_json === null)
 		{
 			throw new RequestException('There has been an error parsing the JSON. JSON Error: ' . json_last_error_msg(), 400);
 		}
 
-		return $decoded_json;
+		return new RequestInput($decoded_json);
 	}
 }
