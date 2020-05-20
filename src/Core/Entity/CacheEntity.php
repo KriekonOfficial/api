@@ -131,6 +131,7 @@ abstract class CacheEntity extends Entity implements EntityInterface
 		$model = $this->getModel();
 		$model->setInitializedFlag(false);
 		$model->reset();
+		$this->setModel($model);
 
 		$record = Cache::getArray($this->getKey($pk_value));
 
@@ -138,6 +139,15 @@ abstract class CacheEntity extends Entity implements EntityInterface
 		{
 			return $model;
 		}
+
+		$this->setModelProperties($record);
+
+		return $this->getModel();
+	}
+
+	protected function setModelProperties(array $record) : void
+	{
+		$model = $this->getModel();
 
 		$reflection = $this->metadata->getReflection();
 		foreach ($record as $column => $value)
@@ -154,8 +164,6 @@ abstract class CacheEntity extends Entity implements EntityInterface
 		}
 
 		$this->setModel($model);
-
-		return $model;
 	}
 
 	/**
