@@ -18,10 +18,10 @@ class Account extends Controller
 		$input = $request->getRequestInput();
 
 		$model = new AccountModel();
-		$model->setEmail(trim($input['email'] ?? ''));
-		$model->setDateOfBirth(trim($input['date_of_birth'] ?? ''));
+		$model->setEmail(trim($input->get('email') ?? ''));
+		$model->setDateOfBirth(trim($input->get('date_of_birth') ?? ''));
 
-		$password = new PasswordModel($input['password'] ?? '');
+		$password = new PasswordModel($input->get('password') ?? '');
 		$model->setPasswordHash($password->generatePasswordHash());
 
 		$gateway = new AccountGateway($model);
@@ -36,5 +36,13 @@ class Account extends Controller
 	public function login(Request $request)
 	{
 		return new ErrorResponse(403, 'Test1234');
+	}
+
+	public function verify(Request $request, string $verification_code)
+	{
+		$input - $request->getRequestInput();
+
+		$model = new VerificationModel();
+		$model->setVerificationCode($verification_code);
 	}
 }
