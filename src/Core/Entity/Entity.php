@@ -48,4 +48,12 @@ abstract class Entity extends ErrorBase
 		}
 		$this->model = $model;
 	}
+
+	protected function resetModel() : void
+	{
+		$model = $this->getModel();
+		$model->setInitializedFlag(false);
+		$model->reset();
+		$this->setModel($model);
+	}
 }

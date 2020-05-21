@@ -115,9 +115,7 @@ abstract class CacheEntity extends Entity implements EntityInterface
 			return false;
 		}
 
-		$model->reset();
-		$model->setInitializedFlag(false);
-		$this->setModel($model);
+		$this->resetModel();
 
 		return true;
 	}
@@ -128,16 +126,13 @@ abstract class CacheEntity extends Entity implements EntityInterface
 	*/
 	public function find($pk_value)
 	{
-		$model = $this->getModel();
-		$model->setInitializedFlag(false);
-		$model->reset();
-		$this->setModel($model);
+		$this->resetModel();
 
 		$record = Cache::getArray($this->getKey($pk_value));
 
 		if ($record === null)
 		{
-			return $model;
+			return $this->getModel();
 		}
 
 		$this->setModelProperties($record);
@@ -167,10 +162,9 @@ abstract class CacheEntity extends Entity implements EntityInterface
 	}
 
 	/**
-	* @throws EntityException if model object is not initialized
 	* @return string
 	*/
-	private function getKey(int $pk_value = 0) : string
+	protected function getKey(int $pk_value = 0) : string
 	{
 		$model = $this->getModel();
 

@@ -107,9 +107,7 @@ abstract class DBEntity extends Entity implements EntityInterface
 		$result = DBWrapper::delete($this->getCollectionTable(), [$this->getCollectionPrimaryKey() => $model->getPrimaryKey()], $this->getCollectionName());
 		if ($result === true)
 		{
-			$model->setInitializedFlag(false);
-			$model->reset();
-			$this->setModel($model);
+			$this->resetModel();
 			return true;
 		}
 		return false;
@@ -133,9 +131,8 @@ abstract class DBEntity extends Entity implements EntityInterface
 
 	protected function setModelProperties(DBResult $result) : void
 	{
+		$this->resetModel();
 		$model = $this->getModel();
-		$model->setInitializedFlag(false);
-		$model->reset();
 
 		$reflection = $this->metadata->getReflection();
 		foreach ($result->getRecord() as $column => $value)
