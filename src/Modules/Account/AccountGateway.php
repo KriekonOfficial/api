@@ -75,7 +75,7 @@ class AccountGateway extends ErrorBase
 
 	}
 
-	public function verify(string $verification_code)
+	public function verify(VerificationModel $model)
 	{
 
 	}

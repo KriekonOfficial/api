@@ -40,9 +40,19 @@ class Account extends Controller
 
 	public function verify(Request $request, string $verification_code)
 	{
-		$input - $request->getRequestInput();
+		$input = $request->getRequestInput();
 
-		$model = new VerificationModel();
-		$model->setVerificationCode($verification_code);
+		$verify = new VerificationModel();
+		$verify->setVerificationCode($verification_code);
+
+		$model = new AccountModel();
+		$account = new AccountGateway($model);
+
+		if (!$account->verify($verify))
+		{
+			return new ErrorResponse(404, 'Verification code does not exist, or it has expired. Please request another to use our lovely site :P');
+		}
+
+		return new SuccessResponse(200, [], 'Congratulations your account is now verified! Happy posting :)');
 	}
 }

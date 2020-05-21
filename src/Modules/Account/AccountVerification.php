@@ -3,6 +3,7 @@
 namespace Modules\Account;
 
 use Core\Entity\CacheEntity;
+use Modules\Account\Models\VerificationModel;
 
 class AccountVerification extends CacheEntity
 {
@@ -24,5 +25,10 @@ class AccountVerification extends CacheEntity
 	public function getEntityCacheTime() : int
 	{
 		return ONE_DAY * 2;
+	}
+
+	public function findVerificationCode(string $verification_code) : VerificationModel
+	{
+
 	}
 }
