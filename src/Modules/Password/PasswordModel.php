@@ -36,12 +36,12 @@ class PasswordModel extends Model
 		return password_verify($this->getPassword(), $verify_hash);
 	}
 
-	public function setPrimaryKey(int $value) : void
+	public function setPrimaryKey($value) : void
 	{
 		throw new BadMethodCallException('Password Model function is not implemented');
 	}
 
-	public function getPrimaryKey() : int
+	public function getPrimaryKey()
 	{
 		throw new BadMethodCallException('Password Model function is not implemented');
 	}

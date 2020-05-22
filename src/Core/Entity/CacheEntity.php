@@ -162,9 +162,10 @@ abstract class CacheEntity extends Entity implements EntityInterface
 	}
 
 	/**
+	* @param $pk_value = mixed|int
 	* @return string
 	*/
-	protected function getKey(int $pk_value = 0) : string
+	protected function getKey($pk_value = 0) : string
 	{
 		$model = $this->getModel();
 

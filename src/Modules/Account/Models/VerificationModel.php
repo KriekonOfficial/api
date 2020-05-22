@@ -19,6 +19,11 @@ class VerificationModel extends Model
 		return $this->ACCTID;
 	}
 
+	public function setACCTID(int $ACCTID) : void
+	{
+		$this->ACCTID = $ACCTID;
+	}
+
 	public function getVerificationCode() : string
 	{
 		return $this->verification_code;
@@ -43,14 +48,14 @@ class VerificationModel extends Model
 	// Abstract
 	////
 
-	public function getPrimaryKey() : int
+	public function getPrimaryKey()
 	{
-		return $this->getACCTID();
+		return $this->getVerificationCode();
 	}
 
-	public function setPrimaryKey(int $value) : void
+	public function setPrimaryKey($value) : void
 	{
-		$this->ACCTID = $value;
+		$this->setVerificationCode($value);
 	}
 
 	public function toArray() : array

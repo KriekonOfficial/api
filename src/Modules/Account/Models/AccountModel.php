@@ -40,6 +40,11 @@ class AccountModel extends Model
 		return $this->ACCTID;
 	}
 
+	public function setACCTID(int $ACCTID) : void
+	{
+		$this->ACCTID = $ACCTID;
+	}
+
 	public function getFirstName() : string
 	{
 		return $this->first_name;
@@ -137,7 +142,7 @@ class AccountModel extends Model
 
 	public function isLocked() : bool
 	{
-		return $this->getLocked() == self::LOCKED_ON;
+		return $this->getLocked() === self::LOCKED_ON;
 	}
 
 	public function getAge() : int
@@ -151,14 +156,14 @@ class AccountModel extends Model
 	// Abstract Functions
 	////
 
-	public function getPrimaryKey() : int
+	public function getPrimaryKey()
 	{
 		return $this->getACCTID();
 	}
 
-	public function setPrimaryKey(int $value) : void
+	public function setPrimaryKey($value) : void
 	{
-		$this->ACCTID = $value;
+		$this->setACCTID($value);
 	}
 
 	public function toArray() : array

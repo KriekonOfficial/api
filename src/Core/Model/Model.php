@@ -14,12 +14,12 @@ abstract class Model
 	* Sets the primary key for the model.
 	* This is a unique identifer
 	*/
-	abstract public function setPrimaryKey(int $value) : void;
+	abstract public function setPrimaryKey($value) : void;
 
 	/**
 	* Get the primary key for the model
 	*/
-	abstract public function getPrimaryKey() : int;
+	abstract public function getPrimaryKey();
 
 	/**
 	* Set Defaults at the beginning of the instance of the model.
