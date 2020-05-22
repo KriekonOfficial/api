@@ -48,8 +48,8 @@ class AccountGateway extends ErrorBase
 		$this->model = $entity->store();
 
 		$verification = new VerificationModel();
-		$verification->setPrimaryKey($this->model->getACCTID());
-		$verification->setVerificationCode(KeyGenerator::generateToken(24));
+		$verification->setACCTID($this->model->getACCTID());
+		$verification->setPrimaryKey(KeyGenerator::generateToken(24));
 
 		$verification_entity = $verification->createEntity();
 		$verification->setDateExpire(date(DATEFORMAT_STANDARD, time() + $verification_entity->getEntityCacheTime()));
@@ -75,8 +75,41 @@ class AccountGateway extends ErrorBase
 
 	}
 
-	public function verify(VerificationModel $model)
+	public function verify(string $verification_code) : bool
 	{
+		$verify = new VerificationModel();
+		$entity = $verify->createEntity();
 
+		$verify = $entity->find($verification_code);
+
+		if (!$verify->isInitialized())
+		{
+			$this->addError('Verification code does not exist, or it has expired. Please request another to use our lovely site :P');
+			return false;
+		}
+
+		$account = new AccountModel();
+		$account_entity = $account->createEntity();
+
+		$account = $account_entity->find($verify->getACCTID());
+		$account->setVerified(AccountModel::VERIFIED_ON);
+
+		if (!$account_entity->update(['verified']))
+		{
+			$this->addError('Unable to verify the account.');
+			return false;
+		}
+
+		$entity->delete();
+
+		$mail = new MailWrapper('noreply@kriekon.com', EMAILS['noreply@kriekon.com']);
+		$mail->addAddress($account->getEmail(), SITE_NAME);
+
+		$body = "Welcome my friend! Your account has now been verified, and you can now start your adventure on " . SITE_NAME . "!\n";
+		$body .= "Try to keep the shit posting to a minimum, but hey :P Freedom of Speech.\n\n";
+		$body .= "Enjoy!";
+		$mail->send('The Real Welcome to Kriekon :P', $body);
+
+		return true;
 	}
 }

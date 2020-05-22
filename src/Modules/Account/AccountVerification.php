@@ -19,16 +19,11 @@ class AccountVerification extends CacheEntity
 
 	public function getCollectionPrimaryKey() : string
 	{
-		return 'ACCTID';
+		return 'verification_code';
 	}
 
 	public function getEntityCacheTime() : int
 	{
 		return ONE_DAY * 2;
-	}
-
-	public function findVerificationCode(string $verification_code) : VerificationModel
-	{
-
 	}
 }
