@@ -12,7 +12,7 @@ class Dispatcher
 	/**
 	* @return ResponseInterface
 	*/
-	public function dispatch(Route $route) : ResponseInterface
+	public function dispatch(CurrentRoute $route) : ResponseInterface
 	{
 		$controller = $route->getReflectionClass()->newInstance();
 
@@ -31,14 +31,14 @@ class Dispatcher
 			}
 			catch (ArgumentCountError $e)
 			{
-				throw new DispatcherException('Invalid request, not enough parameters. Please look to see required parameters for this request');
+				throw new DispatcherException('Invalid request, not enough parameters. Please look to see required parameters for this request', 400);
 			}
 		}
 
 		return $response;
 	}
 
-	private function parseArguments(Route $route) : array
+	private function parseArguments(CurrentRoute $route) : array
 	{
 		$request_index = null;
 		$get_index = null;

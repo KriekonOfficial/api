@@ -6,7 +6,7 @@ use Core\Request\Request;
 use \ReflectionClass;
 use \ReflectionMethod;
 
-class Route
+class CurrentRoute
 {
 	private $reflection_class;
 	private $reflection_method;

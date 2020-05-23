@@ -51,17 +51,17 @@ class Router
 		echo $generate->output();
 	}
 
-	public function getRoute() : Route
+	public function getRoute() : CurrentRoute
 	{
 		return $this->route;
 	}
 
-	public function setRoute(Route $route) : void
+	public function setRoute(CurrentRoute $route) : void
 	{
 		$this->route = $route;
 	}
 
-	private function checkRoute(RouterURI $uri, AuthInterface $auth) : Route
+	private function checkRoute(RouterURI $uri, AuthInterface $auth) : CurrentRoute
 	{
 		if (!class_exists($uri->getControllerPath()))
 		{
@@ -72,7 +72,7 @@ class Router
 
 		if (!$reflection_class->isSubClassOf('\\Core\\Controller'))
 		{
-			throw new RouterException('Controller does not extend Controller', 501);
+			throw new RouterException($uri->getControllerPath() . ' does not extend Controller', 501);
 		}
 
 		if (!$reflection_class->hasMethod($uri->getMethod()))
@@ -95,7 +95,7 @@ class Router
 			throw new RouterException('Invalid method, please use the appropriate method for the request.', 405);
 		}
 
-		$route = new Route($uri, self::getRequest(), $reflection_class, $reflection_method);
+		$route = new CurrentRoute($uri, self::getRequest(), $reflection_class, $reflection_method);
 
 		if ($controller->isAuthRequired($uri->getMethod()) && !$auth->checkAuth($route))
 		{
