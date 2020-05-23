@@ -2,6 +2,10 @@
 
 namespace Core\Router;
 
+use Core\Request\Request;
+use \ReflectionClass;
+use \ReflectionMethod;
+
 class Route
 {
 	private $reflection_class;
@@ -11,9 +15,9 @@ class Route
 
 	public function __construct(
 		RouterURI $uri,
-		\Core\Request\Request $request,
-		\ReflectionClass $class,
-		\ReflectionMethod $method
+		Request $request,
+		ReflectionClass $class,
+		ReflectionMethod $method
 	)
 	{
 		$this->setRouterURI($uri);
@@ -32,32 +36,32 @@ class Route
 		return $this->uri;
 	}
 
-	public function setRequest(\Core\Request\Request $request) : void
+	public function setRequest(Request $request) : void
 	{
 		$this->request = $request;
 	}
 
-	public function getRequest() : \Core\Request\Request
+	public function getRequest() : Request
 	{
 		return $this->request;
 	}
 
-	public function setReflectionClass(\ReflectionClass $class) : void
+	public function setReflectionClass(ReflectionClass $class) : void
 	{
 		$this->reflection_class = $class;
 	}
 
-	public function getReflectionClass() : \ReflectionClass
+	public function getReflectionClass() : ReflectionClass
 	{
 		return $this->reflection_class;
 	}
 
-	public function setReflectionMethod(\ReflectionMethod $method) : void
+	public function setReflectionMethod(ReflectionMethod $method) : void
 	{
 		$this->reflection_method = $method;
 	}
 
-	public function getReflectionMethod() : \ReflectionMethod
+	public function getReflectionMethod() : ReflectionMethod
 	{
 		return $this->reflection_method;
 	}

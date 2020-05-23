@@ -2,18 +2,22 @@
 
 namespace Core\Router;
 
+use Core\Response\Interfaces\ResponseInterface;
 use Core\Router\Exception\DispatcherException;
+use \ArgumentCountError;
+use Core\Response\ErrorResponse;
 
 class Dispatcher
 {
 	/**
 	* @return ResponseInterface
 	*/
-	public function dispatch(Route $route) : \Core\Response\Interfaces\ResponseInterface
+	public function dispatch(Route $route) : ResponseInterface
 	{
 		$controller = $route->getReflectionClass()->newInstance();
 
 		$number_of_params = $route->getReflectionMethod()->getNumberOfParameters();
+
 		if ($number_of_params < 1)
 		{
 			$response = $route->getReflectionMethod()->invoke($controller);
@@ -25,7 +29,7 @@ class Dispatcher
 			{
 				$response = $route->getReflectionMethod()->invokeArgs($controller, $arguments);
 			}
-			catch (\ArgumentCountError $e)
+			catch (ArgumentCountError $e)
 			{
 				throw new DispatcherException('Invalid request, not enough parameters. Please look to see required parameters for this request');
 			}

@@ -4,6 +4,9 @@ namespace Core\Router;
 
 use Core\Request\Request;
 use Core\Router\Exception\RouterException;
+use Core\Router\Interfaces\AuthInterface;
+use Core\Response\GenerateOutput;
+use \ReflectionClass;
 
 class Router
 {
@@ -37,7 +40,7 @@ class Router
 		return self::$request;
 	}
 
-	public function routeAgent(\Core\Router\Interfaces\AuthInterface $auth) : void
+	public function routeAgent(AuthInterface $auth) : void
 	{
 		$route = $this->getRoute();
 		if (!$auth->checkAuth($route))
@@ -48,7 +51,7 @@ class Router
 		$dispatch = new Dispatcher();
 		$response = $dispatch->dispatch($route);
 
-		$generate = new \Core\Response\GenerateOutput($response);
+		$generate = new GenerateOutput($response);
 		echo $generate->output();
 	}
 
@@ -69,7 +72,7 @@ class Router
 			throw new RouterException('Endpoint does not exist');
 		}
 
-		$reflection_class = new \ReflectionClass($uri->getControllerPath());
+		$reflection_class = new ReflectionClass($uri->getControllerPath());
 
 		if (!$reflection_class->isSubClassOf('\\Core\\Controller'))
 		{

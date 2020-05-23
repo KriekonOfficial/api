@@ -2,6 +2,7 @@
 
 use \Core\Router\RouterLib;
 use \Core\Router\Router;
+use \Core\Router\RouterURI;
 use \Modules\Auth\Authentication;
 use \Core\Response\ErrorResponse;
 use \Core\Response\GenerateOutput;
@@ -13,7 +14,7 @@ class Application
 	{
 		self::autoload();
 
-		$uri = RouterLib::parseURI(new Core\Router\RouterURI(array('v1')));
+		$uri = RouterLib::parseURI(new RouterURI(array('v1')));
 		$router = new Router($uri);
 		$router->routeAgent(new Authentication());
 	}
