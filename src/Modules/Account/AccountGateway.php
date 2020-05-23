@@ -64,8 +64,8 @@ class AccountGateway extends ErrorBase
 		$body .= "In order to get your start talking to your fellow gamers, we ask that you verify your email address :P.\n";
 		$body .= "Please click on our lovely link to verify your email.\n\n";
 		$body .= WWW_URL . '/user/verify/' . $verification->getVerificationCode() . "\n\n";
-		$body .= 'Thanks for joining Kriekon and we hope we see you more often! :)';
-		$mail->send('Welcome to Kriekon!', $body);
+		$body .= 'Thanks for joining ' . SITE_NAME . ' and we hope we see you more often! :)';
+		$mail->send('Welcome to ' . SITE_NAME . '!', $body);
 
 		return true;
 	}
@@ -94,6 +94,12 @@ class AccountGateway extends ErrorBase
 		$account = $account_entity->find($verify->getACCTID());
 		$account->setVerified(AccountModel::VERIFIED_ON);
 
+		if (!$account->isInitialized())
+		{
+			$this->addError('Account no longer exists.');
+			return false;
+		}
+
 		if (!$account_entity->update(['verified']))
 		{
 			$this->addError('Unable to verify the account.');
@@ -108,7 +114,7 @@ class AccountGateway extends ErrorBase
 		$body = "Welcome my friend! Your account has now been verified, and you can now start your adventure on " . SITE_NAME . "!\n";
 		$body .= "Try to keep the shit posting to a minimum, but hey :P Freedom of Speech.\n\n";
 		$body .= "Enjoy!";
-		$mail->send('The Real Welcome to Kriekon :P', $body);
+		$mail->send('The Real Welcome to ' . SITE_NAME . ' :P', $body);
 
 		return true;
 	}
