@@ -13,6 +13,15 @@ use Modules\Account\Models\AccountModel;
 
 class Account extends Controller
 {
+	public function __construct()
+	{
+		foreach (['register', 'login'] as $method)
+		{
+			$this->addRequestMetadata($method, 'post', false);
+		}
+		$this->addRequestMetadata('verify', 'get', false);
+	}
+
 	public function register(Request $request)
 	{
 		$input = $request->getRequestInput();
