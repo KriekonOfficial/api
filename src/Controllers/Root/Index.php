@@ -2,10 +2,13 @@
 
 namespace Controllers\Root;
 
-class Index extends \Core\Controller
+use Core\Controller;
+use Core\Response\ErrorResponse;
+
+class Index extends Controller
 {
 	public function index()
 	{
-		echo "index";
+		return new ErrorResponse(400, 'Please select an endpoint to query.');
 	}
 }
