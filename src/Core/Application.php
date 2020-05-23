@@ -12,8 +12,6 @@ class Application
 {
 	public static function run() : void
 	{
-		self::autoload();
-
 		$uri = RouterLib::parseURI(new RouterURI(array('v1')));
 		$router = new Router($uri, new Authentication());
 		$router->routeAgent();
@@ -23,10 +21,18 @@ class Application
 	{
 		set_exception_handler(function ($exception)
 		{
-			$error = new ErrorResponse(500, 'An error has occurred please try again later');
-			if ($exception instanceof APIError && $exception->getHttpCode() < 500 && trim($exception->getMessage()) != '')
+			$default_message = 'An error has occurred please try again later.';
+			$error = new ErrorResponse(500, $default_message);
+			if ($exception instanceof APIError)
 			{
-				$error = new ErrorResponse($exception->getHttpCode(), $exception->getMessage());
+				if ($exception->getHttpCode() >= 500)
+				{
+					$error = new ErrorResponse($exception->getHttpCode(), $default_message);
+				}
+				else if ($exception->getHttpCode() < 500 && trim($exception->getMessage()) != '')
+				{
+					$error = new ErrorResponse($exception->getHttpCode(), $exception->getMessage());
+				}
 			}
 
 			if ($error->getHttpCode() >= 500 && isDevEnv())
