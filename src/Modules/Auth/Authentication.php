@@ -10,6 +10,7 @@ class Authentication extends ErrorBase implements AuthInterface
 {
 	public function checkAuth(Route $route) : bool
 	{
-		return true;
+		$this->addError('Authentication required to make this request.');
+		return false;
 	}
 }

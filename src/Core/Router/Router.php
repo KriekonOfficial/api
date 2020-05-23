@@ -15,10 +15,10 @@ class Router
 
 	private $route;
 
-	public function __construct(RouterURI $uri)
+	public function __construct(RouterURI $uri, AuthInterface $auth)
 	{
 		self::$uri = $uri;
-		$this->setRoute($this->checkRoute($uri));
+		$this->setRoute($this->checkRoute($uri, $auth));
 	}
 
 	public static function getRouterURI() : RouterURI
@@ -40,13 +40,9 @@ class Router
 		return self::$request;
 	}
 
-	public function routeAgent(AuthInterface $auth) : void
+	public function routeAgent() : void
 	{
 		$route = $this->getRoute();
-		if (!$auth->checkAuth($route))
-		{
-			throw new RouterException($auth->getLastError());
-		}
 
 		$dispatch = new Dispatcher();
 		$response = $dispatch->dispatch($route);
@@ -65,7 +61,7 @@ class Router
 		$this->route = $route;
 	}
 
-	private function checkRoute(RouterURI $uri) : Route
+	private function checkRoute(RouterURI $uri, AuthInterface $auth) : Route
 	{
 		if (!class_exists($uri->getControllerPath()))
 		{
@@ -91,7 +87,20 @@ class Router
 			throw new RouterException('Endpoint does not exist');
 		}
 
+		$server = self::getRequest()::getServer();
+
+		$controller = $reflection_class->newInstance();
+		if (!$controller->isHttpMethodAccepted($uri->getMethod(), $server->getMethod()))
+		{
+			throw new RouterException('Invalid method, please use the appropriate method for the request.', 405);
+		}
+
 		$route = new Route($uri, self::getRequest(), $reflection_class, $reflection_method);
+
+		if ($controller->isAuthRequired($uri->getMethod()) && !$auth->checkAuth($route))
+		{
+			throw new RouterException($auth->getLastError(), 401);
+		}
 		return $route;
 	}
 }

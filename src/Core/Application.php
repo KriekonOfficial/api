@@ -15,8 +15,8 @@ class Application
 		self::autoload();
 
 		$uri = RouterLib::parseURI(new RouterURI(array('v1')));
-		$router = new Router($uri);
-		$router->routeAgent(new Authentication());
+		$router = new Router($uri, new Authentication());
+		$router->routeAgent();
 	}
 
 	public static function exception_handler() : void
@@ -24,7 +24,7 @@ class Application
 		set_exception_handler(function ($exception)
 		{
 			$error = new ErrorResponse(500, 'An error has occurred please try again later');
-			if ($exception instanceof APIError && $exception->getHttpCode() < 500)
+			if ($exception instanceof APIError && $exception->getHttpCode() < 500 && trim($exception->getMessage()) != '')
 			{
 				$error = new ErrorResponse($exception->getHttpCode(), $exception->getMessage());
 			}
