@@ -2,7 +2,7 @@
 
 namespace Core;
 
-class Controller extends ErrorBase
+class Controller
 {
 	protected const DEFAULT_METADATA = ['http_method' => '*', 'required_auth' => true];
 	protected array $request_metadata = ['*' => self::DEFAULT_METADATA];
