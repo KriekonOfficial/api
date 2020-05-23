@@ -34,7 +34,7 @@ class RouterURI
 
 	public function setPropsVersionURL(array $url) : void
 	{
-		if (isset($url[1]))
+		if (isset($url[1]) && $this->getDirectory() == '')
 		{
 			$this->setDirectory(camelCase($url[1]));
 		}
@@ -47,7 +47,7 @@ class RouterURI
 	{
 		$this->setVersion('Root');
 
-		if (isset($url[0]))
+		if (isset($url[0]) && $this->getDirectory() == '')
 		{
 			$this->setDirectory(camelCase($url[0]));
 		}
@@ -110,11 +110,6 @@ class RouterURI
 	public function getControllerPath() : string
 	{
 		return $this->controller_path;
-	}
-
-	public function getMethodPath() : string
-	{
-		return $this->method_path;
 	}
 
 	public function setVersion(string $version) : void
