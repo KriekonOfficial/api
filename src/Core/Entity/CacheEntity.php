@@ -126,9 +126,9 @@ abstract class CacheEntity extends Entity implements EntityInterface
 	*/
 	public function find($pk_value)
 	{
-		$this->resetModel();
-
 		$record = Cache::getArray($this->getKey($pk_value));
+
+		$this->resetModel();
 
 		if ($record === null)
 		{
@@ -173,7 +173,7 @@ abstract class CacheEntity extends Entity implements EntityInterface
 		$key .= $this->getCollectionTable() . ':';
 		$key .= $this->getCollectionPrimaryKey() . ':';
 		$pk_key = $pk_value;
-		if ($pk_value == 0)
+		if (empty($pk_key))
 		{
 			$pk_key = $model->getPrimaryKey();
 		}

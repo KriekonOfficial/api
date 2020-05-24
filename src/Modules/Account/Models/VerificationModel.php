@@ -74,7 +74,7 @@ class VerificationModel extends Model
 
 	public function reset() : void
 	{
-		$this->setPrimaryKey($this->_ACCTID);
+		$this->setACCTID($this->_ACCTID);
 		$this->setVerificationCode($this->_verification_code);
 		$this->setDateExpire($this->_date_expire);
 	}
