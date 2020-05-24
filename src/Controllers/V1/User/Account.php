@@ -21,6 +21,11 @@ class Account extends Controller
 		}
 	}
 
+	public function info(Request $request)
+	{
+		return new ErrorResponse(501, 'Not implemented');
+	}
+
 	public function register(Request $request)
 	{
 		$input = $request->getRequestInput();

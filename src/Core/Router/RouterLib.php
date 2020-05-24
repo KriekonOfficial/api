@@ -54,21 +54,23 @@ class RouterLib
 		return $uri;
 	}
 
-    public static function initRoutes() : Dispatcher
-    {
-        $dispatcher = \FastRoute\simpleDispatcher(function(RouteCollector $route)
-        {
-            $route->addGroup('/v1', function(RouteCollector $route)
-            {
-            	$route->addGroup('/user/account', function(RouteCollector $route)
-            	{
-            		$controller = \Controllers\V1\User\Account::class;
-            		$route->addRoute('POST', '/register/{name}',  $controller . '::register');
-                	$route->addRoute('GET', '/verify/{code}', $controller . '::verify');
-            	});
-            });
-        });
-
-        return $dispatcher;
-    }
+	public static function initRoutes() : Dispatcher
+	{
+		$dispatcher = \FastRoute\simpleDispatcher(function(RouteCollector $route)
+		{
+			$route->addGroup('/v1', function(RouteCollector $route)
+			{
+				$route->addRoute('GET', '/user/account', \Controllers\V1\User\Account::class . '::info');
+				$route->addGroup('/user/account', function(RouteCollector $route)
+				{
+					$controller = \Controllers\V1\User\Account::class;
+					$route->addRoute('GET', '/', $controller . '::info');
+					$route->addRoute('POST', '/register/{name}',  $controller . '::register');
+					$route->addRoute('GET', '/verify/{code}', $controller . '::verify');
+					$route->addRoute('POST', '/login', $controller . '::login');
+				});
+			});
+		});
+		return $dispatcher;
+	}
 }
