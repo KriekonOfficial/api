@@ -2,9 +2,11 @@
 
 namespace Core\Router\Interfaces;
 
+use Core\Router\CurrentRoute;
+
 interface AuthInterface
 {
-	public function checkAuth(\Core\Router\Route $route) : bool;
+	public function checkAuth(CurrentRoute $route) : bool;
 
 	public function getLastError() : string;
 }
