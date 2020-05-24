@@ -3,51 +3,72 @@
 namespace Core\Router;
 
 use \GuzzleHttp\Psr7\ServerRequest;
+use \FastRoute\RouteCollector;
+use \FastRoute\Dispatcher;
+use Core\Router\Exception\RouterException;
 
 class RouterLib
 {
-    /**
-    * Allows for some to specify the first part of a url before we attempt to set an allowed version.
-    * If Version is empty we will fall back to see if it is allowed version
-    * If not an allowed version we fall back again to the Root Folder.
-    */
-    public static function parseURI(RouterURI $uri) : RouterURI
-    {
-    	$server = Router::getRequest()::getServer();
-        $url = self::formNewURL($server);
-
-        if ($uri->getVersion() == '' && in_array(($url[0] ?? ''), $uri->getAllowedVersions()))
-        {
-            $uri->setVersion(ucwords($url[0]));
-        }
-
-        if ($uri->getVersion() != '')
-        {
-            $uri->setPropsVersionURL($url);
-        }
-        else
-        {
-            $uri->setPropsRootURL($url);
-        }
-
-        return $uri;
-    }
-
-	private static function formNewURL(ServerRequest $server) : array
+	public static function parseURI(Dispatcher $dispatcher) : RouterURI
 	{
-		$uri = $server->getUri();
+		$server = Router::getRequest()::getServer();
 
-		$url = explode('/', strtolower(rtrim(ltrim($uri->getPath(), '/'), '/')));
+		$routeInfo = $dispatcher->dispatch($server->getMethod(), strtolower(rtrim($server->getUri()->getPath(), '/')));
 
-		$new_url = [];
-
-		if ($uri->getQuery() != '')
+		$uri = new RouterURI();
+		switch ($routeInfo[0])
 		{
-			$new_url['additional_params'] = $server->getQueryParams();
+			case Dispatcher::NOT_FOUND:
+			throw new RouterException('Endpoint does not exist');
+
+			case Dispatcher::METHOD_NOT_ALLOWED:
+			throw new RouterException('Invalid method, please use the appropriate method for the request.', 405);
+
+			case Dispatcher::FOUND:
+				/**
+				* Check to see if Route has a specific function/method we wanna use.
+				*/
+				$route = explode('::', $routeInfo[1]);
+
+				$uri->setControllerPath($route[0]);
+
+				if (isset($route[1]))
+				{
+					$uri->setMethod($route[1]);
+				}
+
+				$arguments = [];
+				foreach ($routeInfo[2] as $argument)
+				{
+					$arguments[] = $argument;
+				}
+
+				$uri->setParams($arguments);
+				if ($server->getUri()->getQuery() != '')
+				{
+					$uri->setAdditionalParams($server->getQueryParams());
+				}
+			break;
 		}
 
-		$new_url += $url;
-
-		return $new_url;
+		return $uri;
 	}
+
+    public static function initRoutes() : Dispatcher
+    {
+        $dispatcher = \FastRoute\simpleDispatcher(function(RouteCollector $route)
+        {
+            $route->addGroup('/v1', function(RouteCollector $route)
+            {
+            	$route->addGroup('/user/account', function(RouteCollector $route)
+            	{
+            		$controller = \Controllers\V1\User\Account::class;
+            		$route->addRoute('POST', '/register/{name}',  $controller . '::register');
+                	$route->addRoute('GET', '/verify/{code}', $controller . '::verify');
+            	});
+            });
+        });
+
+        return $dispatcher;
+    }
 }

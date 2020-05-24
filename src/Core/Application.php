@@ -12,7 +12,8 @@ class Application
 {
 	public static function run() : void
 	{
-		$uri = RouterLib::parseURI(new RouterURI(array('v1')));
+		$collector = RouterLib::initRoutes();
+		$uri = RouterLib::parseURI($collector);
 		$router = new Router($uri, new Authentication());
 		$router->routeAgent();
 	}
