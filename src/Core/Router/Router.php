@@ -87,13 +87,7 @@ class Router
 			throw new RouterException('Endpoint does not exist');
 		}
 
-		$server = self::getRequest()::getServer();
-
 		$controller = $reflection_class->newInstance();
-		if (!$controller->isHttpMethodAccepted($uri->getMethod(), $server->getMethod()))
-		{
-			throw new RouterException('Invalid method, please use the appropriate method for the request.', 405);
-		}
 
 		$route = new CurrentRoute($uri, self::getRequest(), $reflection_class, $reflection_method);
 

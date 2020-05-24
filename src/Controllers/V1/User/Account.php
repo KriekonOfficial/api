@@ -15,11 +15,10 @@ class Account extends Controller
 {
 	public function __construct()
 	{
-		foreach (['register', 'login'] as $method)
+		foreach (['register', 'login', 'verify'] as $method)
 		{
-			$this->addRequestMetadata($method, 'post', false);
+			$this->addRequestMetadata($method, false);
 		}
-		$this->addRequestMetadata('verify', 'get', false);
 	}
 
 	public function register(Request $request)
