@@ -65,7 +65,7 @@ class Router
 	{
 		if (!class_exists($uri->getControllerPath()))
 		{
-			throw new RouterException('Endpoint does not exist');
+			throw new RouterException('Endpoint does not exist', 410);
 		}
 
 		$reflection_class = new ReflectionClass($uri->getControllerPath());
@@ -84,7 +84,7 @@ class Router
 
 		if (!$reflection_method->isPublic())
 		{
-			throw new RouterException('Endpoint does not exist');
+			throw new RouterException('Endpoint does not exist', 423);
 		}
 
 		$controller = $reflection_class->newInstance();
