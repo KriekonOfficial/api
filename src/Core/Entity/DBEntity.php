@@ -119,7 +119,6 @@ abstract class DBEntity extends Entity implements EntityInterface
 	*/
 	public function find($pk_value)
 	{
-		$count = 0;
 		$results = DBWrapper::PResult('
 			SELECT * FROM ' . $this->getCollectionTable() . '
 			WHERE ' . $this->getCollectionPrimaryKey() . ' = ?', [$pk_value], $this->getCollectionName());
