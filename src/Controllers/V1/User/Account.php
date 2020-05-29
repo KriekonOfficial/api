@@ -48,7 +48,19 @@ class Account extends Controller
 
 	public function login(Request $request)
 	{
-		return new ErrorResponse(403, 'Test1234');
+		$input = $request->getRequestInput();
+
+		$model = new AccountModel();
+		$model->setEmail(trim($input->get('email') ?? ''));
+
+		$password = new PasswordModel($input->get('password') ?? '');
+
+		$gateway = new AccountGateway($model);
+		if (!$gateway->login($password))
+		{
+			return new ErrorResponse(405, $gateway->getErrors());
+		}
+		return new SuccessResponse(200, [], 'Login');
 	}
 
 	public function verify(Request $request, string $verification_code)

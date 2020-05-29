@@ -4,13 +4,15 @@ namespace Modules\Auth\Models;
 
 use Core\Model\Model;
 
-class OAuthModel extends Model
+class OAuthBearerModel extends Model
 {
 	private string $_access_token = '';
 	private int $_ACCTID = 0;
 	private string $_date_expiration = '0000-00-00 00:00:00';
 	private string $_authorized_ip = '127.0.0.1';
 	private int $_scope = ScopeModel::GLOBAL_SCOPE;
+
+	private string $bearer_token ='';
 
 	protected string $access_token;
 	protected int $ACCTID;
@@ -35,7 +37,7 @@ class OAuthModel extends Model
 
 	public function setACCTID(int $ACCTID) : void
 	{
-		$this->ACCTID = $ACCTID
+		$this->ACCTID = $ACCTID;
 	}
 
 	public function getDateExpiration() : string
@@ -68,6 +70,29 @@ class OAuthModel extends Model
 		$this->scope = $scope;
 	}
 
+	public function setBearerToken() : void
+	{
+		//Encryption
+		// Part 1 - Encryption Method base64_encoded
+		$bearer_token = '';
+
+		// Part 2 - Encrypted
+		// -Scope
+		// -Date Expiration
+		// -ACCTID
+		$bearer_token .= '';
+
+		// Part 3 - Access Token
+		$bearer_token .= '.' . $this->getAccessToken();
+
+		$this->bearer_token = $bearer_token;
+	}
+
+	public function getBearerToken() : string
+	{
+		return $this->bearer_token;
+	}
+
 	////
 	// Abstract Functions
 	////
@@ -77,7 +102,7 @@ class OAuthModel extends Model
 		return $this->getAccessToken();
 	}
 
-	public function setPrimaryKey(string $access_token) : void
+	public function setPrimaryKey($access_token) : void
 	{
 		$this->setAccessToken($access_token);
 	}

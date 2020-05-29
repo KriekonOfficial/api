@@ -10,6 +10,7 @@ use Modules\Password\PasswordModel;
 use Modules\Password\PasswordValidator;
 use Modules\Password\KeyGenerator;
 use Core\Util\MailWrapper;
+use Modules\Auth\Models\OAuthBearerModel;
 
 class AccountGateway extends ErrorBase
 {
@@ -70,9 +71,30 @@ class AccountGateway extends ErrorBase
 		return true;
 	}
 
-	public function login() : bool
+	public function login(PasswordModel $password, string $ip_address, ?OAuthBearerModel &$bearer = null) : bool
 	{
+		$entity = $this->model->createEntity();
+		$this->model = $entity->findEmail($this->model->getEmail());
 
+		if (!$this->model->isInitialized())
+		{
+			$this->addError('Email does not exist.');
+			return false;
+		}
+
+		if (!$password->verifyPasswordHash($this->model->getPasswordHash()))
+		{
+			$this->addError('Invalid Password, please try again.');
+			return false;
+		}
+
+		$bearer = new OAuthBearerModel();
+		$bearer->setAccessToken(KeyGenerator::generateToken(24));
+		$bearer->setACCTID($this->model->getACCTID());
+		$bearer->setAuthorizedIP($ip_address);
+		$bearer->setDateExpiration(date(DATEFORMAT_STANDARD, strtotime('+1 hour')));
+
+		return true;
 	}
 
 	public function verify(string $verification_code) : bool
