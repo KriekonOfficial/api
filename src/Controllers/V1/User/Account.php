@@ -70,7 +70,7 @@ class Account extends Controller
 		$model = new AccountModel();
 		$account = new AccountGateway($model);
 
-		if (!$account->verify($verification_code))
+		if (!$account->verifyEmail($verification_code))
 		{
 			return new ErrorResponse(404, $account->getErrors());
 		}

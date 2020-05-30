@@ -97,7 +97,7 @@ class AccountGateway extends ErrorBase
 		return true;
 	}
 
-	public function verify(string $verification_code) : bool
+	public function verifyEmail(string $verification_code) : bool
 	{
 		$verify = new VerificationModel();
 		$entity = $verify->createEntity();
