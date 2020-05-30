@@ -30,6 +30,11 @@ class Request
 		}
 	}
 
+	public static function getRequestIP() : string
+	{
+		return self::getServer()->getServerParams()['REMOTE_ADDR'];
+	}
+
 	public function getRequestInput() : RequestInput
 	{
 		$input = (string)self::getServer()->getBody();
