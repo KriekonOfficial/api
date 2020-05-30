@@ -23,6 +23,6 @@ class OAuthBearer extends CacheEntity
 
 	public function getEntityCacheTime() : int
 	{
-		return ONE_HOUR;
+		return ONE_HOUR + (ONE_MIN * 10);
 	}
 }
