@@ -93,6 +93,10 @@ class AccountGateway extends ErrorBase
 		$bearer->setACCTID($this->model->getACCTID());
 		$bearer->setAuthorizedIP($ip_address);
 		$bearer->setDateExpiration(date(DATEFORMAT_STANDARD, strtotime('+1 hour')));
+		$bearer->generateBearerToken();
+
+		$bearer_entity = $bearer->createEntity();
+		$bearer_entity->store();
 
 		return true;
 	}

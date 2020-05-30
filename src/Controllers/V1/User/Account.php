@@ -56,11 +56,15 @@ class Account extends Controller
 		$password = new PasswordModel($input->get('password') ?? '');
 
 		$gateway = new AccountGateway($model);
-		if (!$gateway->login($password))
+		if (!$gateway->login($password, Request::getRequestIP(), $oauth))
 		{
 			return new ErrorResponse(405, $gateway->getErrors());
 		}
-		return new SuccessResponse(200, [], 'Login');
+
+		return new SuccessResponse(200, [
+			'bearer_token' => $oauth->getBearerToken(),
+			'date_expiration' => $oauth->getDateExpiration()
+		], 'Login Successful');
 	}
 
 	public function verify(Request $request, string $verification_code)
