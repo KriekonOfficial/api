@@ -7,9 +7,12 @@ use Core\Router\Interfaces\AuthInterface;
 use Core\Router\CurrentRoute;
 use Modules\Auth\OAuthBearer;
 use Modules\Auth\Models\OAuthBearerModel;
+use Modules\Account\Account;
 
 class Authentication extends ErrorBase implements AuthInterface
 {
+	private $account = null;
+
 	public function checkAuth(CurrentRoute $route) : bool
 	{
 		$request = $route->getRequest();
@@ -50,7 +53,29 @@ class Authentication extends ErrorBase implements AuthInterface
 			return false;
 		}
 
+		$account_entity = new Account();
+		$this->account = $account_entity->find($oauth->getACCTID());
+
+		if (!$this->account->isInitialized())
+		{
+			$this->addError('Account no longer exists.');
+			return false;
+		}
+
+		$request->setAuth($this);
+		$route->setRequest($request);
+
 		return true;
+	}
+
+	public function isAuthorized() : bool
+	{
+		return $this->account !== null;
+	}
+
+	public function getAccount()
+	{
+		return $this->account;
 	}
 
 	private function parseAuthorizationHeader(string $authorization, ?array &$contents) : bool
@@ -120,7 +145,7 @@ class Authentication extends ErrorBase implements AuthInterface
 		{
 			$entity = new OAuthBearer($model);
 			$entity->delete();
-			$this->addError('Token has expired please login again.');
+			$this->addError('Session has expired.');
 			return false;
 		}
 

@@ -6,10 +6,13 @@ use Core\Router\Router;
 use Core\Request\Exception\RequestException;
 use \GuzzleHttp\Psr7\ServerRequest;
 use Core\Util\JSONWrapper;
+use Core\Router\Interfaces\AuthInterface;
 
 class Request
 {
 	private static $server = null;
+
+	private $auth = null;
 
 	public function __construct()
 	{
@@ -33,6 +36,16 @@ class Request
 	public static function getRequestIP() : string
 	{
 		return self::getServer()->getServerParams()['REMOTE_ADDR'];
+	}
+
+	public function getAuth() : ?AuthInterface
+	{
+		return $this->auth;
+	}
+
+	public function setAuth(AuthInterface $auth) : void
+	{
+		$this->auth = $auth;
 	}
 
 	public function getRequestInput() : RequestInput

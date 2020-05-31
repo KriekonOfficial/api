@@ -16,18 +16,6 @@ CREATE TABLE account
     locked				TINYINT(1)		DEFAULT 0
 );
 
-CREATE TABLE account_auth
-(
-	ACCTID					INT				UNIQUE KEY 		NOT NULL,
-    last_logged_in			DATETIME		NULL,
-    ip_address				VARCHAR(255)	NULL,
-    logged_in				INT				DEFAULT 0,
-    
-    CONSTRAINT account_account_auth_fk
-		FOREIGN KEY (ACCTID)
-        REFERENCES account(ACCTID)
-);
-
 CREATE TABLE account_api
 (
 	APIKEYID	INT				NOT NULL	PRIMARY KEY		AUTO_INCREMENT,
@@ -54,22 +42,6 @@ CREATE TABLE account_api_settings
 #(
 	
 #);
-
-CREATE TABLE oauth_server
-(
-	ACCTID						INT				NOT NULL,
-    access_secret				BLOB			NULL,
-    access_iv					BLOB			NULL,
-    access_tag					BLOB			NULL,
-    access_token				BLOB			NULL,
-    refresh_token				BLOB			NULL,
-    access_token_expiration		DATETIME		NULL,
-    refresh_token_expiration	DATETIME		NULL,
-    
-    CONSTRAINT account_oauth_fk
-		FOREIGN KEY (ACCTID)
-        REFERENCES account(ACCTID)
-);
 
 CREATE TABLE account_status
 (

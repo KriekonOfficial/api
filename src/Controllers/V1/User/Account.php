@@ -23,7 +23,9 @@ class Account extends Controller
 
 	public function info(Request $request)
 	{
-		return new ErrorResponse(501, 'Not implemented');
+		$account = $request->getAuth()->getAccount();
+
+		return new SuccessResponse(200, $account->toPublicArray(), 'Info');
 	}
 
 	public function register(Request $request)
