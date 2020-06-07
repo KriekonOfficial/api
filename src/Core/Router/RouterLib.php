@@ -27,6 +27,7 @@ class RouterLib
 			case Dispatcher::FOUND:
 				/**
 				* Check to see if Route has a specific function/method we wanna use.
+				* If none specified will default to "index"
 				*/
 				$route = explode('::', $routeInfo[1]);
 
