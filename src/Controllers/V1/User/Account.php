@@ -25,7 +25,7 @@ class Account extends Controller
 	{
 		$account = $request->getAuth()->getAccount();
 
-		return new SuccessResponse(200, $account->toPublicArray(), 'Info');
+		return new SuccessResponse(200, $account->toPublicArray(), 'Account Information');
 	}
 
 	public function register(Request $request)
