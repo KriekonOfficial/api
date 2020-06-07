@@ -3,6 +3,7 @@
 use \Core\Router\RouterLib;
 use \Core\Router\Router;
 use \Core\Router\RouterURI;
+use \Core\Router\Routes;
 use \Modules\Auth\Authentication;
 use \Core\Response\ErrorResponse;
 use \Core\Response\GenerateOutput;
@@ -12,7 +13,7 @@ class Application
 {
 	public static function run() : void
 	{
-		$uri = RouterLib::parseURI(RouterLib::initRoutes());
+		$uri = RouterLib::parseURI(RouterLib::initRoutes(new Routes()));
 		$router = new Router($uri, new Authentication());
 		$router->routeAgent();
 	}

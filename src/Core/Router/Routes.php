@@ -2,8 +2,10 @@
 
 namespace Core\Router;
 
+use Core\Router\Interfaces\RouteInterface;
 use \FastRoute\RouteCollector as Collector;
-class Routes
+
+class Routes implements RouteInterface
 {
 	public function __invoke(Collector $route)
 	{

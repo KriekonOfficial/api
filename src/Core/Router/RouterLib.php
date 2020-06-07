@@ -5,6 +5,7 @@ namespace Core\Router;
 use \GuzzleHttp\Psr7\ServerRequest;
 use \FastRoute\Dispatcher;
 use Core\Router\Exception\RouterException;
+use Core\Router\Interfaces\RouteInterface;
 
 class RouterLib
 {
@@ -53,8 +54,8 @@ class RouterLib
 		return $uri;
 	}
 
-	public static function initRoutes() : Dispatcher
+	public static function initRoutes(RouteInterface $routes) : Dispatcher
 	{
-		return \FastRoute\simpleDispatcher(new Routes());
+		return \FastRoute\simpleDispatcher($routes);
 	}
 }
