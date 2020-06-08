@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Router;
+namespace Classes;
 
 use Core\Router\Interfaces\RouteInterface;
 use \FastRoute\RouteCollector as Collector;

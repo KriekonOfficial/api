@@ -21,6 +21,17 @@ class Router
 		$this->setRoute($this->checkRoute($uri, $auth));
 	}
 
+	public function routeAgent() : void
+	{
+		$route = $this->getRoute();
+
+		$dispatch = new Dispatcher();
+		$response = $dispatch->dispatch($route);
+
+		$generate = new GenerateOutput($response);
+		echo $generate->output();
+	}
+
 	public static function getRouterURI() : RouterURI
 	{
 		if (self::$uri === null)
@@ -38,17 +49,6 @@ class Router
 			self::$request = new Request();
 		}
 		return self::$request;
-	}
-
-	public function routeAgent() : void
-	{
-		$route = $this->getRoute();
-
-		$dispatch = new Dispatcher();
-		$response = $dispatch->dispatch($route);
-
-		$generate = new GenerateOutput($response);
-		echo $generate->output();
 	}
 
 	public function getRoute() : CurrentRoute

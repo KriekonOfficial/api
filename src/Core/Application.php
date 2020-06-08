@@ -1,23 +1,11 @@
 <?php
 
-use \Core\Router\RouterLib;
-use \Core\Router\Router;
-use \Core\Router\RouterURI;
-use \Core\Router\Routes;
-use \Modules\Auth\Authentication;
 use \Core\Response\ErrorResponse;
 use \Core\Response\GenerateOutput;
 use \Core\APIError;
 
 class Application
 {
-	public static function run() : void
-	{
-		$uri = RouterLib::parseURI(RouterLib::initRoutes(new Routes()));
-		$router = new Router($uri, new Authentication());
-		$router->routeAgent();
-	}
-
 	public static function exception_handler() : void
 	{
 		set_exception_handler(function ($exception)
