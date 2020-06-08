@@ -9,7 +9,7 @@ use Modules\Account\Models\VerificationModel;
 use Modules\Password\PasswordModel;
 use Modules\Password\PasswordValidator;
 use Modules\Password\KeyGenerator;
-use Core\Util\MailWrapper;
+use Classes\MailWrapper;
 use Modules\Auth\Models\OAuthBearerModel;
 
 class AccountGateway extends ErrorBase

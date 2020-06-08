@@ -1,12 +1,11 @@
 <?php
 
-namespace Core\Util;
+namespace Classes;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use Core\APIError;
-use Core\Response\Dump;
 
 class MailWrapper
 {
