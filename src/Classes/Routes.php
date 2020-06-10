@@ -46,7 +46,7 @@ class Routes implements RouteInterface
 	{
 		$controller = \Controllers\V1\User\Status::class;
 
-		$route->addRoute('GET', '/status', $controller . '::profileFeed');
+		$route->addRoute('GET', '/status', $controller . '::listStatus');
 		$route->addRoute('GET', '/status/{id}', $controller . '::getStatus');
 
 		$route->addRoute('POST', '/status', $controller . '::createStatus');

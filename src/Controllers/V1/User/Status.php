@@ -9,7 +9,7 @@ use Core\Response\SuccessResponse;
 
 class Status extends Controller
 {
-	public function profileFeed(Request $request, array $get_params)
+	public function listStatus(Request $request, array $get_params)
 	{
 		//get_params will be pagination options.
 		return new ErrorResponse(200, 'Test', $get_params);
