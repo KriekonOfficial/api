@@ -6,6 +6,8 @@ use \Core\APIError;
 
 class Application
 {
+	private static $autoloaded = false;
+
 	public static function exception_handler() : void
 	{
 		set_exception_handler(function ($exception)
@@ -75,6 +77,17 @@ class Application
 
 	public static function autoload() : void
 	{
+		if (self::$autoloaded === true)
+		{
+			throw new Exception('Unable to autoload our application twice.');
+		}
+
+		define('ROOT_PATH', dirname(dirname(dirname(__FILE__))));
+
+		require(ROOT_PATH . '/src/includes/config.php');
+		require(ROOT_PATH . '/src/includes/global_constants.php');
+		require(ROOT_PATH . '/src/includes/global_functions.php');
+
 		spl_autoload_register(function ($class_name)
 		{
 			$filename = str_replace('\\', '/', $class_name) . '.php';
@@ -90,5 +103,7 @@ class Application
 		* Composer Autoloading
 		*/
 		require_once(ROOT_PATH . '/vendor/autoload.php');
+
+		self::$autoloaded = true;
 	}
 }
