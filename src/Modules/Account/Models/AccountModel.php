@@ -19,8 +19,8 @@ class AccountModel extends Model
 	private string $_email = '';
 	private string $_username = '';
 	private string $_password_hash = '';
-	private string $_date_of_birth = '0000-00-00';
-	private string $_registration_time = '0000-00-00 00:00:00';
+	private string $_date_of_birth = DATE_HALF_ZERO;
+	private string $_registration_time = DATE_ZERO;
 	private int $_verified = self::VERIFIED_OFF;
 	private int $_locked = self::LOCKED_OFF;
 

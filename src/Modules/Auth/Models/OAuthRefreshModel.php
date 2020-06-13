@@ -8,7 +8,7 @@ class OAuthRefreshModel extends Model
 {
 	private string $_refresh_token = '';
 	private int $_ACCTID = 0;
-	private string $_date_expiration = '0000-00-00 00:00:00';
+	private string $_date_expiration = DATE_ZERO;
 	private string $_authorized_ip = '127.0.0.1';
 	private int $_scope = ScopeModel::GLOBAL_SCOPE;
 
