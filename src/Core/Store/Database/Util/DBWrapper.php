@@ -5,9 +5,20 @@ namespace Core\Store\Database\Util;
 use Core\Store\Database\Exception;
 use Core\Store\Database\DBPool;
 use Core\Store\Database\Model\DBResult;
+use Core\Store\Database\Exception\DatabaseException;
+use Core\Store\Database\Interfaces\DatabaseInterface;
 
 class DBWrapper
 {
+	public static function factory(string $sql, array $params = [], string $database = DEFAULT_DB) : DatabaseInterface
+	{
+		$pool = self::getDBPool($database);
+
+		$pool->query($sql, $params);
+
+		return $pool;
+	}
+
 	/**
 	* Executes a SQL query prepared then it throws it into an Object that is implemented by Iterator and Countable
 	* This allows you to loop through a large query with out having to allocate additional memory to store the results.
@@ -171,12 +182,12 @@ class DBWrapper
 		return $pool->quote($value);
 	}
 
-	private static function getDBPool(string $database) : \Core\Store\Database\DatabasePDO
+	private static function getDBPool(string $database) : DatabaseInterface
 	{
 		$pool = DBPool::getDBI($database);
 		if ($pool === null)
 		{
-			throw new Exception\DatabaseException(implode(', ', DBPool::getPoolErrors($database)));
+			throw new DatabaseException(implode(', ', DBPool::getPoolErrors($database)));
 		}
 		return $pool;
 	}

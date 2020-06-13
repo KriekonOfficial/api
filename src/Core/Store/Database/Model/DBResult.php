@@ -16,6 +16,9 @@ class DBResult implements Iterator, Countable
 	public function __construct(DatabaseInterface $pdo_object)
 	{
 		$this->pdo_object = $pdo_object;
+		/**
+		* Populate the first entry before the loop
+		*/
 		if ($this->count() >= 1)
 		{
 			$this->next();
