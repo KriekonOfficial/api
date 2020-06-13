@@ -2,6 +2,8 @@
 
 define('DATEFORMAT_STANDARD', 'Y-m-d H:i:s');
 define('DATEFORMAT_COMPACT', 'Y-m-d');
+define('DATE_ZERO', '0000-00-00 00:00:00');
+define('DATE_HALF_ZERO', '0000-00-00');
 
 define('ONE_MIN', 60);
 define('ONE_HOUR', ONE_MIN * 60);
