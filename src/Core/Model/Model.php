@@ -5,10 +5,13 @@ namespace Core\Model;
 use Core\Util\JSONWrapper;
 use \InvalidArgumentException;
 use Core\Entity\EntityInterface;
+use Core\ClassMetadata;
 
 abstract class Model
 {
 	private bool $initialized_flag = false;
+
+	private $metadata;
 
 	/**
 	* Sets the primary key for the model.
@@ -45,6 +48,7 @@ abstract class Model
 	public function __construct()
 	{
 		$this->reset();
+		$this->metadata = new ClassMetadata($this);
 	}
 
 	final public function toJSON() : string
@@ -67,6 +71,22 @@ abstract class Model
 		$this->initialized_flag = $flag;
 	}
 
+	/**
+	* Set properties for the object based on the record given.
+	*/
+	final public function setModelProperties(array $record) : void
+	{
+		$metadata = $this->metadata;
+
+		$reflection = $metadata->getReflection();
+		foreach ($record as $column => $value)
+		{
+			$property = $reflection->getProperty($column);
+			$property->setAccessible(true);
+			$property->setValue($this, $value);
+			$property->setAccessible(false);
+		}
+	}
 	/**
 	* Create a DB Entity with the existing model
 	* @return EntityInterface
