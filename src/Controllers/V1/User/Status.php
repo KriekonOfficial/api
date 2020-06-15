@@ -24,4 +24,14 @@ class Status extends Controller
 	{
 		return new SuccessResponse(200, []);
 	}
+
+	public function updateStatus(Request $request)
+	{
+
+	}
+
+	public function deleteStatus(Request $request, int $status_id)
+	{
+
+}
 }

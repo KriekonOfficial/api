@@ -50,5 +50,7 @@ class Routes implements RouteInterface
 		$route->addRoute('GET', '/status/{id}', $controller . '::getStatus');
 
 		$route->addRoute('POST', '/status', $controller . '::createStatus');
+		$route->addRoute('PUT', '/status/{id}', $controller . '::updateStatus');
+		$route->addRoute('DELETE', '/status/{id}', $controller . '::deleteStatus');
 	}
 }
