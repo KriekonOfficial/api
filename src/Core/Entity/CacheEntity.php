@@ -145,13 +145,7 @@ abstract class CacheEntity extends Entity implements EntityInterface
 		$model = $this->getModel();
 
 		$reflection = $this->metadata->getReflection();
-		foreach ($record as $column => $value)
-		{
-			$property = $reflection->getProperty($column);
-			$property->setAccessible(true);
-			$property->setValue($model, $value);
-			$property->setAccessible(false);
-		}
+		$model->setModelProperties($record);
 
 		if (count($record) === count($this->metadata->getProtectedFields()))
 		{

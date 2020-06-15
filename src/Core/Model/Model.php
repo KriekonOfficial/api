@@ -40,7 +40,7 @@ abstract class Model
 	abstract public function toPublicArray() : array;
 
 	/**
-	* The class path to the db entity from the model.
+	* The class path to the entity instance from the model.
 	* Example \Modules\Account\Account
 	*/
 	abstract protected function getEntityPath() : string;
@@ -88,7 +88,7 @@ abstract class Model
 		}
 	}
 	/**
-	* Create a DB Entity with the existing model
+	* Create a Entity instance with the existing model
 	* @return EntityInterface
 	*/
 	public function createEntity() : EntityInterface

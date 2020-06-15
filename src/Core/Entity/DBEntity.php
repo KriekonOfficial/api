@@ -133,20 +133,14 @@ abstract class DBEntity extends Entity implements EntityInterface
 		$this->resetModel();
 		$model = $this->getModel();
 
-		$reflection = $this->metadata->getReflection();
-		foreach ($result->getRecord() as $column => $value)
-		{
-			$property = $reflection->getProperty($column);
-			$property->setAccessible(true);
-			$property->setValue($model, $value);
-			$property->setAccessible(false);
-		}
+		$model->setModelProperties($result->getRecord());
 
-		if ($result->count() == 1)
+		$count = $result->count();
+		if ($count === 1)
 		{
 			$model->setInitializedFlag(true);
 		}
-		else if ($result->count() > 1)
+		else if ($count > 1)
 		{
 			throw new EntityException('There appears to be more than 1 record based off the model: ' . get_class($this));
 		}
