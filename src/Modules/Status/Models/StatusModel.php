@@ -108,7 +108,7 @@ class StatusModel extends Model
 		return $this->toArray();
 	}
 
-	public function getEntityPath() : string
+	protected function getEntityPath() : string
 	{
 		return '\Modules\Status\StatusEntity';
 	}
