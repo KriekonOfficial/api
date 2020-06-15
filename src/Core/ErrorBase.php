@@ -1,6 +1,8 @@
 <?php
 namespace Core;
 
+use \Exception;
+
 class ErrorBase
 {
 	/**
@@ -109,6 +111,15 @@ class ErrorBase
 		return $error !== false ? $error : '';
 	}
 
+	/**
+	* Has a public error.
+	* @return bool
+	*/
+	final public function hasError() : bool
+	{
+		return count($this->getError()) >= 1;
+	}
+
 	////
 	// Protected routines
 	////
@@ -188,7 +199,7 @@ class ErrorBase
 			break;
 
 			default:
-			throw new \Exception('Format Error invalid type.');
+			throw new Exception('Format Error invalid type.');
 		}
 		return $message;
 	}
