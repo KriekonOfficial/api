@@ -131,7 +131,7 @@ class OAuthBearerModel extends Model
 
 		$bearer_token .= '.' . $this->getAccessToken();
 
-		$this->bearer_token = $bearer_token;
+		$this->setBearerToken($bearer_token);
 	}
 
 	public function decryptData(string $encrypted_data) : ?array
