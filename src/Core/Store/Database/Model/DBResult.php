@@ -23,6 +23,13 @@ class DBResult implements Iterator, Countable
 		{
 			$this->next();
 		}
+		else if ($this->count() === 0)
+		{
+			/*
+			* No entry don't attempt to start the loop.
+			*/
+			$this->pointer = 0;
+		}
 	}
 
 	/**
@@ -31,7 +38,7 @@ class DBResult implements Iterator, Countable
 	*/
 	public function getRecord() : array
 	{
-		return $this->current();
+		return $this->record;
 	}
 
 	////
@@ -43,7 +50,7 @@ class DBResult implements Iterator, Countable
 	* Do not use this function, use getRecord instead.
 	* @return array
 	*/
-	public function current() : array
+	public function current()
 	{
 		return $this->record;
 	}
@@ -82,7 +89,7 @@ class DBResult implements Iterator, Countable
 	*/
 	public function rewind() : void
 	{
-		//$this->next();
+		//Not needed.
 	}
 
 	////
