@@ -48,7 +48,7 @@ CREATE TABLE account_status
 	STATUSID				INT			PRIMARY KEY		AUTO_INCREMENT,
     ACCTID					INT			NOT NULL,
     status_date				DATETIME	NOT NULL,
-    status_modified_date	DATETIME	NULL,
+    status_modified_date	DATETIME	NOT NULL 		DEFAULT '0000-00-00 00:00:00',
     status_content			TEXT		NOT NULL,
     
     CONSTRAINT account_status_ACCTID_fk
