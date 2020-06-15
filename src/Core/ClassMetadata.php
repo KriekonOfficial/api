@@ -42,7 +42,7 @@ class ClassMetadata
 	{
 		if (($entity instanceof Entity) === false)
 		{
-			throw new InvalidArgumentException('Failed to set entity as it is not an instance of a valid DB Entity');
+			throw new InvalidArgumentException('Failed to set entity as it is not an instance of a valid Entity');
 		}
 		$this->entity = $entity;
 	}
