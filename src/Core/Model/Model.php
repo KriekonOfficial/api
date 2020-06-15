@@ -11,8 +11,6 @@ abstract class Model
 {
 	private bool $initialized_flag = false;
 
-	private $metadata;
-
 	/**
 	* Sets the primary key for the model.
 	* This is a unique identifer
@@ -48,7 +46,6 @@ abstract class Model
 	public function __construct()
 	{
 		$this->reset();
-		$this->metadata = new ClassMetadata($this);
 	}
 
 	final public function toJSON() : string
@@ -76,7 +73,7 @@ abstract class Model
 	*/
 	final public function setModelProperties(array $record) : void
 	{
-		$metadata = $this->metadata;
+		$metadata = new ClassMetadata($this);
 
 		$reflection = $metadata->getReflection();
 		foreach ($record as $column => $value)
