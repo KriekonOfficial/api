@@ -8,7 +8,7 @@ use Core\Response\ErrorResponse;
 use Core\Response\SuccessResponse;
 
 use Modules\Status\StatusGateway;
-
+use Modules\Status\StatusEntity;
 class Status extends Controller
 {
 	public function listStatus(Request $request, array $get_params)
@@ -16,8 +16,8 @@ class Status extends Controller
 		$page = $get_params['page'] ?? 1;
 		$per_page = $get_params['per_page'] ?? 25;
 
-		$status = new StatusGateway();
-		$list = $status->listStatus($request->getAuth()->getAccount()->getACCTID(), $page, $per_page);
+		$status = new StatusGateway($request->getAuth()->getAccount());
+		$list = $status->listStatus($page, $per_page);
 
 		if ($status->hasError())
 		{
@@ -35,9 +35,22 @@ class Status extends Controller
 		return new SuccessResponse(200, []);
 	}
 
-	public function getStatus(Request $request, int $status_id)
+	public function getStatus(Request $request, $status_id)
 	{
-		return new SuccessResponse(200, []);
+		if (!is_numeric($status_id))
+		{
+			return new ErrorResponse(400, 'Status ID must be an integer.');
+		}
+
+		$entity = new StatusEntity();
+		$model = $entity->find((int)$status_id);
+
+		if (!$model->isInitialized())
+		{
+			return new ErrorResponse(404, 'Status does not exist.');
+		}
+
+		return new SuccessResponse(200, $model->toPublicArray());
 	}
 
 	public function updateStatus(Request $request)
@@ -45,8 +58,18 @@ class Status extends Controller
 
 	}
 
-	public function deleteStatus(Request $request, int $status_id)
+	public function deleteStatus(Request $request, $status_id)
 	{
+		if (!is_numeric($status_id))
+		{
+			return new ErrorResponse(400, 'Status ID must be an integer.');
+		}
 
+		$status = new StatusGateway($request->getAuth()->getAccount());
+
+		if (!$status->deleteStatus((int)$status_id))
+		{
+			return new ErrorResponse(404, $status->getErrors());
+		}
 	}
 }

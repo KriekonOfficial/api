@@ -26,7 +26,8 @@ class LogLevel
 		'debug'          => 8,
 		'log'            => 9,
 		'account_login'  => 10,
-		'account_logout' => 11
+		'account_logout' => 11,
+		'status_delete' => 12
 	];
 
 	public static function getLogLevelDescription(int $level) : string
