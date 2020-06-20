@@ -17,7 +17,7 @@ class Status extends Controller
 		$per_page = $get_params['per_page'] ?? 25;
 
 		$status = new StatusGateway($request->getAuth()->getAccount());
-		$list = $status->listStatus($page, $per_page);
+		$list = $status->listStatus((int)$page, (int)$per_page);
 
 		if ($status->hasError())
 		{
