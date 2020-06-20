@@ -2,14 +2,21 @@
 
 namespace Core;
 
+use Core\Router\Interfaces\AuthorizationMiddleware;
+
 class Controller
 {
-	protected const DEFAULT_METADATA = ['required_auth' => true];
+	protected const DEFAULT_METADATA = ['required_auth' => true, 'auth_middleware' => ''];
 	protected array $request_metadata = ['*' => self::DEFAULT_METADATA];
 
 	protected function addRequestMetadata(string $method, bool $required_auth = true) : void
 	{
-		$this->request_metadata[$method] = ['required_auth' => $required_auth];
+		$this->request_metadata[$method]['required_auth'] = $required_auth;
+	}
+
+	public function addAuthorizationMiddleware(string $method, AuthorizationMiddleware $auth_middleware)
+	{
+		$this->request_metadata[$method]['auth_middleware'] = $auth_middleware;
 	}
 
 	public function getRequestMetadata(string $method) : array
@@ -21,10 +28,17 @@ class Controller
 		return $this->request_metadata[$method];
 	}
 
-	public function isAuthRequired(string $method) : bool
+	public function isAuthenticationRequired(string $method) : bool
 	{
 		$data = $this->getRequestMetadata($method);
 
-		return $data['required_auth'] === true;
+		return ($data['required_auth'] ?? false) === true;
+	}
+
+	public function hasAuthorizationMiddleware(string $method) : bool
+	{
+		$data = $this->getRequestMetadata($method);
+
+		return ($data['auth_middleware'] ?? false) instanceof AuthorizationMiddleware;
 	}
 }

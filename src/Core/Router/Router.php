@@ -91,7 +91,7 @@ class Router
 
 		$route = new CurrentRoute($uri, self::getRequest(), $reflection_class, $reflection_method);
 
-		if ($controller->isAuthRequired($uri->getMethod()) && !$auth->checkAuth($route))
+		if ($controller->isAuthenticationRequired($uri->getMethod()) && !$auth->checkAuth($route))
 		{
 			throw new RouterException($auth->getLastError(), 401);
 		}
