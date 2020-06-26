@@ -8,21 +8,33 @@ class ErrorBase
 	/**
 	* Stores User Viewable Errors.
 	*/
-	private $error = [];
+	private array $error = [];
 
 	/**
 	* Stores Dashboard Viewable Errors.
 	*/
-	private $error_administer = [];
+	private array $error_administer = [];
 
 	/**
 	* Stores Dev Viewable Erros.
 	*/
-	private $error_internal = [];
+	private array $error_internal = [];
+
+	private int $http_code = 412;
 
 	////
 	// Public routines
 	////
+
+	final public function setHttpCode(int $code) : void
+	{
+		$this->http_code = $code;
+	}
+
+	final public function getHttpCode() : int
+	{
+		return $this->http_code;
+	}
 
 	/**
 	* Get the error array
