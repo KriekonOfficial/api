@@ -56,4 +56,26 @@ abstract class Entity extends ErrorBase
 		$model->reset();
 		$this->setModel($model);
 	}
+
+	/**
+	* @param $pk_value = mixed|int
+	* @return string
+	*/
+	protected function getCacheKey($pk_value = 0) : string
+	{
+		$model = $this->getModel();
+
+		$key = $this->getCollectionName() . ':';
+		$key .= $this->getCollectionTable() . ':';
+		$key .= $this->getCollectionPrimaryKey() . ':';
+		$pk_key = $pk_value;
+		if (empty($pk_key))
+		{
+			$pk_key = $model->getPrimaryKey();
+		}
+
+		$key .= $pk_key;
+
+		return $key;
+	}
 }

@@ -45,7 +45,7 @@ abstract class CacheEntity extends Entity implements EntityInterface
 	{
 		$model = $this->getModel();
 
-		$cache = Cache::setArray($this->getKey(), $model->toArray(), $this->getEntityCacheTime());
+		$cache = Cache::setArray($this->getCacheKey(), $model->toArray(), $this->getEntityCacheTime());
 		if ($cache)
 		{
 			$model->setInitializedFlag(true);
@@ -82,7 +82,7 @@ abstract class CacheEntity extends Entity implements EntityInterface
 			$update_params[$column] = $update_values[$column];
 		}
 
-		$array = Cache::getArray($this->getKey());
+		$array = Cache::getArray($this->getCacheKey());
 
 		if ($array === null)
 		{
@@ -94,7 +94,7 @@ abstract class CacheEntity extends Entity implements EntityInterface
 			$array[$param] = $value;
 		}
 
-		return Cache::setArray($this->getKey(), $array, $this->getEntityCacheTime());
+		return Cache::setArray($this->getCacheKey(), $array, $this->getEntityCacheTime());
 	}
 
 	/**
@@ -110,7 +110,7 @@ abstract class CacheEntity extends Entity implements EntityInterface
 			throw new EntityException('Unable to delete model ' . get_class($model) . ' as it is not initialized');
 		}
 
-		if (!Cache::delete($this->getKey()))
+		if (!Cache::delete($this->getCacheKey()))
 		{
 			return false;
 		}
@@ -126,7 +126,7 @@ abstract class CacheEntity extends Entity implements EntityInterface
 	*/
 	public function find($pk_value)
 	{
-		$record = Cache::getArray($this->getKey($pk_value));
+		$record = Cache::getArray($this->getCacheKey($pk_value));
 
 		$this->resetModel();
 
@@ -153,27 +153,5 @@ abstract class CacheEntity extends Entity implements EntityInterface
 		}
 
 		$this->setModel($model);
-	}
-
-	/**
-	* @param $pk_value = mixed|int
-	* @return string
-	*/
-	protected function getKey($pk_value = 0) : string
-	{
-		$model = $this->getModel();
-
-		$key = $this->getCollectionName() . ':';
-		$key .= $this->getCollectionTable() . ':';
-		$key .= $this->getCollectionPrimaryKey() . ':';
-		$pk_key = $pk_value;
-		if (empty($pk_key))
-		{
-			$pk_key = $model->getPrimaryKey();
-		}
-
-		$key .= $pk_key;
-
-		return $key;
 	}
 }
