@@ -21,7 +21,7 @@ class StatusGateway extends ErrorBase
 		$this->account = $account;
 	}
 
-	public function listStatus(int $page = 1, int $per_page = 25) : array
+	public function listStatus(int $page = 1, int $per_page = 25, ?int &$total = 0) : array
 	{
 		if ($per_page > 200)
 		{
@@ -37,10 +37,13 @@ class StatusGateway extends ErrorBase
 			$offset = $page * $per_page;
 		}
 
-		foreach (new StatusList($this->account->getACCTID(), $offset, $per_page) as $key => $model)
+		$list = new StatusList($this->account->getACCTID(), $offset, $per_page);
+		$total = $list->getTotalCount();
+		foreach ($list as $key => $model)
 		{
 			$status[] = $model->toPublicArray();
 		}
+
 		return $status;
 	}
 
