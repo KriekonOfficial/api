@@ -102,6 +102,7 @@ class Authentication extends ErrorBase implements AuthInterface
 
 		return true;
 	}
+
 	private function checkTokenType(string $token_type) : bool
 	{
 		if (!in_array(ucwords($token_type), ['Bearer']))
