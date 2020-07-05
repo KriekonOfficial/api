@@ -12,10 +12,16 @@ class DBResult implements Iterator, Countable
 
 	private int $pointer = -1;
 	private array $record = [];
+	private int $total_count = 0;
 
 	public function __construct(DatabaseInterface $pdo_object)
 	{
 		$this->pdo_object = $pdo_object;
+		/**
+		* Get the count immidately, before another query is executed.
+		*/
+		$this->total_count = $pdo_object->rowCount();
+
 		/**
 		* Populate the first entry before the loop
 		*/
@@ -102,6 +108,6 @@ class DBResult implements Iterator, Countable
 	*/
 	public function count() : int
 	{
-		return $this->pdo_object->rowCount();
+		return $this->total_count;
 	}
 }

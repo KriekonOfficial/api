@@ -66,6 +66,9 @@ class DatabasePDO extends ErrorBase implements DatabaseInterface
 	{
 		try
 		{
+			$this->results = [];
+			$this->count = 0;
+
 			$this->query = $this->pdo->prepare($sql);
 
 			$param_position = 1;
