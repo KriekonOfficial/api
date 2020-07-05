@@ -20,6 +20,7 @@ class StatusGateway extends ErrorBase
 	{
 		$this->account = $account;
 	}
+
 	public function listStatus(int $page = 1, int $per_page = 25) : array
 	{
 		if ($per_page > 200)
