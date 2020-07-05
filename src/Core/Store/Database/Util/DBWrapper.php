@@ -47,8 +47,10 @@ class DBWrapper
 	* @param $database - The database you wanna execute this function on
 	* @return array
 	*/
-	public static function PExecute(string $sql, array $params = [], int &$out_count = 0, string $database = DEFAULT_DB) : array
+	public static function PExecute(string $sql, array $params = [], ?int &$out_count = 0, string $database = DEFAULT_DB) : array
 	{
+		$out_count = 0;
+
 		$pool = self::getDBPool($database);
 
 		$results = [];
@@ -67,8 +69,10 @@ class DBWrapper
 	* @param $database - The database you wanna execute this function on
 	* @return array
 	*/
-	public static function PSingle(string $sql, array $params = [], int &$out_count = 0, $database = DEFAULT_DB) : array
+	public static function PSingle(string $sql, array $params = [], ?int &$out_count = 0, string $database = DEFAULT_DB) : array
 	{
+		$out_count = 0;
+
 		$pool = self::getDBPool($database);
 
 		$results = [];
@@ -86,8 +90,10 @@ class DBWrapper
 	* @param $database - The database you wanna execute this function on
 	* @return array
 	*/
-	public static function execute(string $sql, int &$out_count = 0, $database = DEFAULT_DB) : array
+	public static function execute(string $sql, ?int &$out_count = 0, string $database = DEFAULT_DB) : array
 	{
+		$out_count = 0;
+
 		$pool = self::getDBPool($database);
 
 		$results = [];
