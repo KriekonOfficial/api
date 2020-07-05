@@ -4,12 +4,13 @@ namespace Core\Store\Database;
 
 use \PDO;
 use \PDOException;
+use Core\Store\Database\Interfaces\DatabaseInterface;
 use Core\ErrorBase;
 use Core\Store\Database\Exception\DatabaseException;
 use Core\Store\Database\Exception\InvalidConfigException;
 use Core\Store\Database\Model\DBResult;
 
-class DatabasePDO extends ErrorBase implements Interfaces\DatabaseInterface
+class DatabasePDO extends ErrorBase implements DatabaseInterface
 {
 	/**
 	* Houses the PDO Object to make all sql related actions.
