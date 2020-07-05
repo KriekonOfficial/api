@@ -17,12 +17,12 @@ class APIError extends Exception
 		parent::__construct($message, $code);
 	}
 
-	protected function setHttpCode(int $http_code)
+	final public function setHttpCode(int $http_code)
 	{
 		$this->http_code = $http_code;
 	}
 
-	public function getHttpCode() : int
+	final public function getHttpCode() : int
 	{
 		return $this->http_code;
 	}
