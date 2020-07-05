@@ -6,9 +6,30 @@ use \InvalidArgumentException;
 use Core\Entity\Exception\EntityException;
 use Core\Store\Database\Util\DBWrapper;
 use Core\Store\Database\Model\DBResult;
+use Core\Store\RequestCache;
+use Core\Model\Model;
 
 abstract class DBEntity extends Entity implements EntityInterface
 {
+	protected bool $request_cache = false;
+
+	/**
+	* Determine if we wanna look to see if the entity is cached in the request.
+	*/
+	final public function setRequestCache(bool $cachable) : void
+	{
+		$this->request_cache = $cachable;
+	}
+
+	/**
+	* When querying the database should we check to see if the entry exists in the request cache first?
+	* @return bool
+	*/
+	final public function useRequestCache() : bool
+	{
+		return $this->request_cache;
+	}
+
 	/**
 	* Houses the namespace path to the model for the entity
 	*/
@@ -52,6 +73,11 @@ abstract class DBEntity extends Entity implements EntityInterface
 		$model->setInitializedFlag(true);
 		$this->setModel($model);
 
+		if ($this->useRequestCache())
+		{
+			RequestCache::setCacheItem($this->getCacheKey(), $model);
+		}
+
 		return $model;
 	}
 
@@ -82,7 +108,13 @@ abstract class DBEntity extends Entity implements EntityInterface
 			}
 			$update_params[$column] = $update_values[$column];
 		}
-		return DBWrapper::update($this->getCollectionTable(), $update_params, [$this->getCollectionPrimaryKey() => $model->getPrimaryKey()], $this->getCollectionName());
+		$ok = DBWrapper::update($this->getCollectionTable(), $update_params, [$this->getCollectionPrimaryKey() => $model->getPrimaryKey()], $this->getCollectionName());
+
+		if ($this->useRequestCache())
+		{
+			RequestCache::setCacheItem($this->getCacheKey(), $model);
+		}
+		return $ok;
 	}
 
 	/**
@@ -102,6 +134,11 @@ abstract class DBEntity extends Entity implements EntityInterface
 		$result = DBWrapper::delete($this->getCollectionTable(), [$this->getCollectionPrimaryKey() => $model->getPrimaryKey()], $this->getCollectionName());
 		if ($result === true)
 		{
+			if ($this->useRequestCache())
+			{
+				RequestCache::deleteCacheItem($this->getCacheKey());
+			}
+
 			$this->resetModel();
 			return true;
 		}
@@ -114,13 +151,28 @@ abstract class DBEntity extends Entity implements EntityInterface
 	*/
 	public function find($pk_value)
 	{
+		if ($this->useRequestCache())
+		{
+			$cache_item = RequestCache::getCacheItem($this->getCacheKey($pk_value));
+			if ($cache_item instanceof Model)
+			{
+				return $cache_item;
+			}
+		}
+
 		$results = DBWrapper::PResult('
 			SELECT * FROM ' . $this->getCollectionTable() . '
 			WHERE ' . $this->getCollectionPrimaryKey() . ' = ?', [$pk_value], $this->getCollectionName());
 
 		$this->setModelProperties($results);
 
-		return $this->getModel();
+		$model = $this->getModel();
+		if ($this->useRequestCache())
+		{
+			RequestCache::setCacheItem($this->getCacheKey(), $model);
+		}
+
+		return $model;
 	}
 
 	protected function setModelProperties(DBResult $result) : void
