@@ -47,10 +47,10 @@ class StatusGateway extends ErrorBase
 		return $status;
 	}
 
-	public function deleteStatus(int $status_id) : bool
+	public function deleteStatus(int $STATUSID) : bool
 	{
 		$entity = new StatusEntity();
-		$model = $entity->find($status_id);
+		$model = $entity->find($STATUSID);
 
 		if (!$model->isInitialized())
 		{
@@ -64,10 +64,23 @@ class StatusGateway extends ErrorBase
 			return false;
 		}
 
-		$log = new LogModel('Status ID has been deleted: ' . $status_id, LogLevel::LOG);
+		$log = new LogModel('Status ID has been deleted: ' . $STATUSID, LogLevel::LOG);
 		$log->setAssociation('ACCTID', $model->getACCTID());
 		$log->setLogType('status_delete');
 		Logger::log($log);
+
+		return true;
+	}
+
+	public function createStatus(string $status_content) : bool
+	{
+		$status = new StatusModel();
+		$status->setACCTID($this->account->getACCTID());
+		$status->setStatusDate(date(DATEFORMAT_STANDARD));
+		$status->setStatusContent($status_content);
+
+		$entity = $status->createEntity();
+		$status = $entity->store();
 
 		return true;
 	}

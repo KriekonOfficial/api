@@ -42,7 +42,22 @@ class Status extends Controller
 
 	public function createStatus(Request $request)
 	{
-		return new SuccessResponse(200, []);
+		$input = $request->getRequestInput();
+
+		$status_content = $input->get('status_content');
+		if ($status_content === null)
+		{
+			return new ErrorResponse(400, 'Invalid parameter, missing status_content.');
+		}
+		$account = $request->getAuth()->getAccount();
+
+		$status = new StatusGateway($account);
+		if (!$status->createStatus($status_content))
+		{
+			return new ErrorResponse(400, $status->getErrors());
+		}
+
+		return new SuccessResponse(200, [], 'Status Created.');
 	}
 
 	public function getStatus(Request $request, $status_id)
