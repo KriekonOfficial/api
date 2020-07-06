@@ -72,6 +72,10 @@ class StatusGateway extends ErrorBase
 		return true;
 	}
 
+	//Validate length check
+	//Validate for html characters.
+	//Sanitize those characters, unless markdown.
+
 	public function createStatus(string $status_content) : bool
 	{
 		$status = new StatusModel();
