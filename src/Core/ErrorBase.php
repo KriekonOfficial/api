@@ -132,6 +132,28 @@ class ErrorBase
 		return count($this->getError()) >= 1;
 	}
 
+	final public function clearErrors() : void
+	{
+		$this->setError([]);
+	}
+
+	final public function clearErrorAdminister() : void
+	{
+		$this->setErrorAdminister([]);
+	}
+
+	final public function clearErrorInternal() : void
+	{
+		$this->setErrorInternal([]);
+	}
+
+	final public function clearAllErrors() : void
+	{
+		$this->clearErrors();
+		$this->clearErrorAdminister();
+		$this->clearErrorInternal();
+	}
+
 	////
 	// Protected routines
 	////
