@@ -20,7 +20,7 @@ class ErrorBase
 	*/
 	private array $error_internal = [];
 
-	private int $http_code = 409;
+	private int $http_code = 400;
 
 	////
 	// Public routines
