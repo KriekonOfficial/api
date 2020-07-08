@@ -9,12 +9,13 @@ class Routes implements RouteInterface
 {
 	public function __invoke(Collector $route)
 	{
+		$route->addRoute('POST', '/mail/send', \Controllers\MailController::class . '::send');
 		$this->version1($route);
 	}
 
 	private function version1(Collector $route)
 	{
-		$route->addGroup('/v1', function(Collector $route)
+		$route->addGroup('/v1', function (Collector $route)
 		{
 			$this->user($route);
 		});
@@ -22,7 +23,7 @@ class Routes implements RouteInterface
 
 	private function user(Collector $route)
 	{
-		$route->addGroup('/user', function(Collector $route)
+		$route->addGroup('/user', function (Collector $route)
 		{
 			$this->userAccount($route);
 			$this->userStatus($route);
@@ -34,9 +35,9 @@ class Routes implements RouteInterface
 		$controller = \Controllers\V1\User\Account::class;
 
 		$route->addRoute('GET', '/account', $controller . '::info');
-		$route->addGroup('/account', function(Collector $route) use ($controller)
+		$route->addGroup('/account', function (Collector $route) use ($controller)
 		{
-			$route->addRoute('POST', '/register',  $controller . '::register');
+			$route->addRoute('POST', '/register', $controller . '::register');
 			$route->addRoute('GET', '/verify/{code}', $controller . '::verify');
 			$route->addRoute('POST', '/login', $controller . '::login');
 		});

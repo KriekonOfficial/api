@@ -52,7 +52,7 @@ class Application
 	*/
 	public static function shutdown_handler() : void
 	{
-		register_shutdown_function(function()
+		register_shutdown_function(function ()
 		{
 			$error_last = error_get_last();
 			if ($error_last === null)

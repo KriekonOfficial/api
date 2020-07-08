@@ -11,10 +11,15 @@ class Controller
 
 	protected function addRequestMetadata(string $method, bool $required_auth = true) : void
 	{
+		$this->addRequiredAuth($method, $required_auth);
+	}
+
+	protected function addRequiredAuth(string $method, bool $required_auth = true) : void
+	{
 		$this->request_metadata[$method]['required_auth'] = $required_auth;
 	}
 
-	public function addAuthorizationMiddleware(string $method, AuthorizationMiddleware $auth_middleware)
+	protected function addAuthorizationMiddleware(string $method, AuthorizationMiddleware $auth_middleware)
 	{
 		$this->request_metadata[$method]['auth_middleware'] = $auth_middleware;
 	}
