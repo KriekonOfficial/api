@@ -36,6 +36,7 @@ class MailController extends Controller
 
 		$mail = new MailWrapper('noreply@kriekon.com', EMAILS['noreply@kriekon.com']);
 		$mail->addAddress(base64_decode($input->get('email'), true), SITE_NAME);
+		$mail->isHTML(true);
 		$mail->send(base64_decode($input->get('subject'), true), base64_decode($input->get('message'), true));
 
 		return new SuccessResponse(200, [], 'Mail sent');

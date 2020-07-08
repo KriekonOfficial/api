@@ -21,7 +21,11 @@ class MailWrapper
 		}
 
 		$mail->isSMTP();
-		$mail->Host = $host;
+		/**
+		* Vultr/DO blocks outbound IPv6 SMTP requests
+		* gethostbyname does an IPv4 lookup
+		*/
+		$mail->Host = gethostbyname($host);
 		$mail->SMTPAuth = true;
 		$mail->Username = $username;
 		$mail->Password = $password;
@@ -49,9 +53,23 @@ class MailWrapper
 		return $this->addresses;
 	}
 
+	public function setMailer(PHPMailer $mail) : void
+	{
+		$this->mailer = $mail;
+	}
+
 	public function getMailer() : PHPMailer
 	{
 		return $this->mailer;
+	}
+
+	public function isHTML(bool $html) : void
+	{
+		$mailer = $this->getMailer();
+
+		$mailer->isHTML($html);
+
+		$this->setMailer($mailer);
 	}
 
 	public function send(string $subject, string $body) : void
