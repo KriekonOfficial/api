@@ -27,6 +27,7 @@ class MailWrapper
 		*/
 		$mail->Host = gethostbyname($host);
 		$mail->SMTPAuth = true;
+		$mail->Timeout = 10;
 		$mail->Username = $username;
 		$mail->Password = $password;
 		$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
