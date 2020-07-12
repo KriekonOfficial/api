@@ -1,31 +1,23 @@
 <?php
 
-define('MYSQL',
-	[
-		'kriekon' => [
-		    'host' => '192.168.33.1',
-	        //'host' => '149.28.54.227',
-		    'user' => 'genericuser',
-	        //'user' => 'vinnie200111',
-		    'password' => 'Password1234',
-		    'dbname' => 'kriekon',
-		    'charset' => 'UTF8'
-		],
-		'kriekon_log' => [
-			'host' => '192.168.33.1',
-	        //'host' => '149.28.54.227',
-		    'user' => 'genericuser',
-	        //'user' => 'vinnie200111',
-		    'password' => 'Password1234',
-		    'dbname' => 'kriekon_log',
-		    'charset' => 'UTF8'
-		]
+define('MYSQL', array(
+	'kriekon' => [
+	    'host' => '192.168.33.1',
+	    'user' => 'genericuser',
+	    'password' => 'Password1234',
+	    'dbname' => 'kriekon',
+	    'charset' => 'UTF8'
+	],
+	'kriekon_log' => [
+		'host' => '192.168.33.1',
+	    'user' => 'genericuser',
+	    'password' => 'Password1234',
+	    'dbname' => 'kriekon_log',
+	    'charset' => 'UTF8'
 	]
-);
+));
 define('DEVENV', true);
 
-define('EMAILS',
-	[
-		'noreply@kriekon.com' => '{JPyaU?fm2K2=HYz'
-	]
-);
+define('EMAILS', array(
+	'noreply@kriekon.com' => '{JPyaU?fm2K2=HYz'
+));
