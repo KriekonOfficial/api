@@ -6,6 +6,7 @@ use Core\ErrorBase;
 use Core\Logger\Logger;
 use Core\Logger\Model\LogModel;
 use COre\Logger\LogLevel;
+use Core\Model\BaseValidator;
 
 use Modules\Status\Models\StatusModel;
 use Modules\Status\StatusEntity;
@@ -72,16 +73,22 @@ class StatusGateway extends ErrorBase
 		return true;
 	}
 
-	//Validate length check
-	//Validate for html characters.
-	//Sanitize those characters, unless markdown.
-
 	public function createStatus(string $status_content) : bool
 	{
 		$status = new StatusModel();
 		$status->setACCTID($this->account->getACCTID());
 		$status->setStatusDate(date(DATEFORMAT_STANDARD));
 		$status->setStatusContent($status_content);
+
+		$validator = new BaseValidator($status);
+		$validator->addValidator('maxLength', [300]);
+		$validator->addRule('maxLength', ['status_content']);
+
+		if (!$validator->validate())
+		{
+			$this->addError($validator->getErrors());
+			return false;
+		}
 
 		$entity = $status->createEntity();
 		$status = $entity->store();
