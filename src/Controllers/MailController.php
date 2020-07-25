@@ -27,7 +27,7 @@ class MailController extends Controller
 
 		$authorization = $server->getHeader('AUTHORIZATION')[0] ?? '';
 
-		if ($authorization != 'M5NdnJRTElAsavditOHRna798JVpDJcV')
+		if ($authorization != trim(file_get_contents(ROOT_PATH . '/../secret_keys/tworiverstax_api_key')))
 		{
 			return new ErrorResponse(500, 'Invalid request.');
 		}
