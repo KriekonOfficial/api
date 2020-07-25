@@ -52,16 +52,16 @@ class Request
 	{
 		$input = (string)self::getServer()->getBody();
 
-		/*if (!empty($_POST))
+		if (empty($input))
 		{
-			return $_POST;
-		}*/
+			throw new RequestException('Request must be given a JSON. Please refer to documentation.', 400);
+		}
 
 		$decoded_json = JSONWrapper::decode($input);
 
 		if (json_last_error() !== JSON_ERROR_NONE || $decoded_json === null)
 		{
-			throw new RequestException('There has been an error parsing the JSON. JSON Error: ' . json_last_error_msg(), 400);
+			throw new RequestException('There has been an error parsing the input. JSON Error: ' . json_last_error_msg(), 400);
 		}
 
 		return new RequestInput($decoded_json);
