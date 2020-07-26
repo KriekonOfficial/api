@@ -132,17 +132,18 @@ abstract class DBEntity extends Entity implements EntityInterface
 		}
 
 		$result = DBWrapper::delete($this->getCollectionTable(), [$this->getCollectionPrimaryKey() => $model->getPrimaryKey()], $this->getCollectionName());
-		if ($result === true)
+		if ($result === false)
 		{
-			if ($this->useRequestCache())
-			{
-				RequestCache::deleteCacheItem($this->getCacheKey());
-			}
-
-			$this->resetModel();
-			return true;
+			return false;
 		}
-		return false;
+
+		if ($this->useRequestCache())
+		{
+			RequestCache::deleteCacheItem($this->getCacheKey());
+		}
+
+		$this->resetModel();
+		return true;
 	}
 
 	/**
