@@ -94,7 +94,7 @@ abstract class DBEntity extends Entity implements EntityInterface
 
 		if (!$model->isInitialized())
 		{
-			throw new EntityException('Unable to delete the model as it is not initialized. Model: ' . get_class($model));
+			throw new EntityException('Unable to update the model as it is not initialized. Model: ' . get_class($model));
 		}
 
 		$update_values = $model->toArray();
