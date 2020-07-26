@@ -55,12 +55,14 @@ class StatusGateway extends ErrorBase
 
 		if (!$model->isInitialized())
 		{
+			$this->setHttpCode(404);
 			$this->addError('Status does not exist.');
 			return false;
 		}
 
 		if (!$entity->delete())
 		{
+			$this->setHttpCode(500);
 			$this->addError('Unable to delete status at this time please try again later.');
 			return false;
 		}
@@ -80,19 +82,58 @@ class StatusGateway extends ErrorBase
 		$status->setStatusDate(date(DATEFORMAT_STANDARD));
 		$status->setStatusContent($status_content);
 
-		$validator = new BaseValidator($status);
-		$validator->addValidator('maxLength', [300]);
-		$validator->addRule('maxLength', ['status_content']);
-
-		if (!$validator->validate())
+		if (!$this->validateStatus($status))
 		{
-			$this->addError($validator->getErrors());
 			return false;
 		}
 
 		$entity = $status->createEntity();
 		$status = $entity->store();
 
+		return true;
+	}
+
+	public function updateStatus(int $STATUSID, string $status_content) : bool
+	{
+		$entity = new StatusEntity();
+		$status = $entity->find($STATUSID);
+		if (!$status->isInitialized())
+		{
+			$this->setHttpCode(404);
+			$this->addError('Status does not exist.');
+			return false;
+		}
+
+		$status->setStatusContent($status_content);
+		$status->setStatusModifiedDate(date(DATEFORMAT_STANDARD));
+
+		if (!$this->validateStatus($status))
+		{
+			return false;
+		}
+
+		$entity = $status->createEntity();
+		if (!$entity->update(['status_content', 'status_modified_date']))
+		{
+			$this->setHttpCode(500);
+			$this->addError('Unable to update status_content at this time. Please try again later.');
+			return false;
+		}
+		return true;
+	}
+
+	private function validateStatus(StatusModel $status) : bool
+	{
+		$validator = new BaseValidator($status);
+		$validator->addValidator('maxLength', [300]);
+		$validator->addRule('maxLength', ['status_content']);
+
+		if (!$validator->validate())
+		{
+			$this->setHttpCode(400);
+			$this->addError($validator->getErrors());
+			return false;
+		}
 		return true;
 	}
 }

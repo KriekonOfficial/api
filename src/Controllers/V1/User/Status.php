@@ -78,9 +78,27 @@ class Status extends Controller
 		return new SuccessResponse(200, $model->toPublicArray());
 	}
 
-	public function updateStatus(Request $request)
+	public function updateStatus(Request $request, $status_id)
 	{
+		if (!is_numeric($status_id))
+		{
+			return new ErrorResponse(400, 'Status ID must be an integer.');
+		}
 
+		$input = $request->getRequestInput();
+		$status_content = $input->get('status_content');
+		if ($status_content === null)
+		{
+			return new ErrorResponse(400, 'Invalid parameter, missing status_content.');
+		}
+
+		$status = new StatusGateway($request->getAuth()->getAccount());
+
+		if (!$status->updateStatus($status_id, $status_content))
+		{
+			return new ErrorResponse($status->getHttpCode(), $status->getErrors());
+		}
+		return new SuccessResponse(200, [], 'Status updated.');
 	}
 
 	public function deleteStatus(Request $request, $status_id)
@@ -94,7 +112,9 @@ class Status extends Controller
 
 		if (!$status->deleteStatus((int)$status_id))
 		{
-			return new ErrorResponse(404, $status->getErrors());
+			return new ErrorResponse($status->getHttpCode(), $status->getErrors());
 		}
+
+		return new SuccessResponse(200, [], 'Status has been deleted');
 	}
 }
