@@ -6,6 +6,8 @@ Application::autoload();
 
 Application::shutdown_handler();
 
+//Application::error_handler();
+
 Application::exception_handler();
 
 use \Core\Router\RouterLib;

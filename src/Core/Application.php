@@ -8,6 +8,16 @@ class Application
 {
 	private static $autoloaded = false;
 
+	public static function error_handler() : void
+	{
+		set_error_handler(function ($error_number, $error, $error_file, $error_line)
+		{
+			error_clear_last();
+			var_dump($error_number);
+			exit();
+		});
+	}
+
 	public static function exception_handler() : void
 	{
 		set_exception_handler(function ($exception)

@@ -60,13 +60,8 @@ class Status extends Controller
 		return new SuccessResponse(200, [], 'Status Created.');
 	}
 
-	public function getStatus(Request $request, $status_id)
+	public function getStatus(Request $request, int $status_id)
 	{
-		if (!is_numeric($status_id))
-		{
-			return new ErrorResponse(400, 'Status ID must be an integer.');
-		}
-
 		$entity = new StatusEntity();
 		$model = $entity->find((int)$status_id);
 
@@ -78,13 +73,8 @@ class Status extends Controller
 		return new SuccessResponse(200, $model->toPublicArray());
 	}
 
-	public function updateStatus(Request $request, $status_id)
+	public function updateStatus(Request $request, int $status_id)
 	{
-		if (!is_numeric($status_id))
-		{
-			return new ErrorResponse(400, 'Status ID must be an integer.');
-		}
-
 		$input = $request->getRequestInput();
 		$status_content = $input->get('status_content');
 		if ($status_content === null)
@@ -101,13 +91,8 @@ class Status extends Controller
 		return new SuccessResponse(200, [], 'Status updated.');
 	}
 
-	public function deleteStatus(Request $request, $status_id)
+	public function deleteStatus(Request $request, int $status_id)
 	{
-		if (!is_numeric($status_id))
-		{
-			return new ErrorResponse(400, 'Status ID must be an integer.');
-		}
-
 		$status = new StatusGateway($request->getAuth()->getAccount());
 
 		if (!$status->deleteStatus((int)$status_id))
