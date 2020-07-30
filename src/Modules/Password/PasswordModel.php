@@ -36,6 +36,11 @@ class PasswordModel extends Model
 		return password_verify($this->getPassword(), $verify_hash);
 	}
 
+	public function reset() : void
+	{
+		$this->password = '';
+	}
+
 	public function setPrimaryKey($value) : void
 	{
 		throw new BadMethodCallException('Password Model function is not implemented');
@@ -44,11 +49,6 @@ class PasswordModel extends Model
 	public function getPrimaryKey()
 	{
 		throw new BadMethodCallException('Password Model function is not implemented');
-	}
-
-	public function reset() : void
-	{
-		$this->password = '';
 	}
 
 	public function toPublicArray() : array
