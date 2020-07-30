@@ -8,7 +8,7 @@ use Modules\User\Models\UserValidator;
 use Modules\User\Models\VerificationModel;
 use Modules\Password\PasswordModel;
 use Modules\Password\PasswordValidator;
-use Modules\Password\KeyGenerator;
+use Core\Util\KeyGenerator;
 use Classes\MailWrapper;
 use Modules\Auth\Models\OAuthBearerModel;
 
