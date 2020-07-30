@@ -7,7 +7,7 @@ use Core\Model\Model;
 class OAuthRefreshModel extends Model
 {
 	private string $_refresh_token = '';
-	private int $_ACCTID = 0;
+	private int $_USERID = 0;
 	private string $_date_expiration = DATE_ZERO;
 	private string $_authorized_ip = '127.0.0.1';
 	private int $_scope = ScopeModel::GLOBAL_SCOPE;
@@ -28,14 +28,14 @@ class OAuthRefreshModel extends Model
 		$this->refresh_token = $refresh_token;
 	}
 
-	public function getACCTID() : int
+	public function getUSERID() : int
 	{
-		return $this->ACCTID;
+		return $this->USERID;
 	}
 
-	public function setACCTID(int $ACCTID) : void
+	public function setUSERID(int $USERID) : void
 	{
-		$this->ACCTID = $ACCTID
+		$this->USERID = $USERID
 	}
 
 	public function getDateExpiration() : string
@@ -85,7 +85,7 @@ class OAuthRefreshModel extends Model
 	{
 		return [
 			'refresh_token'   => $this->getRefreshToken(),
-			'ACCTID'          => $this->getACCTID(),
+			'USERID'          => $this->getUSERID(),
 			'date_expiration' => $this->getDateExpiration(),
 			'authorized_ip'   => $this->getAuthorizedIP(),
 			'scope'           => $this->getScope()
@@ -102,7 +102,7 @@ class OAuthRefreshModel extends Model
 	public function reset() : void
 	{
 		$this->setRefreshToken($this->_refresh_token);
-		$this->setACCTID($this->_ACCTID);
+		$this->setUSERID($this->_USERID);
 		$this->setDateExpiration($this->_date_expiration);
 		$this->setAuthorizedIP($this->_authorized_ip);
 		$this->setScope($this->_scope);

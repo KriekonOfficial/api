@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Account\Models;
+namespace Modules\User\Models;
 
 use Core\Model\BaseValidator;
-use Modules\Account\Account;
+use Modules\User\User;
 use \DateTime;
 
-class AccountValidator extends BaseValidator
+class UserValidator extends BaseValidator
 {
 	public function validateEmail(string $email) : bool
 	{
@@ -23,7 +23,7 @@ class AccountValidator extends BaseValidator
 			return false;
 		}
 
-		$entity = new Account();
+		$entity = new User();
 		$model = $entity->findEmail($email);
 
 		if ($model->isInitialized())
@@ -41,10 +41,10 @@ class AccountValidator extends BaseValidator
 
 		if (!($date && ($date->format($format) === $date_of_birth)))
 		{
-			$this->addError('Date of Birth is in an improper format, must be YYYY-mm-dd');
+			$this->addError($this->getCurrentEntityProperty() . ' is in an improper format, must be YYYY-mm-dd');
 			return false;
 		}
-    	return true;
+		return true;
 	}
 
 	public function validateAge(string $date_of_birth, int $age) : bool

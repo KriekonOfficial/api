@@ -8,10 +8,10 @@ use Core\Response\ErrorResponse;
 use Core\Response\SuccessResponse;
 
 use Modules\Password\PasswordModel;
-use Modules\Account\AccountGateway;
-use Modules\Account\Models\AccountModel;
+use Modules\User\UserGateway;
+use Modules\User\Models\UserModel;
 
-class Account extends Controller
+class User extends Controller
 {
 	public function __construct()
 	{
@@ -23,23 +23,23 @@ class Account extends Controller
 
 	public function info(Request $request)
 	{
-		$account = $request->getAuth()->getAccount();
+		$user = $request->getAuth()->getUser();
 
-		return new SuccessResponse(200, $account->toPublicArray(), 'Account Information');
+		return new SuccessResponse(200, $user->toPublicArray(), 'User Information');
 	}
 
 	public function register(Request $request)
 	{
 		$input = $request->getRequestInput();
 
-		$model = new AccountModel();
+		$model = new UserModel();
 		$model->setEmail(trim($input->get('email') ?? ''));
 		$model->setDateOfBirth(trim($input->get('date_of_birth') ?? ''));
 
 		$password = new PasswordModel($input->get('password') ?? '');
 		$model->setPasswordHash($password->generatePasswordHash());
 
-		$gateway = new AccountGateway($model);
+		$gateway = new UserGateway($model);
 		if (!$gateway->register($password))
 		{
 			return new ErrorResponse(400, $gateway->getErrors());
@@ -52,12 +52,12 @@ class Account extends Controller
 	{
 		$input = $request->getRequestInput();
 
-		$model = new AccountModel();
+		$model = new UserModel();
 		$model->setEmail(trim($input->get('email') ?? ''));
 
 		$password = new PasswordModel($input->get('password') ?? '');
 
-		$gateway = new AccountGateway($model);
+		$gateway = new UserGateway($model);
 		if (!$gateway->login($password, Request::getRequestIP(), $oauth))
 		{
 			return new ErrorResponse(405, $gateway->getErrors());
@@ -71,16 +71,14 @@ class Account extends Controller
 
 	public function verify(Request $request, string $verification_code)
 	{
-		$input = $request->getRequestInput();
+		$model = new UserModel();
+		$user = new UserGateway($model);
 
-		$model = new AccountModel();
-		$account = new AccountGateway($model);
-
-		if (!$account->verifyEmail($verification_code))
+		if (!$user->verifyEmail($verification_code))
 		{
-			return new ErrorResponse(404, $account->getErrors());
+			return new ErrorResponse(404, $user->getErrors());
 		}
 
-		return new SuccessResponse(200, [], 'Congratulations your account is now verified! Happy posting :)');
+		return new SuccessResponse(200, [], 'Congratulations your user is now verified! Happy posting :)');
 	}
 }

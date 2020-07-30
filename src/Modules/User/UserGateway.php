@@ -1,22 +1,22 @@
 <?php
 
-namespace Modules\Account;
+namespace Modules\User;
 
 use Core\ErrorBase;
-use Modules\Account\Models\AccountModel;
-use Modules\Account\Models\AccountValidator;
-use Modules\Account\Models\VerificationModel;
+use Modules\User\Models\UserModel;
+use Modules\User\Models\UserValidator;
+use Modules\User\Models\VerificationModel;
 use Modules\Password\PasswordModel;
 use Modules\Password\PasswordValidator;
 use Modules\Password\KeyGenerator;
 use Classes\MailWrapper;
 use Modules\Auth\Models\OAuthBearerModel;
 
-class AccountGateway extends ErrorBase
+class UserGateway extends ErrorBase
 {
 	private $model;
 
-	public function __construct(AccountModel $model)
+	public function __construct(UserModel $model)
 	{
 		$this->model = $model;
 	}
@@ -25,15 +25,15 @@ class AccountGateway extends ErrorBase
 	{
 		$this->model->setRegistrationTime(date(DATEFORMAT_STANDARD));
 
-		$account_validator = new AccountValidator($this->model);
-		$account_validator->addValidator('validateAge', [16]);
+		$user_validator = new UserValidator($this->model);
+		$user_validator->addValidator('validateAge', [16]);
 
-		$account_validator->addRule('validateEmail', ['email']);
-		$account_validator->addRule('validateDateOfBirth', ['date_of_birth']);
-		$account_validator->addRule('validateAge', ['date_of_birth']);
-		if (!$account_validator->validate())
+		$user_validator->addRule('validateEmail', ['email']);
+		$user_validator->addRule('validateDateOfBirth', ['date_of_birth']);
+		$user_validator->addRule('validateAge', ['date_of_birth']);
+		if (!$user_validator->validate())
 		{
-			$this->addError($account_validator->getErrors());
+			$this->addError($user_validator->getErrors());
 			return false;
 		}
 
@@ -49,7 +49,7 @@ class AccountGateway extends ErrorBase
 		$this->model = $entity->store();
 
 		$verification = new VerificationModel();
-		$verification->setACCTID($this->model->getACCTID());
+		$verification->setUSERID($this->model->getUSERID());
 		$verification->setPrimaryKey(KeyGenerator::generateToken(24));
 
 		$verification_entity = $verification->createEntity();
@@ -90,7 +90,7 @@ class AccountGateway extends ErrorBase
 
 		$bearer = new OAuthBearerModel();
 		$bearer->setAccessToken(KeyGenerator::generateToken(24));
-		$bearer->setACCTID($this->model->getACCTID());
+		$bearer->setUSERID($this->model->getUSERID());
 		$bearer->setAuthorizedIP($ip_address);
 		$bearer->setDateExpiration(date(DATEFORMAT_STANDARD, strtotime('+1 hour')));
 		$bearer->generateBearerToken();
@@ -114,30 +114,30 @@ class AccountGateway extends ErrorBase
 			return false;
 		}
 
-		$account = new AccountModel();
-		$account_entity = $account->createEntity();
+		$user = new UserModel();
+		$user_entity = $user->createEntity();
 
-		$account = $account_entity->find($verify->getACCTID());
-		$account->setVerified(AccountModel::VERIFIED_ON);
+		$user = $user_entity->find($verify->getUSERID());
+		$user->setVerified(UserModel::VERIFIED_ON);
 
-		if (!$account->isInitialized())
+		if (!$user->isInitialized())
 		{
-			$this->addError('Account no longer exists.');
+			$this->addError('User no longer exists.');
 			return false;
 		}
 
-		if (!$account_entity->update(['verified']))
+		if (!$user_entity->update(['verified']))
 		{
-			$this->addError('Unable to verify the account.');
+			$this->addError('Unable to verify the user.');
 			return false;
 		}
 
 		$entity->delete();
 
 		$mail = new MailWrapper('noreply@kriekon.com', EMAILS['noreply@kriekon.com']);
-		$mail->addAddress($account->getEmail(), SITE_NAME);
+		$mail->addAddress($user->getEmail(), SITE_NAME);
 
-		$body = "Welcome my friend! Your account has now been verified, and you can now start your adventure on " . SITE_NAME . "!\n";
+		$body = "Welcome my friend! Your user has now been verified, and you can now start your adventure on " . SITE_NAME . "!\n";
 		$body .= "Try to keep the shit posting to a minimum, but hey :P Freedom of Speech.\n\n";
 		$body .= "Enjoy!";
 		$mail->send('The Real Welcome to ' . SITE_NAME . ' :P', $body);

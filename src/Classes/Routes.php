@@ -25,33 +25,32 @@ class Routes implements RouteInterface
 	{
 		$route->addGroup('/user', function (Collector $route)
 		{
-			$this->userAccount($route);
+			$this->userRoot($route);
 			$this->userStatus($route);
 		});
 	}
 
-	private function userAccount(Collector $route)
+	private function userRoot(Collector $route)
 	{
-		$controller = \Controllers\V1\User\Account::class;
+		$controller = \Controllers\V1\User\User::class;
 
-		$route->addRoute('GET', '/account', $controller . '::info');
-		$route->addGroup('/account', function (Collector $route) use ($controller)
-		{
-			$route->addRoute('POST', '/register', $controller . '::register');
-			$route->addRoute('GET', '/verify/{code}', $controller . '::verify');
-			$route->addRoute('POST', '/login', $controller . '::login');
-		});
+		$route->addRoute('GET', '', $controller . '::info');
+		$route->addRoute('POST', '', $controller . '::register');
+		$route->addRoute('GET', '/verify/{code}', $controller . '::verify');
+		$route->addRoute('POST', '/login', $controller . '::login');
 	}
 
 	private function userStatus(Collector $route)
 	{
 		$controller = \Controllers\V1\User\Status::class;
 
-		$route->addRoute('GET', '/status', $controller . '::listStatus');
-		$route->addRoute('GET', '/status/{id}', $controller . '::getStatus');
-
-		$route->addRoute('POST', '/status', $controller . '::createStatus');
-		$route->addRoute('PUT', '/status/{id}', $controller . '::updateStatus');
-		$route->addRoute('DELETE', '/status/{id}', $controller . '::deleteStatus');
+		$route->addGroup('/status', function (Collector $route) use ($controller)
+		{
+			$route->addRoute('GET', '', $controller . '::listStatus');
+			$route->addRoute('GET', '/{id}', $controller . '::getStatus');
+			$route->addRoute('POST', '', $controller . '::createStatus');
+			$route->addRoute('PUT', '/{id}', $controller . '::updateStatus');
+			$route->addRoute('DELETE', '/{id}', $controller . '::deleteStatus');
+		});
 	}
 }

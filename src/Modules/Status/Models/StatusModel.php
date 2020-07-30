@@ -7,13 +7,13 @@ use Core\Model\Model;
 class StatusModel extends Model
 {
 	private int $_STATUSID = 0;
-	private int $_ACCTID = 0;
+	private int $_USERID = 0;
 	private string $_status_date = DATE_ZERO;
 	private string $_status_modified_date = DATE_ZERO;
 	private string $_status_content = '';
 
 	protected int $STATUSID;
-	protected int $ACCTID;
+	protected int $USERID;
 	protected string $status_date;
 	protected string $status_modified_date;
 	protected string $status_content;
@@ -28,14 +28,14 @@ class StatusModel extends Model
 		$this->STATUSID = $STATUSID;
 	}
 
-	public function getACCTID() : int
+	public function getUSERID() : int
 	{
-		return $this->ACCTID;
+		return $this->USERID;
 	}
 
-	public function setACCTID(int $ACCTID) : void
+	public function setUSERID(int $USERID) : void
 	{
-		$this->ACCTID = $ACCTID;
+		$this->USERID = $USERID;
 	}
 
 	public function getStatusDate() : string
@@ -86,7 +86,7 @@ class StatusModel extends Model
 	public function reset() : void
 	{
 		$this->setStatusID($this->_STATUSID);
-		$this->setACCTID($this->_ACCTID);
+		$this->setUSERID($this->_USERID);
 		$this->setStatusDate($this->_status_date);
 		$this->setStatusModifiedDate($this->_status_modified_date);
 		$this->setStatusContent($this->_status_content);
@@ -96,7 +96,7 @@ class StatusModel extends Model
 	{
 		return [
 			'STATUSID' => $this->getStatusID(),
-			'ACCTID' => $this->getACCTID(),
+			'USERID' => $this->getUSERID(),
 			'status_date' => $this->getStatusDate(),
 			'status_modified_date' => $this->getStatusModifiedDate(),
 			'status_content' => $this->getStatusContent()

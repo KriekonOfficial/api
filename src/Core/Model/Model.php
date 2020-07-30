@@ -39,7 +39,7 @@ abstract class Model
 
 	/**
 	* The class path to the entity instance from the model.
-	* Example \Modules\Account\Account
+	* Example \Modules\User\User
 	*/
 	abstract protected function getEntityPath() : string;
 

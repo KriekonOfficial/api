@@ -13,7 +13,7 @@ class StatusEntity extends DBEntity
 
 	public function getCollectionTable() : string
 	{
-		return 'account_status';
+		return 'user_status';
 	}
 
 	public function getCollectionPrimaryKey() : string

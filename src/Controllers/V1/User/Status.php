@@ -9,23 +9,23 @@ use Core\Response\SuccessResponse;
 
 use Modules\Status\StatusGateway;
 use Modules\Status\StatusEntity;
-use Modules\Account\Account;
+use Modules\User\User;
 class Status extends Controller
 {
 	public function listStatus(Request $request, array $get_params)
 	{
-		$ACCTID = $get_params['ACCTID'] ?? false;
+		$USERID = $get_params['USERID'] ?? false;
 		$page = $get_params['page'] ?? 1;
 		$per_page = $get_params['per_page'] ?? 25;
 
-		$account = $request->getAuth()->getAccount();
-		if ($ACCTID !== false)
+		$user = $request->getAuth()->getUser();
+		if ($USERID !== false)
 		{
-			$account_entity = new Account();
-			$account = $account_entity->find($ACCTID);
+			$user_entity = new User();
+			$user = $user_entity->find($USERID);
 		}
 
-		$status = new StatusGateway($account);
+		$status = new StatusGateway($user);
 		$list = $status->listStatus((int)$page, (int)$per_page, $total);
 
 		if ($status->hasError())
@@ -49,9 +49,9 @@ class Status extends Controller
 		{
 			return new ErrorResponse(400, 'Invalid parameter, missing status_content.');
 		}
-		$account = $request->getAuth()->getAccount();
+		$user = $request->getAuth()->getUser();
 
-		$status = new StatusGateway($account);
+		$status = new StatusGateway($user);
 		if (!$status->createStatus($status_content))
 		{
 			return new ErrorResponse(400, $status->getErrors());
@@ -82,7 +82,7 @@ class Status extends Controller
 			return new ErrorResponse(400, 'Invalid parameter, missing status_content.');
 		}
 
-		$status = new StatusGateway($request->getAuth()->getAccount());
+		$status = new StatusGateway($request->getAuth()->getUser());
 
 		if (!$status->updateStatus($status_id, $status_content))
 		{
@@ -93,7 +93,7 @@ class Status extends Controller
 
 	public function deleteStatus(Request $request, int $status_id)
 	{
-		$status = new StatusGateway($request->getAuth()->getAccount());
+		$status = new StatusGateway($request->getAuth()->getUser());
 
 		if (!$status->deleteStatus((int)$status_id))
 		{

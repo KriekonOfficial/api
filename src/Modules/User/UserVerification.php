@@ -1,20 +1,20 @@
 <?php
 
-namespace Modules\Account;
+namespace Modules\User;
 
 use Core\Entity\CacheEntity;
-use Modules\Account\Models\VerificationModel;
+use Modules\User\Models\VerificationModel;
 
-class AccountVerification extends CacheEntity
+class UserVerification extends CacheEntity
 {
 	public function getModelPath() : string
 	{
-		return '\Modules\Account\Models\VerificationModel';
+		return '\Modules\User\Models\VerificationModel';
 	}
 
 	public function getCollectionTable() : string
 	{
-		return 'account_verification';
+		return 'user_verification';
 	}
 
 	public function getCollectionPrimaryKey() : string

@@ -1,27 +1,27 @@
 <?php
 
-namespace Modules\Account\Models;
+namespace Modules\User\Models;
 
 use Core\Model\Model;
 
 class VerificationModel extends Model
 {
-	private int $_ACCTID = 0;
+	private int $_USERID = 0;
 	private string $_verification_code = '';
 	private string $_date_expire = '0000-00-00 00:00:00';
 
-	protected int $ACCTID;
+	protected int $USERID;
 	protected string $verification_code;
 	protected string $date_expire;
 
-	public function getACCTID() : int
+	public function getUSERID() : int
 	{
-		return $this->ACCTID;
+		return $this->USERID;
 	}
 
-	public function setACCTID(int $ACCTID) : void
+	public function setUSERID(int $USERID) : void
 	{
-		$this->ACCTID = $ACCTID;
+		$this->USERID = $USERID;
 	}
 
 	public function getVerificationCode() : string
@@ -61,7 +61,7 @@ class VerificationModel extends Model
 	public function toArray() : array
 	{
 		return [
-			'ACCTID'            => $this->getACCTID(),
+			'USERID'            => $this->getUSERID(),
 			'verification_code' => $this->getVerificationCode(),
 			'date_expire'       => $this->getDateExpire()
 		];
@@ -74,13 +74,13 @@ class VerificationModel extends Model
 
 	public function reset() : void
 	{
-		$this->setACCTID($this->_ACCTID);
+		$this->setUSERID($this->_USERID);
 		$this->setVerificationCode($this->_verification_code);
 		$this->setDateExpire($this->_date_expire);
 	}
 
 	protected function getEntityPath() : string
 	{
-		return '\Modules\Account\AccountVerification';
+		return '\Modules\User\UserVerification';
 	}
 }

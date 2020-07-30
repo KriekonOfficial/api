@@ -7,11 +7,11 @@ use Core\Router\Interfaces\AuthInterface;
 use Core\Router\CurrentRoute;
 use Modules\Auth\OAuthBearer;
 use Modules\Auth\Models\OAuthBearerModel;
-use Modules\Account\Account;
+use Modules\User\User;
 
 class Authentication extends ErrorBase implements AuthInterface
 {
-	private $account = null;
+	private $user = null;
 
 	public function checkAuth(CurrentRoute $route) : bool
 	{
@@ -53,12 +53,12 @@ class Authentication extends ErrorBase implements AuthInterface
 			return false;
 		}
 
-		$account_entity = new Account();
-		$this->account = $account_entity->find($oauth->getACCTID());
+		$user_entity = new User();
+		$this->user = $user_entity->find($oauth->getUSERID());
 
-		if (!$this->account->isInitialized())
+		if (!$this->user->isInitialized())
 		{
-			$this->addError('Account no longer exists.');
+			$this->addError('User no longer exists.');
 			return false;
 		}
 
@@ -70,12 +70,12 @@ class Authentication extends ErrorBase implements AuthInterface
 
 	public function isAuthorized() : bool
 	{
-		return $this->account !== null;
+		return $this->user !== null;
 	}
 
-	public function getAccount()
+	public function getUser()
 	{
-		return $this->account;
+		return $this->user;
 	}
 
 	private function parseAuthorizationHeader(string $authorization, ?array &$contents) : bool
@@ -134,11 +134,11 @@ class Authentication extends ErrorBase implements AuthInterface
 			$this->addError('Something went wrong, please login again to remedy this issue.');
 			return false;
 		}
-		$ACCTID = $data['ACCTID'] ?? 0;
+		$USERID = $data['USERID'] ?? 0;
 
-		if ($ACCTID != $model->getACCTID())
+		if ($USERID != $model->getUSERID())
 		{
-			$this->addError('Hey Pal, do you want a job? Congrats on cracking the encryption. But you won\'t be able to steal that account that way :P.');
+			$this->addError('Hey Pal, do you want a job? Congrats on cracking the encryption. But you won\'t be able to steal that user that way :P.');
 			return false;
 		}
 

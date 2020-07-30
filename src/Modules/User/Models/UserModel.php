@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Account\Models;
+namespace Modules\User\Models;
 
 use Core\Model\Model;
 use Core\Util\TimeUtils;
 
-class AccountModel extends Model
+class UserModel extends Model
 {
 	public const LOCKED_ON = 1;
 	public const LOCKED_OFF = 0;
@@ -13,7 +13,7 @@ class AccountModel extends Model
 	public const VERIFIED_ON = 1;
 	public const VERIFIED_OFF = 0;
 
-	private int $_ACCTID = 0;
+	private int $_USERID = 0;
 	private string $_first_name = '';
 	private string $_last_name = '';
 	private string $_email = '';
@@ -24,7 +24,7 @@ class AccountModel extends Model
 	private int $_verified = self::VERIFIED_OFF;
 	private int $_locked = self::LOCKED_OFF;
 
-	protected int $ACCTID;
+	protected int $USERID;
 	protected string $first_name;
 	protected string $last_name;
 	protected string $email;
@@ -35,14 +35,14 @@ class AccountModel extends Model
 	protected int $verified;
 	protected int $locked;
 
-	public function getACCTID() : int
+	public function getUSERID() : int
 	{
-		return $this->ACCTID;
+		return $this->USERID;
 	}
 
-	public function setACCTID(int $ACCTID) : void
+	public function setUSERID(int $USERID) : void
 	{
-		$this->ACCTID = $ACCTID;
+		$this->USERID = $USERID;
 	}
 
 	public function getFirstName() : string
@@ -158,18 +158,18 @@ class AccountModel extends Model
 
 	public function getPrimaryKey()
 	{
-		return $this->getACCTID();
+		return $this->getUSERID();
 	}
 
 	public function setPrimaryKey($value) : void
 	{
-		$this->setACCTID($value);
+		$this->setUSERID($value);
 	}
 
 	public function toArray() : array
 	{
 		return [
-			'ACCTID' => $this->getACCTID(),
+			'USERID' => $this->getUSERID(),
 			'first_name' => $this->getFirstName(),
 			'last_name' => $this->getLastName(),
 			'email' => $this->getEmail(),
@@ -191,7 +191,7 @@ class AccountModel extends Model
 
 	public function reset() : void
 	{
-		$this->setPrimaryKey($this->_ACCTID);
+		$this->setPrimaryKey($this->_USERID);
 		$this->setFirstName($this->_first_name);
 		$this->setLastName($this->_last_name);
 		$this->setEmail($this->_email);
@@ -205,6 +205,6 @@ class AccountModel extends Model
 
 	protected function getEntityPath() : string
 	{
-		return '\Modules\Account\Account';
+		return '\Modules\User\User';
 	}
 }

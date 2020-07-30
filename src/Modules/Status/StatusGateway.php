@@ -12,14 +12,14 @@ use Modules\Status\Models\StatusModel;
 use Modules\Status\StatusEntity;
 use Modules\Status\Models\StatusList;
 
-use Modules\Account\Models\AccountModel;
+use Modules\User\Models\UserModel;
 
 class StatusGateway extends ErrorBase
 {
-	private $account;
-	public function __construct(AccountModel $account)
+	private $user;
+	public function __construct(UserModel $user)
 	{
-		$this->account = $account;
+		$this->user = $user;
 	}
 
 	public function listStatus(int $page = 1, int $per_page = 25, ?int &$total = 0) : array
@@ -38,7 +38,7 @@ class StatusGateway extends ErrorBase
 			$offset = $page * $per_page;
 		}
 
-		$list = new StatusList($this->account->getACCTID(), $offset, $per_page);
+		$list = new StatusList($this->user->getUSERID(), $offset, $per_page);
 		$total = $list->getTotalCount();
 		foreach ($list as $key => $model)
 		{
@@ -68,7 +68,7 @@ class StatusGateway extends ErrorBase
 		}
 
 		$log = new LogModel('Status ID has been deleted: ' . $STATUSID, LogLevel::LOG);
-		$log->setAssociation('ACCTID', $model->getACCTID());
+		$log->setAssociation('USERID', $model->getUSERID());
 		$log->setLogType('status_delete');
 		Logger::log($log);
 
@@ -78,7 +78,7 @@ class StatusGateway extends ErrorBase
 	public function createStatus(string $status_content) : bool
 	{
 		$status = new StatusModel();
-		$status->setACCTID($this->account->getACCTID());
+		$status->setUSERID($this->user->getUSERID());
 		$status->setStatusDate(date(DATEFORMAT_STANDARD));
 		$status->setStatusContent($status_content);
 

@@ -16,17 +16,17 @@ class LogLevel
 	public const LOG = 9;
 
 	public const LOG_TYPES = [
-		'emergency'      => 1,
-		'alert'          => 2,
-		'critical'       => 3,
-		'error'          => 4,
-		'warning'        => 5,
-		'notice'         => 6,
-		'info'           => 7,
-		'debug'          => 8,
-		'log'            => 9,
-		'account_login'  => 10,
-		'account_logout' => 11,
+		'emergency'     => 1,
+		'alert'         => 2,
+		'critical'      => 3,
+		'error'         => 4,
+		'warning'       => 5,
+		'notice'        => 6,
+		'info'          => 7,
+		'debug'         => 8,
+		'log'           => 9,
+		'user_login'    => 10,
+		'user_logout'   => 11,
 		'status_delete' => 12
 	];
 
@@ -72,8 +72,7 @@ class LogLevel
 			break;
 
 			default:
-				throw new LoggerException('Invalid Log Level type selected: ' . $level);
-			break;
+			throw new LoggerException('Invalid Log Level type selected: ' . $level);
 		}
 		return $description;
 	}
