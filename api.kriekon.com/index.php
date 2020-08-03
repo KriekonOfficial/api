@@ -15,6 +15,9 @@ use \Core\Router\Router;
 use \Core\Router\RouterURI;
 use \Classes\Routes;
 use \Modules\Auth\Authentication;
+use \Core\Environment\Config;
+
+Config::setConfig('/home/projects/kriekon/api/config.json');
 
 $uri = RouterLib::parseURI(RouterLib::initRoutes(new Routes()));
 $router = new Router($uri, new Authentication());
