@@ -20,6 +20,9 @@ $generator->addConfigOption('emails', array(
 
 $generator->addConfigOption('default_db', 'kriekon');
 $generator->addConfigOption('default_log_db', 'kriekon_log');
+$generator->addConfigOption('site_name', 'Kriekon');
+$generator->addConfigOption('www_url', 'http://local.www.kriekon.com');
+$generator->addConfigOption('api_url', 'http://local.api.kriekon.com');
 
 $generator->generate();
 
