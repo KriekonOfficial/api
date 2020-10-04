@@ -3,6 +3,7 @@
 namespace Modules\User;
 
 use Core\Entity\CacheEntity;
+use Core\Util\TimeUtils;
 use Modules\User\Models\VerificationModel;
 
 class UserVerification extends CacheEntity
@@ -24,6 +25,6 @@ class UserVerification extends CacheEntity
 
 	public function getEntityCacheTime() : int
 	{
-		return ONE_DAY * 2;
+		return TimeUtils::ONE_DAY * 2;
 	}
 }

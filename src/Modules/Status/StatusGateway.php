@@ -5,8 +5,9 @@ namespace Modules\Status;
 use Core\ErrorBase;
 use Core\Logger\Logger;
 use Core\Logger\Model\LogModel;
-use COre\Logger\LogLevel;
+use Core\Logger\LogLevel;
 use Core\Model\BaseValidator;
+use Core\Util\TimeUtils;
 
 use Modules\Status\Models\StatusModel;
 use Modules\Status\StatusEntity;
@@ -79,7 +80,7 @@ class StatusGateway extends ErrorBase
 	{
 		$status = new StatusModel();
 		$status->setUSERID($this->user->getUSERID());
-		$status->setStatusDate(date(DATEFORMAT_STANDARD));
+		$status->setStatusDate(date(TimeUtils::DATEFORMAT_STANDARD));
 		$status->setStatusContent($status_content);
 
 		if (!$this->validateStatus($status))
@@ -105,7 +106,7 @@ class StatusGateway extends ErrorBase
 		}
 
 		$status->setStatusContent($status_content);
-		$status->setStatusModifiedDate(date(DATEFORMAT_STANDARD));
+		$status->setStatusModifiedDate(date(TimeUtils::DATEFORMAT_STANDARD));
 
 		if (!$this->validateStatus($status))
 		{

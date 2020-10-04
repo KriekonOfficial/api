@@ -4,12 +4,13 @@ namespace Modules\Auth\Models;
 
 use Core\Model\Model;
 use Core\Util\JSONWrapper;
+use Core\Util\TimeUtils;
 
 class OAuthBearerModel extends Model
 {
 	private string $_access_token = '';
 	private int $_USERID = 0;
-	private string $_date_expiration = DATE_ZERO;
+	private string $_date_expiration = TimeUtils::DATE_ZERO;
 	private string $_authorized_ip = '127.0.0.1';
 	private int $_scope = ScopeModel::GLOBAL_SCOPE;
 	private string $_iv = '';

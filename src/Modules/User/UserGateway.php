@@ -9,6 +9,7 @@ use Modules\User\Models\VerificationModel;
 use Modules\Password\PasswordModel;
 use Modules\Password\PasswordValidator;
 use Core\Util\KeyGenerator;
+use Core\Util\TimeUtils;
 use Classes\MailWrapper;
 use Modules\Auth\Models\OAuthBearerModel;
 
@@ -23,7 +24,7 @@ class UserGateway extends ErrorBase
 
 	public function register(PasswordModel $password) : bool
 	{
-		$this->model->setRegistrationTime(date(DATEFORMAT_STANDARD));
+		$this->model->setRegistrationTime(date(TimeUtils::DATEFORMAT_STANDARD));
 
 		$user_validator = new UserValidator($this->model);
 		$user_validator->addValidator('validateAge', [16]);
@@ -53,7 +54,7 @@ class UserGateway extends ErrorBase
 		$verification->setPrimaryKey(KeyGenerator::generateToken(24));
 
 		$verification_entity = $verification->createEntity();
-		$verification->setDateExpire(date(DATEFORMAT_STANDARD, time() + $verification_entity->getEntityCacheTime()));
+		$verification->setDateExpire(date(TimeUtils::DATEFORMAT_STANDARD, time() + $verification_entity->getEntityCacheTime()));
 		$verification_entity = $verification->createEntity();
 
 		$verification_entity->store();
@@ -92,7 +93,7 @@ class UserGateway extends ErrorBase
 		$bearer->setAccessToken(KeyGenerator::generateToken(24));
 		$bearer->setUSERID($this->model->getUSERID());
 		$bearer->setAuthorizedIP($ip_address);
-		$bearer->setDateExpiration(date(DATEFORMAT_STANDARD, strtotime('+1 hour')));
+		$bearer->setDateExpiration(date(TimeUtils::DATEFORMAT_STANDARD, strtotime('+1 hour')));
 		$bearer->generateBearerToken();
 
 		$bearer_entity = $bearer->createEntity();

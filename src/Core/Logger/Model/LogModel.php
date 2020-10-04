@@ -2,6 +2,8 @@
 
 namespace Core\Logger\Model;
 
+use Core\Util\TimeUtils;
+
 class LogModel
 {
 	protected string $message;
@@ -18,7 +20,7 @@ class LogModel
 		$this->setMessage($message);
 		$this->setLogLevel($level);
 
-		$this->setDate(date(DATEFORMAT_STANDARD));
+		$this->setDate(date(TimeUtils::DATEFORMAT_STANDARD));
 	}
 
 	public function setMessage(string $message) : void

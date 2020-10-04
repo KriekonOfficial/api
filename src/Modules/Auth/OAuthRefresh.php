@@ -3,6 +3,7 @@
 namespace Modules\Auth;
 
 use Core\Entity\CacheEntity;
+use Core\Util\TimeUtils;
 
 class OAuthBearer extends CacheEntity
 {
@@ -23,6 +24,6 @@ class OAuthBearer extends CacheEntity
 
 	public function getEntityCacheTime() : int
 	{
-		return ONE_DAY;
+		return TimeUtils::ONE_DAY;
 	}
 }

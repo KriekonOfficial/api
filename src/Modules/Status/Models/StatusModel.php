@@ -3,13 +3,14 @@
 namespace Modules\Status\Models;
 
 use Core\Model\Model;
+use Core\Util\TimeUtils;
 
 class StatusModel extends Model
 {
 	private int $_STATUSID = 0;
 	private int $_USERID = 0;
-	private string $_status_date = DATE_ZERO;
-	private string $_status_modified_date = DATE_ZERO;
+	private string $_status_date = TimeUtils::DATE_ZERO;
+	private string $_status_modified_date = TimeUtils::DATE_ZERO;
 	private string $_status_content = '';
 
 	protected int $STATUSID;

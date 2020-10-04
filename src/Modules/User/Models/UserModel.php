@@ -19,8 +19,8 @@ class UserModel extends Model
 	private string $_email = '';
 	private string $_username = '';
 	private string $_password_hash = '';
-	private string $_date_of_birth = DATE_HALF_ZERO;
-	private string $_registration_time = DATE_ZERO;
+	private string $_date_of_birth = TimeUtils::DATE_HALF_ZERO;
+	private string $_registration_time = TimeUtils::DATE_ZERO;
 	private int $_verified = self::VERIFIED_OFF;
 	private int $_locked = self::LOCKED_OFF;
 
@@ -147,7 +147,7 @@ class UserModel extends Model
 
 	public function getAge() : int
 	{
-		$difference = TimeUtils::getAge($this->getDateOfBirth(), date(DATEFORMAT_STANDARD));
+		$difference = TimeUtils::getAge($this->getDateOfBirth(), date(TimeUtils::DATEFORMAT_STANDARD));
 
 		return $difference->y;
 	}

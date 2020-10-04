@@ -1,8 +1,14 @@
 <?php
 
+use \Core\APIError;
+use \Core\Environment\Config;
+use \Core\Router\Interfaces\AuthInterface;
+use \Core\Router\Interfaces\RouteInterface;
+use \Core\Router\RouterLib;
+use \Core\Router\Router;
+use \Core\Router\RouterURI;
 use \Core\Response\ErrorResponse;
 use \Core\Response\GenerateOutput;
-use \Core\APIError;
 
 class Application
 {
@@ -92,10 +98,9 @@ class Application
 			throw new Exception('Unable to autoload our application twice.');
 		}
 
-		define('ROOT_PATH', dirname(dirname(dirname(__FILE__))));
+		define('ROOT_PATH', dirname(dirname(__DIR__)));
 
 		require(ROOT_PATH . '/src/includes/config.php');
-		require(ROOT_PATH . '/src/includes/global_constants.php');
 		require(ROOT_PATH . '/src/includes/global_functions.php');
 
 		spl_autoload_register(function ($class_name)
@@ -115,5 +120,27 @@ class Application
 		require_once(ROOT_PATH . '/vendor/autoload.php');
 
 		self::$autoloaded = true;
+	}
+
+	public static function bootstrapWeb(string $config_path, RouteInterface $routes, AuthInterface $authentication) : void
+	{
+		self::bootstrap($config_path);
+
+		$uri = RouterLib::parseURI(RouterLib::initRoutes($routes));
+		$router = new Router($uri, $authentication);
+		$router->routeAgent();
+	}
+
+	private static function bootstrap(string $config_path) : void
+	{
+		Config::setConfig($config_path);
+
+		$config = Config::getConfig();
+
+		define('DEFAULT_DB', $config->get('default_db'));
+		define('DEFAULT_LOG_DB', $config->get('default_log_db'));
+		define('SITE_NAME', $config->get('site_name'));
+		define('WWW_URL', $config->get('www_url'));
+		define('API_URL', $config->get('api_url'));
 	}
 }
