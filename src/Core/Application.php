@@ -9,6 +9,7 @@ use \Core\Router\Router;
 use \Core\Router\RouterURI;
 use \Core\Response\ErrorResponse;
 use \Core\Response\GenerateOutput;
+use \Core\Environment\Environment;
 
 class Application
 {
@@ -42,7 +43,7 @@ class Application
 				}
 			}
 
-			if ($error->getHttpCode() >= 500 && isDevEnv())
+			if ($error->getHttpCode() >= 500 && Environment::isDevEnv())
 			{
 				$error->setResponse([
 					'message' => $exception->getMessage(),
@@ -76,7 +77,7 @@ class Application
 				return;
 			}
 			$error = new ErrorResponse(500, 'Unknown error has occurred');
-			if (isDevEnv())
+			if (Environment::isDevEnv())
 			{
 				$error->setResponse($error_last);
 			}
