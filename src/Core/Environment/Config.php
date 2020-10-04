@@ -3,10 +3,12 @@
 namespace Core\Environment;
 
 use Core\Util\JSONWrapper;
+use Core\Environment\Model\DatabaseModel;
 
 class Config
 {
 	private static $_instance = null;
+	private static ?array $databases = null;
 
 	private array $_config;
 	private string $_file_path;
@@ -51,5 +53,26 @@ class Config
 			throw new EnvironmentException('Config Instance already exists! Only one instance of a config can exist.');
 		}
 		self::$_instance = new Config($file_path);
+	}
+
+	/**
+	* @return array of DatabaseModel
+	*/
+	public static function getDatabases() : array
+	{
+		if (self::$databases !== null)
+		{
+			return self::$databases;
+		}
+		$databases = self::getConfig()->get('databases');
+
+		$out = array();
+		foreach ($databases as $database => $attr)
+		{
+			$out[$database] = new DatabaseModel($attr['dbname'], $attr['host'], $attr['user'], $attr['password'], $attr['charset'] ?? 'UTF8');
+		}
+
+		self::$databases = $out;
+		return self::$databases;
 	}
 }

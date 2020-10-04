@@ -67,11 +67,11 @@ class DatabaseModel extends EnvironmentModel
 	public function toArray() : array
 	{
 		return [
-			'dbname' => $this->getDBName(),
-			'host' => $this->getHost(),
-			'user' => $this->getUser(),
+			'dbname'   => $this->getDBName(),
+			'host'     => $this->getHost(),
+			'user'     => $this->getUser(),
 			'password' => $this->getPassword(),
-			'charset' => $this->getCharset()
+			'charset'  => $this->getCharset()
 		];
 	}
 }

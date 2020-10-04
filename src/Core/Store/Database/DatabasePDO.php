@@ -9,6 +9,7 @@ use Core\ErrorBase;
 use Core\Store\Database\Exception\DatabaseException;
 use Core\Store\Database\Exception\InvalidConfigException;
 use Core\Store\Database\Model\DBResult;
+use Core\Environment\Config;
 
 class DatabasePDO extends ErrorBase implements DatabaseInterface
 {
@@ -229,15 +230,18 @@ class DatabasePDO extends ErrorBase implements DatabaseInterface
 	*/
 	private function connectPDO(int $timeout = 1) : bool
 	{
-		if (!isset(MYSQL[$this->dbname]))
+		$databases = Config::getDatabases();
+		if (!isset($databases[$this->dbname]))
 		{
 			throw new InvalidConfigException('No Mysql Configuration set for this Database: ' . $this->dbname);
 		}
 
-		$dsn = 'mysql:host=' . MYSQL[$this->dbname]['host'] . ';dbname=' . $this->dbname . ';charset=' . MYSQL[$this->dbname]['charset'];
+		$database = $databases[$this->dbname];
+
+		$dsn = 'mysql:host=' . $database->getHost() . ';dbname=' . $database->getDBName() . ';charset=' . $database->getCharset();
 		try
 		{
-			$this->pdo = new PDO($dsn, MYSQL[$this->dbname]['user'], MYSQL[$this->dbname]['password'], [
+			$this->pdo = new PDO($dsn, $database->getUser(), $database->getPassword(), [
 				PDO::ATTR_TIMEOUT          => $timeout, //Seconds
 				PDO::ATTR_EMULATE_PREPARES => false,
 				PDO::ATTR_ERRMODE          => PDO::ERRMODE_EXCEPTION
