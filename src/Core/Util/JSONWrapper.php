@@ -4,17 +4,43 @@ namespace Core\Util;
 
 class JSONWrapper
 {
-	public static function json(array $array, $constant = null) : string
+	private static array $errors = [];
+
+	public static function json(array $array, $constant = 0) : string
 	{
-		if ($constant !== null)
+		self::$errors = [];
+
+		$json = json_encode($array, $constant);
+
+		if ($json === false)
 		{
-			return json_encode($array, $constant);
+			self::$errors[] = json_last_error_msg();
+			return '';
 		}
-		return json_encode($array);
+		return $json;
 	}
 
 	public static function decode(string $json) : ?array
 	{
-		return json_decode($json, true);
+		self::$errors = [];
+
+		$decode = json_decode($json, true);
+		if (json_last_error() !== JSON_ERROR_NONE)
+		{
+			self::$errors[] = json_last_error_msg();
+			return null;
+		}
+		return $decode;
+	}
+
+	public static function getErrors() : array
+	{
+		return self::$errors;
+	}
+
+	public static function getLastError() : string
+	{
+		$error = end(self::$errors);
+		return $error !== false ? $error : '';
 	}
 }
