@@ -97,8 +97,12 @@ class UserGateway extends ErrorBase
 		$bearer->generateBearerToken();
 
 		$bearer_entity = $bearer->createEntity();
-		$bearer_entity->store();
-
+		$bearer = $bearer_entity->store();
+		if (!$bearer->isInitialized())
+		{
+			$this->addError('Failed to login, please try again later.');
+			return false;
+		}
 		return true;
 	}
 

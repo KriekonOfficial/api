@@ -113,7 +113,7 @@ class Authentication extends ErrorBase implements AuthInterface
 		return true;
 	}
 
-	private function getOAuthBearer(string $access_token, ?OAuthBearerModel &$model = null)
+	private function getOAuthBearer(string $access_token, ?OAuthBearerModel &$model = null) : bool
 	{
 		$oauth = new OAuthBearer();
 

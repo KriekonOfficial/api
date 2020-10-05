@@ -5,6 +5,7 @@ namespace Modules\Auth\Models;
 use Core\Model\Model;
 use Core\Util\JSONWrapper;
 use Core\Util\TimeUtils;
+use Core\Environment\Config;
 
 class OAuthBearerModel extends Model
 {
@@ -91,7 +92,7 @@ class OAuthBearerModel extends Model
 
 	public function setIV(string $iv) : void
 	{
-		$this->iv = $iv;
+		$this->iv = base64_encode($iv);
 	}
 
 	public function getIV() : string
@@ -99,14 +100,24 @@ class OAuthBearerModel extends Model
 		return $this->iv;
 	}
 
+	public function getRawIV() : string
+	{
+		return base64_decode($this->getIV());
+	}
+
 	public function setSalt(string $salt) : void
 	{
-		$this->salt = $salt;
+		$this->salt = base64_encode($salt);
 	}
 
 	public function getSalt() : string
 	{
 		return $this->salt;
+	}
+
+	public function getRawSalt() : string
+	{
+		return base64_decode($this->getSalt());
 	}
 
 	public function generateBearerToken() : void
@@ -117,19 +128,17 @@ class OAuthBearerModel extends Model
 
 		$json = JSONWrapper::json($this->toPublicArray());
 
-		$encrypted_string = openssl_encrypt($json, $cipher, 'test1234', 0, $iv);
+		$encrypted_string = openssl_encrypt($json, $cipher, self::getEncryptionKey(), 0, $iv);
 
-		$this->setSalt(base64_encode($salt));
-		$this->setIV(base64_encode($iv));
+		$this->setSalt($salt);
+		$this->setIV($iv);
 
 		$method_info = [
 			'cipher' => $cipher,
-			'salt'   => $this->getSalt(),
-			'iv'     => $this->getIV()
 		];
 
-		$bearer_token = base64_encode(JSONWrapper::json($method_info)) . '.' . $encrypted_string;
-
+		$bearer_token = base64_encode(JSONWrapper::json($method_info));
+		$bearer_token .= '.' . $encrypted_string;
 		$bearer_token .= '.' . $this->getAccessToken();
 
 		$this->setBearerToken($bearer_token);
@@ -137,7 +146,7 @@ class OAuthBearerModel extends Model
 
 	public function decryptData(string $encrypted_data) : ?array
 	{
-		$decrypt = openssl_decrypt($encrypted_data, $this->getCipher(), 'test1234', 0, base64_decode($this->getIV()));
+		$decrypt = openssl_decrypt($encrypted_data, $this->getCipher(), self::getEncryptionKey(), 0, $this->getRawIV());
 
 		if ($decrypt === false)
 		{
@@ -211,5 +220,10 @@ class OAuthBearerModel extends Model
 	protected function getEntityPath() : string
 	{
 		return '\Modules\Auth\OAuthBearer';
+	}
+
+	private static function getEncryptionKey() : string
+	{
+		return Config::getConfig()->get('encryption_keys')['oauth_encryption'];
 	}
 }
