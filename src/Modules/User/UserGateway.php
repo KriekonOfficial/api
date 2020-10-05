@@ -59,7 +59,7 @@ class UserGateway extends ErrorBase
 
 		$verification_entity->store();
 
-		$mail = new MailWrapper('noreply@kriekon.com', EMAILS['noreply@kriekon.com']);
+		$mail = new MailWrapper(MailWrapper::getDefaultEmail(), MailWrapper::getDefaultPassword());
 		$mail->addAddress($this->model->getEmail(), SITE_NAME);
 
 		$body = "Hello and welcome to the Social Network for Gamers!\n";
@@ -135,7 +135,7 @@ class UserGateway extends ErrorBase
 
 		$entity->delete();
 
-		$mail = new MailWrapper('noreply@kriekon.com', EMAILS['noreply@kriekon.com']);
+		$mail = new MailWrapper(MailWrapper::getDefaultEmail(), MailWrapper::getDefaultPassword());
 		$mail->addAddress($user->getEmail(), SITE_NAME);
 
 		$body = "Welcome my friend! Your user has now been verified, and you can now start your adventure on " . SITE_NAME . "!\n";

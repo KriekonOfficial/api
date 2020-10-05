@@ -101,7 +101,6 @@ class Application
 
 		define('ROOT_PATH', dirname(dirname(__DIR__)));
 
-		require(ROOT_PATH . '/src/includes/config.php');
 		require(ROOT_PATH . '/src/includes/global_functions.php');
 
 		spl_autoload_register(function ($class_name)

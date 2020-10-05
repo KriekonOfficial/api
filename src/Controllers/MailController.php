@@ -6,6 +6,7 @@ use Core\Controller;
 use Core\Request\Request;
 use Core\Response\ErrorResponse;
 use Core\Response\SuccessResponse;
+use Core\Environment\Config;
 
 use Classes\MailWrapper;
 
@@ -34,7 +35,7 @@ class MailController extends Controller
 
 		$input = $request->getRequestInput();
 
-		$mail = new MailWrapper('noreply@kriekon.com', EMAILS['noreply@kriekon.com']);
+		$mail = new MailWrapper(MailWrapper::getDefaultEmail(), MailWrapper::getDefaultPassword());
 		$mail->addAddress(base64_decode($input->get('email'), true), SITE_NAME);
 		$mail->isHTML(true);
 		$mail->send(base64_decode($input->get('subject'), true), base64_decode($input->get('message'), true));

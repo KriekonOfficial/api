@@ -17,7 +17,7 @@ $generator->addEncryptionKey('oauth_encryption', KeyGenerator::generateToken(45)
 $generator->addConfigOption('emails', array(
 	'noreply@kriekon.com' => '{JPyaU?fm2K2=HYz'
 ));
-
+$generator->addConfigOption('default_email', 'noreply@kriekon.com');
 $generator->addConfigOption('default_db', 'kriekon');
 $generator->addConfigOption('default_log_db', 'kriekon_log');
 $generator->addConfigOption('site_name', 'Kriekon');

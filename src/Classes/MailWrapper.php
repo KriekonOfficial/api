@@ -6,6 +6,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use Core\APIError;
+use Core\Environment\Config;
 
 class MailWrapper
 {
@@ -93,5 +94,17 @@ class MailWrapper
 		{
 			throw new APIError('Unable to send emails to ' . implode(', ', $this->getAddresses()) . ' Error: ' . $mail->ErrorInfo);
 		}
+	}
+
+	public static function getDefaultEmail() : string
+	{
+		return Config::getConfig()->get('default_email');
+	}
+
+	public static function getDefaultPassword() : string
+	{
+		$emails = Config::getConfig()->get('emails');
+
+		return $emails[self::getDefaultEmail()];
 	}
 }
