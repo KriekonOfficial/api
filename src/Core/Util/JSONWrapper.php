@@ -33,6 +33,11 @@ class JSONWrapper
 		return $decode;
 	}
 
+	public static function hasError() : bool
+	{
+		return count(self::getErrors()) >= 1;
+	}
+
 	public static function getErrors() : array
 	{
 		return self::$errors;
