@@ -3,6 +3,7 @@
 namespace Core\Store;
 
 use \Redis;
+use Core\Util\JSONWrapper;
 
 class Cache
 {
@@ -58,7 +59,12 @@ class Cache
 	*/
 	public static function setArray(string $key, array $value, int $time = 0) : bool
 	{
-		$value = json_encode($value);
+		$value = JSONWrapper::json($value);
+
+		if (JSONWrapper::hasError())
+		{
+			return false;
+		}
 
 		return self::set($key, $value, $time);
 	}
@@ -90,8 +96,7 @@ class Cache
 			return null;
 		}
 
-		$json = json_decode($json, true);
-		return $json;
+		return JSONWrapper::decode($json);
 	}
 
 	/**

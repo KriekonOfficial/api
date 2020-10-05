@@ -5,6 +5,7 @@ namespace Core\Entity;
 use \InvalidArgumentException;
 use Core\Entity\Exception\EntityException;
 use Core\Store\Cache;
+use Core\Util\JSONWrapper;
 
 abstract class CacheEntity extends Entity implements EntityInterface
 {
@@ -46,11 +47,16 @@ abstract class CacheEntity extends Entity implements EntityInterface
 		$model = $this->getModel();
 
 		$cache = Cache::setArray($this->getCacheKey(), $model->toArray(), $this->getEntityCacheTime());
-		if ($cache)
+		if ($cache === false)
 		{
-			$model->setInitializedFlag(true);
+			if (JSONWrapper::hasError())
+			{
+				throw new EntityException(JSONWrapper::getLastError());
+			}
+			return $model;
 		}
 
+		$model->setInitializedFlag(true);
 		return $model;
 	}
 
@@ -94,7 +100,12 @@ abstract class CacheEntity extends Entity implements EntityInterface
 			$array[$param] = $value;
 		}
 
-		return Cache::setArray($this->getCacheKey(), $array, $this->getEntityCacheTime());
+		$cache = Cache::setArray($this->getCacheKey(), $array, $this->getEntityCacheTime());
+		if ($cache === false && JSONWrapper::hasError())
+		{
+			throw new EntityException(JSONWrapper::getLastError());
+		}
+		return $cache;
 	}
 
 	/**
