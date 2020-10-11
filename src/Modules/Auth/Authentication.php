@@ -13,7 +13,7 @@ class Authentication extends ErrorBase implements AuthInterface
 {
 	private $user = null;
 
-	public function checkAuth(CurrentRoute $route) : bool
+	public function checkAuth(?CurrentRoute $route) : bool
 	{
 		$request = $route->getRequest();
 		$server = $request::getServer();
