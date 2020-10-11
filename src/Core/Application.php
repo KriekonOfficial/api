@@ -131,6 +131,11 @@ class Application
 		$router->routeAgent();
 	}
 
+	public static function bootstrapScript(string $config_path, AuthInterface $authentication) : void
+	{
+		self::bootstrap($config_path);
+	}
+
 	private static function bootstrap(string $config_path) : void
 	{
 		Config::setConfig($config_path);

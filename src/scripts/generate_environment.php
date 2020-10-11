@@ -1,8 +1,6 @@
 <?php
 
-require('../Core/Application.php');
-
-Application::autoload();
+require('../includes/bootstrap_script.php');
 
 use Core\Environment\EnvironmentGenerator;
 use Core\Environment\Environment;
