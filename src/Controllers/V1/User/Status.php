@@ -25,18 +25,24 @@ class Status extends Controller
 			$user = $user_entity->find($USERID);
 		}
 
-		$status = new StatusGateway($user);
-		$list = $status->listStatus((int)$page, (int)$per_page, $total);
+		$gate = new StatusGateway($user);
+		$list = $gate->listStatus((int)$page, (int)$per_page, $total);
 
-		if ($status->hasError())
+		if ($gate->hasError())
 		{
-			return new ErrorResponse(400, $status->getErrors());
+			return new ErrorResponse(400, $gate->getErrors());
+		}
+
+		$output = [];
+		foreach ($list as $status)
+		{
+			$output[] = $status->toPublicArray();
 		}
 
 		return new SuccessResponse(200, [
-			'total' => $total,
-			'page' => $page,
-			'threads' => $list
+			'total'   => $total,
+			'page'    => $page,
+			'threads' => $output
 		]);
 	}
 

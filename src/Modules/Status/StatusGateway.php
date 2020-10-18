@@ -2,6 +2,7 @@
 
 namespace Modules\Status;
 
+use \Iterator;
 use Core\ErrorBase;
 use Core\Logger\Logger;
 use Core\Logger\Model\LogModel;
@@ -23,15 +24,13 @@ class StatusGateway extends ErrorBase
 		$this->user = $user;
 	}
 
-	public function listStatus(int $page = 1, int $per_page = 25, ?int &$total = 0) : array
+	public function listStatus(int $page = 1, int $per_page = 25, ?int &$total = 0) : Iterator
 	{
 		if ($per_page > 200)
 		{
 			$this->addError('Max status threads per page is 200.');
 			return [];
 		}
-
-		$status = [];
 
 		$offset = 0;
 		if ($page > 1)
@@ -41,12 +40,8 @@ class StatusGateway extends ErrorBase
 
 		$list = new StatusList($this->user->getUSERID(), $offset, $per_page);
 		$total = $list->getTotalCount();
-		foreach ($list as $key => $model)
-		{
-			$status[] = $model->toPublicArray();
-		}
 
-		return $status;
+		return $list;
 	}
 
 	public function deleteStatus(int $STATUSID) : bool
