@@ -7,16 +7,15 @@ use Core\Store\Database\DBPool;
 use Core\Store\Database\Model\DBResult;
 use Core\Store\Database\Exception\DatabaseException;
 use Core\Store\Database\Interfaces\DatabaseInterface;
+use Core\Store\Database\Interfaces\QueryInterface;
 
 class DBWrapper
 {
-	public static function factory(string $sql, array $params = [], string $database = DEFAULT_DB) : DatabaseInterface
+	public static function factory(string $sql, array $params = [], string $database = DEFAULT_DB) : QueryInterface
 	{
 		$pool = self::getDBPool($database);
 
-		$pool->query($sql, $params);
-
-		return $pool;
+		return $pool->query($sql, $params);
 	}
 
 	/**
@@ -32,12 +31,9 @@ class DBWrapper
 	{
 		$pool = self::getDBPool($database);
 
-		$results = new DBResult($pool);
-		if ($pool->query($sql, $params))
-		{
-			$results = $pool->getDBResult();
-		}
-		return $results;
+		$query = $pool->query($sql, $params);
+
+		return $query->getDBResult();
 	}
 
 	/**
@@ -49,17 +45,12 @@ class DBWrapper
 	*/
 	public static function PExecute(string $sql, array $params = [], ?int &$out_count = 0, string $database = DEFAULT_DB) : array
 	{
-		$out_count = 0;
-
 		$pool = self::getDBPool($database);
 
-		$results = [];
-		if ($pool->query($sql, $params))
-		{
-			$results = $pool->fetchAllResults();
-			$out_count = $pool->rowCount();
-		}
-		return $results;
+		$query = $pool->query($sql, $params);
+		$out_count = $query->rowCount();
+
+		return $query->fetchAllResults();
 	}
 
 	/**
@@ -71,17 +62,12 @@ class DBWrapper
 	*/
 	public static function PSingle(string $sql, array $params = [], ?int &$out_count = 0, string $database = DEFAULT_DB) : array
 	{
-		$out_count = 0;
-
 		$pool = self::getDBPool($database);
 
-		$results = [];
-		if ($pool->query($sql, $params))
-		{
-			$results = $pool->fetchResult();
-			$out_count = $pool->rowCount();
-		}
-		return $results;
+		$query = $pool->query($sql, $params);
+		$out_count = $query->rowCount();
+
+		return $query->fetchResult();
 	}
 
 	/**
@@ -92,24 +78,20 @@ class DBWrapper
 	*/
 	public static function execute(string $sql, ?int &$out_count = 0, string $database = DEFAULT_DB) : array
 	{
-		$out_count = 0;
-
 		$pool = self::getDBPool($database);
 
-		$results = [];
-		if ($pool->query($sql))
-		{
-			$results = $pool->fetchAllResults();
-			$out_count = $pool->rowCount();
-		}
-		return $results;
+		$query = $pool->query($sql);
+		$out_count = $pool->rowCount();
+
+		return $query->fetchAllResults();
 	}
 
 	public static function insert(string $table, array $params, &$last_insert_id = 0, string $database = DEFAULT_DB) : bool
 	{
 		$pool = self::getDBPool($database);
 
-		if (!$pool->query(DatabaseLib::generateInsertSQL($table, $params), $params))
+		$query = $pool->query(DatabaseLib::generateInsertSQL($table, $params), $params);
+		if (!$query->isInitialized())
 		{
 			return false;
 		}
@@ -124,7 +106,8 @@ class DBWrapper
 		$prepared = [];
 		$sql = DatabaseLib::generateUpdateSQL($table, $set_params, $where_params, $prepared);
 
-		if (!$pool->query($sql, $prepared))
+		$query = $pool->query($sql, $prepared);
+		if (!$query->isInitialized())
 		{
 			return false;
 		}
@@ -138,7 +121,8 @@ class DBWrapper
 		$prepared = [];
 		$sql = DatabaseLib::generateDeleteSQL($table, $where_params, $prepared);
 
-		if (!$pool->query($sql, $prepared))
+		$query = $pool->query($sql, $prepared);
+		if (!$query->isInitialized())
 		{
 			return false;
 		}

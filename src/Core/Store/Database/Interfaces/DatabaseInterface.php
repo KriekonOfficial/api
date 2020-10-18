@@ -28,37 +28,7 @@ interface DatabaseInterface
 	* @param $values - The values to bind corresponding question marks to.
 	* @return bool
 	*/
-	public function query(string $sql, array $values = []) : bool;
-
-	/**
-	* Get the value of whatever is stored inside $results
-	* @return mixed Array|DBResult - Iterator/Countable data
-	*/
-	public function getResults();
-
-	/**
-	* Creates an Iterator object and only fetches 1 row at a time.
-	* @return DBResult
-	*/
-	public function getDBResult() : \Core\Store\Database\Model\DBResult;
-
-	/**
-	* Returns all the results from the query.
-	* @return array
-	*/
-	public function fetchAllResults() : array;
-
-	/**
-	* Returns a single result
-	* @return array
-	*/
-	public function fetchResult() : array;
-
-	/**
-	* The Count of the affected rows from the query.
-	* @return int
-	*/
-	public function rowCount() : int;
+	public function query(string $sql, array $values = []) : QueryInterface;
 
 	/**
 	* Returns the ID of the last inserted row, or the last value from a sequence object

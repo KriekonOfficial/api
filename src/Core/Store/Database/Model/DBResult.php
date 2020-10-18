@@ -4,7 +4,7 @@ namespace Core\Store\Database\Model;
 
 use \Iterator;
 use \Countable;
-use Core\Store\Database\Interfaces\DatabaseInterface;
+use Core\Store\Database\Interfaces\QueryInterface;
 
 class DBResult implements Iterator, Countable
 {
@@ -14,7 +14,7 @@ class DBResult implements Iterator, Countable
 	private array $record = [];
 	private int $total_count = 0;
 
-	public function __construct(DatabaseInterface $pdo_object)
+	public function __construct(QueryInterface $pdo_object)
 	{
 		$this->pdo_object = $pdo_object;
 		/**

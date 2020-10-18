@@ -5,10 +5,12 @@ namespace Core\Store\Database;
 use \PDO;
 use \PDOException;
 use Core\Store\Database\Interfaces\DatabaseInterface;
+use Core\Store\Database\Interfaces\QueryInterface;
 use Core\ErrorBase;
 use Core\Store\Database\Exception\DatabaseException;
 use Core\Store\Database\Exception\InvalidConfigException;
 use Core\Store\Database\Model\DBResult;
+use Core\Store\Database\Model\QueryResult;
 use Core\Environment\Config;
 
 class DatabasePDO extends ErrorBase implements DatabaseInterface
@@ -24,9 +26,6 @@ class DatabasePDO extends ErrorBase implements DatabaseInterface
 	protected $query;
 
 	protected string $dbname;
-
-	protected int $count = 0;
-	protected $results = [];
 
 	public function __construct(string $dbname)
 	{
@@ -63,13 +62,11 @@ class DatabasePDO extends ErrorBase implements DatabaseInterface
 	* @param $values - The values to bind corresponding question marks to.
 	* @return bool
 	*/
-	public function query(string $sql, array $values = []) : bool
+	public function query(string $sql, array $values = []) : QueryInterface
 	{
+		$result = new QueryResult(null);
 		try
 		{
-			$this->results = [];
-			$this->count = 0;
-
 			$this->query = $this->pdo->prepare($sql);
 
 			$param_position = 1;
@@ -80,68 +77,17 @@ class DatabasePDO extends ErrorBase implements DatabaseInterface
 
 			if ($this->execute())
 			{
-				$this->count = $this->query->rowCount();
-				return true;
+				return new QueryResult($this->query);
 			}
 
-			$this->setErrorInternal($this->query->errorInfo());
+			$result->addErrorInternal(implode(', ', $this->query->errorInfo()));
 		}
 		catch (PDOException $e)
 		{
 			throw new DatabaseException($e->getMessage());
 		}
 
-		return false;
-	}
-
-	/**
-	* Get the value of whatever is stored inside $results
-	* @return mixed Array|DBResult - Iterator/Countable data
-	*/
-	public function getResults()
-	{
-		return $this->results;
-	}
-
-	/**
-	* Creates an Iterator object and only fetches 1 row at a time.
-	* @return DBResult
-	*/
-	public function getDBResult() : DBResult
-	{
-		$this->results = new DBResult($this);
-		return $this->results;
-	}
-
-	/**
-	* Returns all the results from the query.
-	* @return array
-	*/
-	public function fetchAllResults() : array
-	{
-		$results = $this->query->fetchAll(PDO::FETCH_ASSOC);
-		$this->results = is_array($results) === true ? $results : [];
-		return $this->results;
-	}
-
-	/**
-	* Returns a single result
-	* @return array
-	*/
-	public function fetchResult() : array
-	{
-		$results = $this->query->fetch(PDO::FETCH_ASSOC);
-		$this->results = is_array($results) === true ? $results : [];
-		return $this->results;
-	}
-
-	/**
-	* The Count of the affected rows from the query.
-	* @return int
-	*/
-	public function rowCount() : int
-	{
-		return $this->count;
+		return $result;
 	}
 
 	/**
