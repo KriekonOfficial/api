@@ -56,7 +56,7 @@ class Config
 	}
 
 	/**
-	* @return array of DatabaseModel
+	* @return []DatabaseModel
 	*/
 	public static function getDatabases() : array
 	{
