@@ -17,7 +17,7 @@ class User extends Controller
 	{
 		foreach (['register', 'login', 'verify'] as $method)
 		{
-			$this->addRequestMetadata($method, false);
+			$this->addRequiredAuth($method, false);
 		}
 	}
 
