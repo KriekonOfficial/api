@@ -12,7 +12,7 @@ class EnvironmentGenerator
 	private string $file_path;
 	public function __construct(string $environment, string $file_path)
 	{
-		if (!in_array($environment, array(Environment::LOCAL, Environment::DEV, Environment::LIVE)))
+		if (!in_array($environment, array(Environment::LOCAL, Environment::DEV, Environment::PROD)))
 		{
 			throw new Exception('Invalid environment');
 		}
