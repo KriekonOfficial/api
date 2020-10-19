@@ -108,4 +108,20 @@ class Status extends Controller
 
 		return new SuccessResponse(200, [], 'Status has been deleted');
 	}
+
+	public function listComment(Request $request, int $status_id, array $get_params)
+	{
+		$USERID = $get_params['USERID'] ?? false;
+		$page = $get_params['page'] ?? 1;
+		$per_page = $get_params['per_page'] ?? 25;
+
+		$user = $request->getAuth()->getUser();
+		if ($USERID !== false)
+		{
+			$user_entity = new User();
+			$user = $user_entity->find($USERID);
+		}
+
+		$gate = new StatusGateway($user);
+	}
 }
