@@ -95,7 +95,14 @@ class DBResult implements Iterator, Countable
 	*/
 	public function rewind() : void
 	{
-		//Not needed.
+		if ($this->pointer != 0 && $this->pointer >= $this->count())
+		{
+			/**
+			* PDO has very limited support when it comes rewinding cursors. So no point in adding this.
+			* If you have to loop over a result set more than once, just add it to an array. Or use fetchAll.
+			*/
+			throw new DatabaseException('Unable to loop over result set twice.');
+		}
 	}
 
 	////

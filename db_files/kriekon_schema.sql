@@ -23,7 +23,7 @@ CREATE TABLE user_status
     status_date				DATETIME	NOT NULL,
     status_modified_date	DATETIME	NOT NULL 		DEFAULT '0000-00-00 00:00:00',
     status_content			TEXT		NOT NULL,
-    
+
     CONSTRAINT user_status_USERID_fk
 		FOREIGN KEY (USERID)
         REFERENCES user(USERID)
@@ -38,7 +38,7 @@ CREATE TABLE user_status_comments
     comment_date			DATETIME	NOT NULL,
     comment_modified_date	DATETIME	NULL,
     comment_content			TEXT		NOT NULL,
-    
+
     CONSTRAINT user_status_comment_USERID_fk
 		FOREIGN KEY (USERID)
         REFERENCES user(USERID),
