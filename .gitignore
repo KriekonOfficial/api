@@ -3,3 +3,5 @@
 /src/util_scripts
 /src/util_scripts/*
 /config.json
+/vagrant
+/vagrant/*
