@@ -38,6 +38,7 @@ class Dispatcher
 		}
 		catch (TypeError $e)
 		{
+			// Clean this up to allow for further debugging.
 			$string = 'A parameter does not match the appropriate data type for this endpoint, please refer to documentation.';
 
 			preg_match('/Argument\s([0-9])/', $e->getMessage(), $matches);

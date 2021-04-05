@@ -15,7 +15,7 @@ class DatabaseLib
 		$values = '';
 		$count_params = count($params);
 		$counter = 0;
-		foreach($params as $column => $value)
+		foreach ($params as $column => $value)
 		{
 			$columns .= $column;
 			$values .= '?';
@@ -42,37 +42,10 @@ class DatabaseLib
 	public static function generateUpdateSQL(string $table, array $set_params, array $where_params, array &$out_prepared) : string
 	{
 		$out_prepared = [];
-
-		$set = '';
-		$set_count = 0;
-		$count_set_params = count($set_params);
-
-		$prepared = [];
-		foreach($set_params as $column => $value)
-		{
-			$set .= $column . ' = ?';
-			if (++$set_count < $count_set_params)
-			{
-				$set .= ', ';
-			}
-			$prepared[] = $value;
-		}
-
-		$where = '';
-		$where_count = 0;
-		$count_where_params = count($where_params);
-		foreach ($where_params as $column => $value)
-		{
-			$where .= $column . ' = ?';
-			if (++$where_count < $count_where_params)
-			{
-				$where .= ' AND ';
-			}
-			$prepared[] = $value;
-		}
+		$set = self::generateParameters($set_params, $out_prepared, ',');
+		$where = self::generateParameters($where_params, $out_prepared);
 
 		$sql = 'UPDATE ' . $table . ' SET ' . $set . ' WHERE ' . $where;
-		$out_prepared = $prepared;
 		return $sql;
 	}
 
@@ -86,19 +59,24 @@ class DatabaseLib
 	{
 		$out_prepared = [];
 
-		$where = '';
-		$where_count = 0;
-		$count_where_params = count($where_params);
-		foreach ($where_params as $column => $value)
+		return 'DELETE FROM ' . $table . ' WHERE ' . self::generateParameters($where_params, $out_prepared);
+	}
+
+	private static function generateParameters(array $params, array &$out_prepared, string $delimiter = 'AND') : string
+	{
+		$parameters = '';
+		$count = 0;
+		$count_params = count($params);
+		foreach ($params as $column => $value)
 		{
-			$where .= $column . ' = ?';
-			if (++$where_count < $count_where_params)
+			$parameters .= $column . ' = ?';
+			if (++$count < $count_params)
 			{
-				$where .= ' AND ';
+				$parameters .= " {$delimiter} ";
 			}
 			$out_prepared[] = $value;
 		}
 
-		return 'DELETE FROM ' . $table . ' WHERE ' . $where;
+		return $parameters;
 	}
 }
