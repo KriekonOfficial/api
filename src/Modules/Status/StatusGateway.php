@@ -18,13 +18,7 @@ use Modules\User\Models\UserModel;
 
 class StatusGateway extends ErrorBase
 {
-	private $user;
-	public function __construct(UserModel $user)
-	{
-		$this->user = $user;
-	}
-
-	public function listStatus(int $page = 1, int $per_page = 25, ?int &$total = 0) : Iterator
+	public function listStatus(UserModel $user, int $page = 1, int $per_page = 25, ?int &$total = 0) : Iterator
 	{
 		if ($per_page > 200)
 		{
@@ -38,10 +32,18 @@ class StatusGateway extends ErrorBase
 			$offset = ($page - 1) * $per_page;
 		}
 
-		$list = new StatusList($this->user->getUSERID(), $offset, $per_page);
+		$list = new StatusList($user->getUSERID(), $offset, $per_page);
 		$total = $list->getTotalCount();
 
 		return $list;
+	}
+
+	public function getStatus(int $STATUSID) : StatusModel
+	{
+		$entity = new StatusEntity();
+		$model = $entity->find((int)$STATUSID);
+
+		return $model;
 	}
 
 	public function deleteStatus(int $STATUSID) : bool
@@ -71,10 +73,10 @@ class StatusGateway extends ErrorBase
 		return true;
 	}
 
-	public function createStatus(string $status_content) : bool
+	public function createStatus(UserModel $user, string $status_content) : bool
 	{
 		$status = new StatusModel();
-		$status->setUSERID($this->user->getUSERID());
+		$status->setUSERID($user->getUSERID());
 		$status->setStatusDate(date(TimeUtils::DATEFORMAT_STANDARD));
 		$status->setStatusContent($status_content);
 

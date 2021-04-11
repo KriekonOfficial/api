@@ -25,8 +25,8 @@ class Status extends Controller
 			$user = $user_entity->find($USERID);
 		}
 
-		$gate = new StatusGateway($user);
-		$list = $gate->listStatus((int)$page, (int)$per_page, $total);
+		$gate = new StatusGateway();
+		$list = $gate->listStatus($user, (int)$page, (int)$per_page, $total);
 
 		if ($gate->hasError())
 		{
@@ -61,8 +61,8 @@ class Status extends Controller
 		}
 		$user = $request->getAuth()->getUser();
 
-		$status = new StatusGateway($user);
-		if (!$status->createStatus($status_content))
+		$status = new StatusGateway();
+		if (!$status->createStatus($user, $status_content))
 		{
 			return new ErrorResponse(400, $status->getErrors());
 		}
@@ -72,8 +72,8 @@ class Status extends Controller
 
 	public function getStatus(Request $request, int $status_id)
 	{
-		$entity = new StatusEntity();
-		$model = $entity->find((int)$status_id);
+		$status = new StatusGateway();
+		$model = $status->getStatus($status_id);
 
 		if (!$model->isInitialized())
 		{
@@ -92,7 +92,13 @@ class Status extends Controller
 			return new ErrorResponse(400, 'Invalid parameter, missing status_content.');
 		}
 
-		$status = new StatusGateway($request->getAuth()->getUser());
+		$status = new StatusGateway();
+
+		$model = $status->getStatus($status_id);
+		if ($model->getUserID() != $request->getAuth()->getUser()->getUserID())
+		{
+			return new ErrorResponse(403, 'Invalid access.');
+		}
 
 		if (!$status->updateStatus($status_id, $status_content))
 		{
@@ -103,7 +109,13 @@ class Status extends Controller
 
 	public function deleteStatus(Request $request, int $status_id)
 	{
-		$status = new StatusGateway($request->getAuth()->getUser());
+		$status = new StatusGateway();
+
+		$model = $status->getStatus($status_id);
+		if ($model->getUserID() != $request->getAuth()->getUser()->getUserID())
+		{
+			return new ErrorResponse(403, 'Invalid access.');
+		}
 
 		if (!$status->deleteStatus((int)$status_id))
 		{
