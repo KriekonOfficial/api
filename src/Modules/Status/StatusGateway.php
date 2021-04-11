@@ -35,7 +35,7 @@ class StatusGateway extends ErrorBase
 		$offset = 0;
 		if ($page > 1)
 		{
-			$offset = $page * $per_page;
+			$offset = ($page - 1) * $per_page;
 		}
 
 		$list = new StatusList($this->user->getUSERID(), $offset, $per_page);

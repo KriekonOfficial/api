@@ -39,11 +39,15 @@ class Status extends Controller
 			$output[] = $status->toPublicArray();
 		}
 
-		return new SuccessResponse(200, [
-			'total'   => $total,
-			'page'    => $page,
+		$response = new SuccessResponse(200, [
 			'threads' => $output
 		]);
+
+		$response->setMeta([
+			'total' => $total,
+			'page' => $page
+		]);
+		return $response;
 	}
 
 	public function createStatus(Request $request)
