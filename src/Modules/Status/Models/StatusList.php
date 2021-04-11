@@ -11,7 +11,7 @@ use Modules\Status\StatusEntity;
 class StatusList extends DBResult
 {
 	public const SUPPORTED_ORDER_FILTER = ['status_date'];
-	public const SUPPORTED_ORDER = ['desc', 'asc'];
+	public const SUPPORTED_ORDER = ['DESC', 'ASC'];
 
 	private $entity;
 	private int $USERID;
@@ -23,7 +23,7 @@ class StatusList extends DBResult
 		int $offset = 0,
 		int $limit = 100,
 		string $order_by = 'status_date',
-		string $order = 'desc'
+		string $order = 'DESC'
 	)
 	{
 		if (!in_array($order_by, self::SUPPORTED_ORDER_FILTER))
@@ -31,6 +31,7 @@ class StatusList extends DBResult
 			throw new APIError('Invalid order filter, supported order filters. ' . implode(', ', self::SUPPORTED_ORDER_FILTER), 400);
 		}
 
+		$order = strtoupper($order);
 		if (!in_array($order, self::SUPPORTED_ORDER))
 		{
 			throw new APIError('Invalid order, supported orders.' . implode(', ', self::SUPPORTED_ORDER), 400);
@@ -44,7 +45,7 @@ class StatusList extends DBResult
 		$factory = DBWrapper::factory('
 			SELECT * FROM ' . $this->entity->getCollectionTable() . '
 			WHERE USERID = ?
-			ORDER BY ' . $order_by . ' ' . $order . '
+			ORDER BY '.$order_by.' '.$order.'
 			LIMIT ?, ?', [$USERID, $offset, $limit], $this->entity->getCollectionName());
 
 		parent::__construct($factory);
