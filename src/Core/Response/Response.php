@@ -13,6 +13,7 @@ trait Response
 	protected string $status = "OK";
 	protected array $response = [];
 	protected string $message = '';
+	protected array $meta = [];
 
 	private $guzzle_response = null;
 
@@ -105,6 +106,23 @@ trait Response
 		$this->message = $message;
 	}
 
+	public function setMeta(array $meta) : void
+	{
+		$this->meta = $meta;
+	}
+
+	public function getMeta() : array
+	{
+		$meta = [
+			'status' => $this->getStatus(),
+			'message' => $this->getMessage()
+		];
+
+		$meta += $this->meta;
+
+		return $meta;
+	}
+
 	public function __toString() : string
 	{
 		return $this->json();
@@ -113,9 +131,8 @@ trait Response
 	private function json() : string
 	{
 		return JSONWrapper::json([
-			'status' => $this->getStatus(),
-			'message' => $this->getMessage(),
-			'response' => $this->getResponse()
+			'response' => $this->getResponse(),
+			'meta' => $this->getMeta(),
 		]);
 	}
 }
