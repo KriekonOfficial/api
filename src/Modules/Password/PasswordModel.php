@@ -2,10 +2,10 @@
 
 namespace Modules\Password;
 
-use Core\Model\Model;
+use Core\Model\BaseModel;
 use \BadMethodCallException;
 
-class PasswordModel extends Model
+class PasswordModel extends BaseModel
 {
 	protected string $password;
 
@@ -24,13 +24,6 @@ class PasswordModel extends Model
 		return password_hash($this->getPassword(), PASSWORD_BCRYPT, ['cost' => $cost]);
 	}
 
-	public function toArray() : array
-	{
-		return [
-			'password' => $this->getPassword()
-		];
-	}
-
 	public function verifyPasswordHash(string $verify_hash) : bool
 	{
 		return password_verify($this->getPassword(), $verify_hash);
@@ -41,23 +34,15 @@ class PasswordModel extends Model
 		$this->password = '';
 	}
 
-	public function setPrimaryKey($value) : void
+	public function toArray() : array
 	{
-		throw new BadMethodCallException('Password Model function is not implemented');
-	}
-
-	public function getPrimaryKey()
-	{
-		throw new BadMethodCallException('Password Model function is not implemented');
+		return [
+			'password' => $this->getPassword()
+		];
 	}
 
 	public function toPublicArray() : array
 	{
-		throw new BadMethodCallException('Password Model function is not implemented');
-	}
-
-	protected function getEntityPath() : string
-	{
-		throw new BadMethodCallException('Password Model function is not implemented');
+		throw new BadMethodCallException('toPublicArray not implemented');
 	}
 }

@@ -47,7 +47,7 @@ class Validator extends ErrorBase
 	*/
 	public function __construct($model)
 	{
-		if (($model instanceof Model) === false)
+		if (($model instanceof BaseModel) === false)
 		{
 			throw new InvalidArgumentException('Construct parameter model does not extend an instanceof model ' . var_export($model, true));
 		}
