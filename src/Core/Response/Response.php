@@ -131,7 +131,7 @@ trait Response
 	private function json() : string
 	{
 		return JSONWrapper::json([
-			'response' => $this->getResponse(),
+			'data' => $this->getResponse(),
 			'meta' => $this->getMeta(),
 		]);
 	}
