@@ -4,7 +4,7 @@ namespace Classes;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\Exception as MailerException;
 use Core\APIError;
 use Core\Environment\Config;
 
@@ -90,9 +90,13 @@ class MailWrapper
 
 			$this->mailer = $mail;
 		}
+		catch (MailerException $e)
+		{
+			throw new APIError('Unable to send emails to ' . implode(', ', $this->getAddresses()) . ' Error: ' . $e->getMessage());
+		}
 		catch (Exception $e)
 		{
-			throw new APIError('Unable to send emails to ' . implode(', ', $this->getAddresses()) . ' Error: ' . $mail->ErrorInfo);
+			throw new APIError('Unable to send emails to ' . implode(', ', $this->getAddresses()) . ' Error: ' . $e->getMessage());
 		}
 	}
 
