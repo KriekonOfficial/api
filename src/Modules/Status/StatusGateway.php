@@ -13,12 +13,14 @@ use Core\Util\TimeUtils;
 use Modules\Status\Models\StatusModel;
 use Modules\Status\StatusEntity;
 use Modules\Status\Models\StatusList;
+use Modules\Status\Models\StatusCommentModel;
+use Modules\Status\StatusCommentEntity;
 
 use Modules\User\Models\UserModel;
 
 class StatusGateway extends ErrorBase
 {
-	public function listStatus(UserModel $user, int $page = 1, int $per_page = 25, ?int &$total = 0) : Iterator
+	public function listStatus(UserModel $user, int $page = 1, int $per_page = 25, ?int &$total = 0) : StatusList
 	{
 		if ($per_page > 200)
 		{
@@ -120,11 +122,52 @@ class StatusGateway extends ErrorBase
 		return true;
 	}
 
+	public function createComment(UserModel $user, StatusModel $status, string $comment_content) : bool
+	{
+		if (!$status->isInitialized())
+		{
+			$this->setHttpCode(404);
+			$this->addError('Status does not exist.');
+			return false;
+		}
+
+		$comment = new StatusCommentModel();
+		$comment->setStatusID($status->getStatusID());
+		$comment->setUserID($user->getUSERID());
+		$comment->setCommentContent($comment_content);
+		$comment->setCommentDate(date(TimeUtils::DATEFORMAT_STANDARD));
+
+		if (!$this->validateComment($comment))
+		{
+			return false;
+		}
+
+		$entity = $comment->createEntity();
+		$entity->store();
+
+		return true;
+	}
+
 	private function validateStatus(StatusModel $status) : bool
 	{
 		$validator = new BaseValidator($status);
 		$validator->addValidator('maxLength', [300]);
 		$validator->addRule('maxLength', ['status_content']);
+
+		if (!$validator->validate())
+		{
+			$this->setHttpCode(400);
+			$this->addError($validator->getErrors());
+			return false;
+		}
+		return true;
+	}
+
+	private function validateComment(StatusCommentModel $comment) : bool
+	{
+		$validator = new BaseValidator($comment);
+		$validator->addValidator('maxLength', [300]);
+		$validator->addRule('maxLength', ['comment_content']);
 
 		if (!$validator->validate())
 		{

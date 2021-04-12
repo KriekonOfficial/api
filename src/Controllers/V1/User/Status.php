@@ -138,6 +138,33 @@ class Status extends Controller
 			$user = $user_entity->find($USERID);
 		}
 
-		$gate = new StatusGateway($user);
+		$gate = new StatusGateway();
+	}
+
+	public function getComment(Request $request, int $comment_id)
+	{
+
+	}
+
+	public function createComment(Request $request, int $status_id)
+	{
+		$user = $request->getAuth()->getUser();
+
+		$gate = new StatusGateway();
+		$input = $request->getRequestInput();
+		$comment_content = $input->get('comment_content');
+		if ($comment_content === null)
+		{
+			return new ErrorResponse(400, 'Invalid parameter, missing comment_content.');
+		}
+
+		$status = $gate->getStatus($status_id);
+
+		if (!$gate->createComment($user, $status, $comment_content))
+		{
+			return new ErrorResponse($gate->getHttpCode(), $gate->getErrors());
+		}
+
+		return new SuccessResponse(200, [], 'Comment created');
 	}
 }

@@ -35,6 +35,7 @@ CREATE TABLE user_status_comments
     STATUSID				INT 		NOT NULL,
     PARENTID				INT			NOT NULL		DEFAULT 0,
     USERID					INT			NOT NULL,
+    level                   TINYINT(1)  NOT NULL		DEFAULT 0,
     comment_date			DATETIME	NOT NULL,
     comment_modified_date	DATETIME	NULL,
     comment_content			TEXT		NOT NULL,

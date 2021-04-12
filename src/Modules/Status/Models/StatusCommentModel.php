@@ -11,6 +11,7 @@ class StatusCommentModel extends Model
 	private int $_STATUSID = 0;
 	private int $_PARENTID = 0;
 	private int $_USERID = 0;
+	private int $_LEVEL = 0;
 	private string $_comment_date = TimeUtils::DATE_ZERO;
 	private string $_comment_modified_date = TimeUtils::DATE_ZERO;
 	private string $_comment_content = '';
@@ -19,6 +20,7 @@ class StatusCommentModel extends Model
 	protected int $STATUSID;
 	protected int $PARENTID;
 	protected int $USERID;
+	protected int $level;
 	protected string $comment_date;
 	protected string $comment_modified_date;
 	protected string $comment_content;
@@ -51,6 +53,16 @@ class StatusCommentModel extends Model
 	public function setParentID(int $PARENTID) : void
 	{
 		$this->PARENTID = $PARENTID;
+	}
+
+	public function getLevel() : int
+	{
+		return $this->level;
+	}
+
+	public function setLevel(int $level) : void
+	{
+		$this->level = $level;
 	}
 
 	public function getUserID() : int
@@ -88,7 +100,7 @@ class StatusCommentModel extends Model
 		return $this->comment_content;
 	}
 
-	public function setCommentContent(string $comment_content) : string
+	public function setCommentContent(string $comment_content) : void
 	{
 		$this->comment_content = $comment_content;
 	}
@@ -109,6 +121,7 @@ class StatusCommentModel extends Model
 		$this->setStatusID($this->_STATUSID);
 		$this->setParentID($this->_PARENTID);
 		$this->setUserID($this->_USERID);
+		$this->setLevel($this->_LEVEL);
 		$this->setCommentDate($this->_comment_date);
 		$this->setCommentModifiedDate($this->_comment_modified_date);
 		$this->setCommentContent($this->_comment_content);
@@ -121,6 +134,7 @@ class StatusCommentModel extends Model
 			'STATUSID'              => $this->getStatusID(),
 			'PARENTID'              => $this->getParentID(),
 			'USERID'                => $this->getUserID(),
+			'level'                 => $this->getLevel(),
 			'comment_date'          => $this->getCommentDate(),
 			'comment_modified_date' => $this->getCommentModifiedDate(),
 			'comment_content'       => $this->getCommentContent()
@@ -130,5 +144,10 @@ class StatusCommentModel extends Model
 	public function toPublicArray() : array
 	{
 		return $this->toArray();
+	}
+
+	protected function getEntityPath() : string
+	{
+		return '\Modules\Status\StatusCommentEntity';
 	}
 }
