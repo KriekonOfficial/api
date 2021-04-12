@@ -51,15 +51,12 @@ class Routes implements RouteInterface
 			$route->addRoute('POST', '', $controller . '::createStatus');
 			$route->addRoute('PUT', '/{status_id}', $controller . '::updateStatus');
 			$route->addRoute('DELETE', '/{status_id}', $controller . '::deleteStatus');
-		});
 
-		$route->addGroup('/comment', function (Collector $route) use ($controller)
-		{
-			$route->addRoute('GET', '/{status_id}', $controller . '::listComment');
-			$route->addRoute('GET', '/{status_id}/{comment_id}', $controller . '::getComment');
-			$route->addRoute('POST', '', $controller . '::createComment');
-			$route->addRoute('PUT', '/{comment_id}', $controller . '::updateComment');
-			$route->addRoute('DELETE', '/{comment_id}', $controller . '::deleteComment');
+			$route->addRoute('GET', '/{status_id}/comment', "${controller}::listComment");
+			$route->addRoute('GET', '/comment/{comment_id}', "${controller}::getComment");
+			$route->addRoute('POST', '/{status_id}/comment', "${controller}::createComment");
+			$route->addRoute('PUT', '/comment/{comment_id}', "${controller}::updateComment");
+			$route->addRoute('DELETE', '/comment/{comment_id}', "${controller}::deleteComment");
 		});
 	}
 }
