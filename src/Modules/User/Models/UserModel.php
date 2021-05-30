@@ -169,16 +169,16 @@ class UserModel extends Model
 	public function toArray() : array
 	{
 		return [
-			'USERID' => $this->getUSERID(),
-			'first_name' => $this->getFirstName(),
-			'last_name' => $this->getLastName(),
-			'email' => $this->getEmail(),
-			'username' => $this->getUsername(),
-			'password_hash' => $this->getPasswordHash(),
-			'date_of_birth' => $this->getDateOfBirth(),
+			'USERID'            => $this->getUSERID(),
+			'first_name'        => $this->getFirstName(),
+			'last_name'         => $this->getLastName(),
+			'email'             => $this->getEmail(),
+			'username'          => $this->getUsername(),
+			'password_hash'     => $this->getPasswordHash(),
+			'date_of_birth'     => $this->getDateOfBirth(),
 			'registration_time' => $this->getRegistrationTime(),
-			'verified' => $this->getVerified(),
-			'locked' => $this->getLocked()
+			'verified'          => $this->getVerified(),
+			'locked'            => $this->getLocked()
 		];
 	}
 

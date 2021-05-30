@@ -151,8 +151,7 @@ class StatusGateway extends ErrorBase
 	private function validateStatus(StatusModel $status) : bool
 	{
 		$validator = new BaseValidator($status);
-		$validator->addValidator('maxLength', [300]);
-		$validator->addRule('maxLength', ['status_content']);
+		$validator->addRule('maxLength', ['status_content'], ['status_content' => 300]);
 
 		if (!$validator->validate())
 		{
@@ -166,8 +165,7 @@ class StatusGateway extends ErrorBase
 	private function validateComment(StatusCommentModel $comment) : bool
 	{
 		$validator = new BaseValidator($comment);
-		$validator->addValidator('maxLength', [300]);
-		$validator->addRule('maxLength', ['comment_content']);
+		$validator->addRule('maxLength', ['comment_content'], ['comment_content' => 300]);
 
 		if (!$validator->validate())
 		{

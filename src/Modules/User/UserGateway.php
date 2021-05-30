@@ -27,11 +27,9 @@ class UserGateway extends ErrorBase
 		$this->model->setRegistrationTime(date(TimeUtils::DATEFORMAT_STANDARD));
 
 		$user_validator = new UserValidator($this->model);
-		$user_validator->addValidator('validateAge', [16]);
-
 		$user_validator->addRule('validateEmail', ['email']);
 		$user_validator->addRule('validateDateOfBirth', ['date_of_birth']);
-		$user_validator->addRule('validateAge', ['date_of_birth']);
+		$user_validator->addRule('validateAge', ['date_of_birth'], ['date_of_birth' => 16]);
 		if (!$user_validator->validate())
 		{
 			$this->addError($user_validator->getErrors());

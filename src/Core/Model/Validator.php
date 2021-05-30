@@ -58,11 +58,18 @@ class Validator extends ErrorBase
 	/**
 	* @param $validator - The validation function that will be run on the following columns
 	* @param $rule_columns - The fields to search for from the model array
+	* @param $params - Any additional parameters you may need for a specific column.
+	* Ex ->addRule('validateAge', ['date_of_birth', 'registration_time'], ['date_of_birth' => 16])
+	* The 16 will be fed in as an additional parameter when the function validateAge is called on date_of_birth, but when validateAge is ran on registration_time
+	* It uses the default parameter of the function.
 	* @return void
 	*/
-	final public function addRule(string $validator, array $rule_columns) : void
+	final public function addRule(string $validator, array $rule_columns, array $params = []) : void
 	{
-		$this->rules[$validator] = $rule_columns;
+		foreach ($rule_columns as $column)
+		{
+			$this->rules[$validator][$column] = $params[$column] ?? [];
+		}
 	}
 
 	final public function getRules() : array
@@ -78,37 +85,8 @@ class Validator extends ErrorBase
 	final public function getRuleColumns(string $validator) : array
 	{
 		$rules = $this->getRules();
-		if (isset($rules[$validator]))
-		{
-			return $rules[$validator];
-		}
-		return [];
-	}
 
-	/**
-	* Add Validator additional params if needed
-	* @param $validator - The function that will be called.
-	* @param $params - The values that the validator will pass into it's function
-	* @return void
-	*/
-	final public function addValidator(string $validator, array $params = []) : void
-	{
-		$this->validators[$validator] = $params;
-	}
-
-	/**
-	* Get the values in the validator
-	* @param $validator - The validator that has values
-	* @return array
-	*/
-	final public function getValidator(string $validator) : array
-	{
-		return $this->validators[$validator] ?? [];
-	}
-
-	final public function getValidators() : array
-	{
-		return $this->validators;
+		return $rules[$validator] ?? [];
 	}
 
 	final public function getModel()
@@ -129,10 +107,8 @@ class Validator extends ErrorBase
 		{
 			$result = true;
 
-			$validator_params = $this->getValidator($validator);
-			foreach ($rule_columns as $rule_column)
+			foreach ($rule_columns as $rule_column => $params)
 			{
-				$params = $validator_params;
 				array_unshift($params, $fields[$rule_column]);
 
 				$this->setCurrentEntityProperty($rule_column);
