@@ -15,18 +15,10 @@ class Validator extends ErrorBase
 	/**
 	* Rules that the validators will run against the fields.
 	* [
-	*	'validator' => ['column1', 'column2']
+	*	'validator' => ['column1' => [], 'column2' => [30]]
 	* ]
 	*/
 	private array $rules = [];
-
-	/**
-	* Additional arguments to be passed into the validator function
-	* [
-	*	'validator' => ['param1', 2, 3]
-	* ]
-	*/
-	private array $validators = [];
 
 	/**
 	* Will continue to validate the rest of the validator values if one fails
