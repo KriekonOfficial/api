@@ -49,7 +49,8 @@ class Authentication extends ErrorBase implements AuthInterface
 
 		if ($request::getRequestIP() != $oauth->getAuthorizedIP())
 		{
-			$this->addError('IP address is not authorized for that token.');
+			// IP Address doesn't match for the request token. Someone tried stealing the bearer token.
+			$this->addError('Not authorized for that token.');
 			return false;
 		}
 
