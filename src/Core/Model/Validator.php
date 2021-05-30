@@ -101,11 +101,12 @@ class Validator extends ErrorBase
 
 			foreach ($rule_columns as $rule_column => $params)
 			{
-				array_unshift($params, $fields[$rule_column]);
+				$shift_params = $params;
+				array_unshift($shift_params, $fields[$rule_column]);
 
 				$this->setCurrentEntityProperty($rule_column);
 
-				$result = $result && call_user_func_array([$this, $validator], $params);
+				$result = $result && call_user_func_array([$this, $validator], $shift_params);
 				if ($result === false && $this->isStopOnRuleFail())
 				{
 					break 2;
