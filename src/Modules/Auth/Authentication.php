@@ -5,6 +5,7 @@ namespace Modules\Auth;
 use Core\ErrorBase;
 use Core\Router\Interfaces\AuthInterface;
 use Core\Router\CurrentRoute;
+use Core\Store\Session;
 use Modules\Auth\OAuthBearer;
 use Modules\Auth\Models\OAuthBearerModel;
 use Modules\User\User;
@@ -18,13 +19,18 @@ class Authentication extends ErrorBase implements AuthInterface
 		$request = $route->getRequest();
 		$server = $request::getServer();
 
-		if (!$server->hasHeader('AUTHORIZATION'))
+		if (!$server->hasHeader('AUTHORIZATION') && !Session::has('bearer_token'))
 		{
-			$this->addError('Failed to pass in authorization header, please submit your request with the appropriate token.');
+			// Failed to pass in authorization header, and session expired.
+			$this->addError('Token does not exist.');
 			return false;
 		}
 
 		$authorization = $server->getHeader('AUTHORIZATION')[0] ?? '';
+		if ($authorization == '' && Session::has('bearer_token'))
+		{
+			$authorization = Session::get('bearer_token', '');
+		}
 
 		if (!$this->parseAuthorizationHeader($authorization, $matches))
 		{
@@ -147,6 +153,7 @@ class Authentication extends ErrorBase implements AuthInterface
 		{
 			$entity = new OAuthBearer($model);
 			$entity->delete();
+			@session_destroy();
 			$this->addError('Session has expired.');
 			return false;
 		}

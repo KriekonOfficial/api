@@ -6,6 +6,7 @@ use Core\Controller;
 use Core\Request\Request;
 use Core\Response\ErrorResponse;
 use Core\Response\SuccessResponse;
+use Core\Store\Session;
 
 use Modules\Password\PasswordModel;
 use Modules\User\UserGateway;
@@ -63,8 +64,12 @@ class User extends Controller
 			return new ErrorResponse(405, $gateway->getErrors());
 		}
 
+		Session::start();
+
+		Session::set('bearer_token', 'Bearer '.$oauth->getBearerToken());
+
 		return new SuccessResponse(200, [
-			'bearer_token' => $oauth->getBearerToken(),
+			'bearer_token'    => $oauth->getBearerToken(),
 			'date_expiration' => $oauth->getDateExpiration()
 		], 'Login Successful');
 	}

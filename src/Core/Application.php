@@ -10,6 +10,7 @@ use \Core\Router\RouterURI;
 use \Core\Response\ErrorResponse;
 use \Core\Response\GenerateOutput;
 use \Core\Environment\Environment;
+use \Core\Store\Session;
 
 class Application
 {
@@ -125,6 +126,9 @@ class Application
 	public static function bootstrapWeb(string $config_path, RouteInterface $routes, AuthInterface $authentication) : void
 	{
 		self::bootstrap($config_path);
+
+		Session::configure();
+		Session::start();
 
 		$uri = RouterLib::parseURI(RouterLib::initRoutes($routes));
 		$router = new Router($uri, $authentication);
