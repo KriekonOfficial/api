@@ -61,7 +61,7 @@ class User extends Controller
 		$gateway = new UserGateway($model);
 		if (!$gateway->login($password, Request::getRequestIP(), $oauth))
 		{
-			return new ErrorResponse(405, $gateway->getErrors());
+			return new ErrorResponse(403, $gateway->getErrors());
 		}
 
 		Session::start();
