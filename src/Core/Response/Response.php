@@ -42,19 +42,27 @@ trait Response
 			{
 				$path .= '?' . $uri->getQuery();
 			}
+
+			$headers = [
+				'Content-Length'                   => strlen($this->json()),
+				'Content-Type'                     => 'application/json',
+				'Content-Encoding'                 => 'identity',
+				'ETag'                             => md5($path . $this->json()),
+				'Access-Control-Allow-Origin'      => '*',
+				'Access-Control-Allow-Credentials' => 'true',
+				'Access-Control-Allow-Methods'     => 'GET, PUT, POST, OPTIONS, DELETE',
+				'Access-Control-Allow-Headers'     => 'Accept, Content-Type, Authorization',
+				'Accept'                           => 'application/json',
+			];
+
+			if (stripos($server->getServerParams()['HTTP_REFERER'] ?? '', 'kriekon.com') !== false)
+			{
+				$headers['Access-Control-Allow-Origin'] = WWW_URL;
+			}
+
 			$response = new GuzzleResponse(
 				$this->getHttpCode(),
-				[
-					'Content-Length'                   => strlen($this->json()),
-					'Content-Type'                     => 'application/json',
-					'Content-Encoding'                 => 'identity',
-					'ETag'                             => md5($path . $this->json()),
-					'Access-Control-Allow-Origin'      => '*',
-					'Access-Control-Allow-Credentials' => 'true',
-					'Access-Control-Allow-Methods'     => 'GET, PUT, POST, OPTIONS, DELETE',
-					'Access-Control-Allow-Headers'     => 'Accept, Content-Type, Authorization',
-					'Accept'                           => 'application/json'
-				],
+				$headers,
 				$this->json(),
 				$server->getProtocolVersion());
 		}
