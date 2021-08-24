@@ -79,4 +79,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell" do |s|
     s.path = "vagrant/bootstrap.sh"
   end
+  config.vm.provision "shell" do |s|
+    s.path = "vagrant/configure_kriekon.sh"
+  end
 end
