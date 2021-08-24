@@ -55,6 +55,11 @@ class Config
 		self::$_instance = new Config($file_path);
 	}
 
+	public static function isInitialized() : bool
+	{
+		return self::$_instance !== null;
+	}
+
 	/**
 	* @return []DatabaseModel
 	*/

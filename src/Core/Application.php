@@ -44,7 +44,7 @@ class Application
 				}
 			}
 
-			if ($error->getHttpCode() >= 500 && Environment::isDevEnv())
+			if ($error->getHttpCode() >= 500 && Config::isInitialized() && Environment::isDevEnv())
 			{
 				$error->setResponse([
 					'message' => $exception->getMessage(),
@@ -78,7 +78,7 @@ class Application
 				return;
 			}
 			$error = new ErrorResponse(500, 'Unknown error has occurred');
-			if (Environment::isDevEnv())
+			if (Config::isInitialized() && Environment::isDevEnv())
 			{
 				$error->setResponse($error_last);
 			}

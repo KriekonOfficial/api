@@ -15,6 +15,11 @@ class APIError extends Exception
 	{
 		$this->setHttpCode($http_code);
 		parent::__construct($message, $code);
+
+		if ($this->getHttpCode() >= 500)
+		{
+			error_log($this->getMessage()."\nTrace:".$this->getTraceAsString());
+		}
 	}
 
 	final public function setHttpCode(int $http_code)
