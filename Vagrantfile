@@ -70,6 +70,11 @@ Vagrant.configure("2") do |config|
     override.vm.synced_folder ".", "/home/kriekon/api", "type": "nfs", owner: nil, group: nil, nfs_udp: false
   end
 
+  config.trigger.before :up do |trigger|
+    trigger.info = "Running Prebuild..."
+    trigger.run = {path: "vagrant/pre_host_hook.sh"}
+  end
+
   # provision
   config.vm.provision :hostmanager
 

@@ -1,6 +1,6 @@
 <?php
 
-require(__DIR__.'/../Core/Application.php');
+require(__DIR__.'/../../Core/Application.php');
 
 Application::autoload();
 

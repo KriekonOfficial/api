@@ -5,3 +5,5 @@ mkdir /var/log/kriekon
 touch /var/log/kriekon/kriekon_api.log
 
 php /home/kriekon/api/src/scripts/dev/generate_environment.php
+
+ln -s /home/kriekon/api/vendor/bin/phpunit /usr/bin/phpunit
