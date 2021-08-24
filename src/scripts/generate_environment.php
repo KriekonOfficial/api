@@ -7,7 +7,7 @@ use Core\Environment\Environment;
 use Core\Environment\Model\DatabaseModel;
 use Core\Util\KeyGenerator;
 
-$generator = new EnvironmentGenerator(Environment::DEV, '/home/projects/kriekon/api/config.json');
+$generator = new EnvironmentGenerator(Environment::DEV, '/home/kriekon/api/config.json');
 $generator->addDatabase(new DatabaseModel('kriekon', '192.168.33.1', 'genericuser', 'Password1234'));
 $generator->addDatabase(new DatabaseModel('kriekon_log', '192.168.33.1', 'genericuser', 'Password1234'));
 

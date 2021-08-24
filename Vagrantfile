@@ -51,7 +51,7 @@ Vagrant.configure("2") do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder "./", "/home/kriekon", create: true, group: "www-data", owner: "www-data"
+  config.vm.synced_folder "./", "/home/kriekon/api", create: true, group: "www-data", owner: "www-data"
 
   # define hardware
   cpu_count = "4"
@@ -67,7 +67,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider "libvirt" do |vm, override|
     vm.memory = mem_mb.to_i
     vm.cpus = cpu_count.to_i
-    override.vm.synced_folder ".", "/home/kriekon", "type": "nfs", owner: nil, group: nil, nfs_udp: false
+    override.vm.synced_folder ".", "/home/kriekon/api", "type": "nfs", owner: nil, group: nil, nfs_udp: false
   end
 
   # provision

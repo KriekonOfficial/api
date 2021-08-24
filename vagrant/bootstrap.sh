@@ -23,7 +23,7 @@ sudo apt-get install -y libvirt-dev qemu-kvm libvirt-bin
 
 # Nginx Config
 echo "Configuring Nginx..."
-sudo ln -s /home/kriekon/vagrant/nginx_vhost /etc/nginx/sites-enabled/nginx_vhost
+sudo ln -s /home/kriekon/api/vagrant/nginx_vhost /etc/nginx/sites-enabled/nginx_vhost
 
 sudo rm -rf /etc/nginx/sites-enabled/default
 sudo rm -rf /var/www/html
