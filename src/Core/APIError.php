@@ -18,7 +18,20 @@ class APIError extends Exception
 
 		if ($this->getHttpCode() >= 500)
 		{
-			error_log($this->getMessage()."\nTrace:".$this->getTraceAsString());
+			/**
+			 * @see https://www.php.net/manual/en/function.error-log
+			 */
+			if (php_sapi_name() == 'cli')
+			{
+				/**
+				 * 3 message is appended to the file destination. A newline is not automatically added to the end of the message string.
+				 */
+				error_log($this->getMessage()."\nTrace:".$this->getTraceAsString().PHP_EOL, 3, '/var/log/kriekon/kriekon_api.log');
+			}
+			else
+			{
+				error_log($this->getMessage()."\nTrace:".$this->getTraceAsString());
+			}
 		}
 	}
 
