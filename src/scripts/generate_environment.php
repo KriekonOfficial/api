@@ -1,6 +1,8 @@
 <?php
 
-require('../includes/bootstrap_script.php');
+require(__DIR__.'/../Core/Application.php');
+
+Application::autoload();
 
 use Core\Environment\EnvironmentGenerator;
 use Core\Environment\Environment;
@@ -23,4 +25,5 @@ $generator->addConfigOption('www_url', 'http://local.www.kriekon.com');
 $generator->addConfigOption('api_url', 'http://local.api.kriekon.com');
 
 $generator->generate();
+
 
