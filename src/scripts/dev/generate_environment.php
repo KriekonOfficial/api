@@ -10,8 +10,8 @@ use Core\Environment\Model\DatabaseModel;
 use Core\Util\KeyGenerator;
 
 $generator = new EnvironmentGenerator(Environment::DEV, '/home/kriekon/api/config.json');
-$generator->addDatabase(new DatabaseModel('kriekon', '192.168.33.1', 'genericuser', 'Password1234'));
-$generator->addDatabase(new DatabaseModel('kriekon_log', '192.168.33.1', 'genericuser', 'Password1234'));
+$generator->addDatabase(new DatabaseModel('kriekon', '192.168.1.154', 'genericuser', 'Password1234'));
+$generator->addDatabase(new DatabaseModel('kriekon_log', '192.168.1.154', 'genericuser', 'Password1234'));
 
 $generator->addEncryptionKey('oauth_encryption', KeyGenerator::generateToken(45));
 $generator->addConfigOption('emails', array(
