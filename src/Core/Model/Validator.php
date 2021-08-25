@@ -52,6 +52,7 @@ class Validator extends ErrorBase
 	* @param $rule_columns - The fields to search for from the model array
 	* @param $params - Any additional parameters you may need for a specific column.
 	* Ex ->addRule('validateAge', ['date_of_birth', 'registration_time'], ['date_of_birth' => 16])
+	* Ex ->addRule('validateAge', ['date_of_birth', 'registration_time'], ['date_of_birth' => [16, 65]])
 	* The 16 will be fed in as an additional parameter when the function validateAge is called on date_of_birth, but when validateAge is ran on registration_time
 	* It uses the default parameter of the function.
 	* @return void
@@ -101,7 +102,17 @@ class Validator extends ErrorBase
 
 			foreach ($rule_columns as $rule_column => $params)
 			{
-				$shift_params = $params;
+				/**
+				 * This allows for developers to specify a parameter or parameters.
+				 * @see addRule
+				 * Ex ['date_of_birth' => 16]
+				 * Ex ['date_of_birth' => [16, 65]]
+				 */
+				$shift_params = [$params];
+				if (is_array($params))
+				{
+					$shift_params = $params;
+				}
 				array_unshift($shift_params, $fields[$rule_column]);
 
 				$this->setCurrentEntityProperty($rule_column);
