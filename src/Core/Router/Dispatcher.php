@@ -65,7 +65,7 @@ class Dispatcher
 				throw new DispatcherException($string, 400);
 			}
 
-			throw new TypeError($e->getMessage());
+			throw new TypeError($e->getMessage().". Trace: ".$e->getTraceAsString());
 		}
 
 		return $response;
