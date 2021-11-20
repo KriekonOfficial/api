@@ -62,12 +62,13 @@ class Status extends Controller
 		$user = $request->getAuth()->getUser();
 
 		$status = new StatusGateway();
-		if (!$status->createStatus($user, $status_content))
+		$model = $status->createStatus($user, $status_content);
+		if ($model === null)
 		{
 			return new ErrorResponse(400, $status->getErrors());
 		}
 
-		return new SuccessResponse(200, [], 'Status Created.');
+		return new SuccessResponse(200, $model->toPublicArray(), 'Status Created.');
 	}
 
 	public function getStatus(Request $request, int $status_id)

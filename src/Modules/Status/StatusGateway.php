@@ -75,7 +75,7 @@ class StatusGateway extends ErrorBase
 		return true;
 	}
 
-	public function createStatus(UserModel $user, string $status_content) : bool
+	public function createStatus(UserModel $user, string $status_content) : ?StatusModel
 	{
 		$status = new StatusModel();
 		$status->setUSERID($user->getUSERID());
@@ -84,13 +84,13 @@ class StatusGateway extends ErrorBase
 
 		if (!$this->validateStatus($status))
 		{
-			return false;
+			return null;
 		}
 
 		$entity = $status->createEntity();
 		$status = $entity->store();
 
-		return true;
+		return $status;
 	}
 
 	public function updateStatus(int $STATUSID, string $status_content) : bool
