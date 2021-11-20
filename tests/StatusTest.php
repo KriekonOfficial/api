@@ -61,12 +61,14 @@ class StatusTest extends TestCase
 
 		$this->assertInstanceOf(StatusModel::class, $model);
 		$this->assertEquals($test_string, $model->getStatusContent());
+		$this->assertTrue($model->isInitialized());
 		self::$status = $model;
 
 		$test_string = KeyGenerator::generateToken(300);
 		$model = $gateway->createStatus(self::$user, $test_string);
 		$this->assertInstanceOf(StatusModel::class, $model);
 		$this->assertEquals($test_string, $model->getStatusContent());
+		$this->assertTrue($model->isInitialized());
 
 		$test_string = KeyGenerator::generateToken(301);
 		$model = $gateway->createStatus(self::$user, $test_string);
@@ -82,11 +84,18 @@ class StatusTest extends TestCase
 
 		$gateway = new StatusGateway();
 		$model = $gateway->getStatus(self::$status->getStatusID());
+		$this->assertTrue($model->isInitialized());
 		$this->assertEquals(self::$status, $model);
+
+		$min = self::$status->getStatusID() + 100;
+		$max = self::$status->getStatusID() + 1000;
+		$model = $gateway->getStatus(random_int($min, $max));
+		$this->assertFalse($model->isInitialized());
 	}
 
 	/**
 	 * @depends testCreateStatus
+	 * @depends testGetStatus
 	 */
 	public function testUpdateStatus()
 	{
@@ -97,6 +106,7 @@ class StatusTest extends TestCase
 		$test_model = clone self::$status;
 		$model = $gateway->updateStatus($test_model, $test_string);
 		$this->assertInstanceOf(StatusModel::class, $model);
+		$this->assertTrue($model->isInitialized());
 		$this->assertEquals($test_string, $model->getStatusContent());
 		$this->assertNotEquals(self::$status->getStatusContent(), $model->getStatusContent());
 		$this->assertNotEquals(self::$status->getStatusModifiedDate(), $model->getStatusModifiedDate());
@@ -105,6 +115,7 @@ class StatusTest extends TestCase
 		$test_string = KeyGenerator::generateToken(300);
 		$model = $gateway->updateStatus($test_model, $test_string);
 		$this->assertInstanceOf(StatusModel::class, $model);
+		$this->assertTrue($model->isInitialized());
 		$this->assertEquals($test_string, $model->getStatusContent());
 		$this->assertNotEquals(self::$status->getStatusContent(), $model->getStatusContent());
 		$this->assertNotEquals(self::$status->getStatusModifiedDate(), $model->getStatusModifiedDate());
@@ -117,9 +128,14 @@ class StatusTest extends TestCase
 
 	/**
 	 * @depends testCreateStatus
+	 * @depends testGetStatus
+	 * @depends testUpdateStatus
 	 */
 	public function testDeleteStatus()
 	{
 		$this->assertInstanceOf(StatusModel::class, self::$status);
+		$gateway = new StatusGateway();
+		$this->assertTrue($gateway->deleteStatus(self::$status->getStatusID()));
+		$this->assertFalse($gateway->deleteStatus(self::$status->getStatusID()));
 	}
 }
