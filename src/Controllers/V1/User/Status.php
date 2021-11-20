@@ -101,11 +101,12 @@ class Status extends Controller
 			return new ErrorResponse(403, 'Invalid access.');
 		}
 
-		if (!$status->updateStatus($status_id, $status_content))
+		$model = $status->updateStatus($status, $status_content);
+		if ($model === null)
 		{
 			return new ErrorResponse($status->getHttpCode(), $status->getErrors());
 		}
-		return new SuccessResponse(200, [], 'Status updated.');
+		return new SuccessResponse(200, $model->toPublicArray(), 'Status updated.');
 	}
 
 	public function deleteStatus(Request $request, int $status_id)

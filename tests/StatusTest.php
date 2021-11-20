@@ -91,10 +91,32 @@ class StatusTest extends TestCase
 	public function testUpdateStatus()
 	{
 		$this->assertInstanceOf(StatusModel::class, self::$status);
+
+		$gateway = new StatusGateway();
+		$test_string = 'This is an updated mctester status test.';
+		$test_model = clone self::$status;
+		$model = $gateway->updateStatus($test_model, $test_string);
+		$this->assertInstanceOf(StatusModel::class, $model);
+		$this->assertEquals($test_string, $model->getStatusContent());
+		$this->assertNotEquals(self::$status->getStatusContent(), $model->getStatusContent());
+		$this->assertNotEquals(self::$status->getStatusModifiedDate(), $model->getStatusModifiedDate());
+
+		$test_model = clone self::$status;
+		$test_string = KeyGenerator::generateToken(300);
+		$model = $gateway->updateStatus($test_model, $test_string);
+		$this->assertInstanceOf(StatusModel::class, $model);
+		$this->assertEquals($test_string, $model->getStatusContent());
+		$this->assertNotEquals(self::$status->getStatusContent(), $model->getStatusContent());
+		$this->assertNotEquals(self::$status->getStatusModifiedDate(), $model->getStatusModifiedDate());
+
+		$test_model = clone self::$status;
+		$test_string = KeyGenerator::generateToken(301);
+		$model = $gateway->updateStatus($test_model, $test_string);
+		$this->assertNull($model);
 	}
 
 	/**
-	 * @depends testUpdateStatus
+	 * @depends testCreateStatus
 	 */
 	public function testDeleteStatus()
 	{

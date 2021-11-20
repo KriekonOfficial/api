@@ -93,15 +93,13 @@ class StatusGateway extends ErrorBase
 		return $status;
 	}
 
-	public function updateStatus(int $STATUSID, string $status_content) : bool
+	public function updateStatus(StatusModel $status, string $status_content) : ?StatusModel
 	{
-		$entity = new StatusEntity();
-		$status = $entity->find($STATUSID);
 		if (!$status->isInitialized())
 		{
 			$this->setHttpCode(404);
 			$this->addError('Status does not exist.');
-			return false;
+			return null;
 		}
 
 		$status->setStatusContent($status_content);
@@ -109,7 +107,7 @@ class StatusGateway extends ErrorBase
 
 		if (!$this->validateStatus($status))
 		{
-			return false;
+			return null;
 		}
 
 		$entity = $status->createEntity();
@@ -117,9 +115,9 @@ class StatusGateway extends ErrorBase
 		{
 			$this->setHttpCode(500);
 			$this->addError('Unable to update status_content at this time. Please try again later.');
-			return false;
+			return null;
 		}
-		return true;
+		return $status;
 	}
 
 	public function createComment(UserModel $user, StatusModel $status, string $comment_content) : bool
