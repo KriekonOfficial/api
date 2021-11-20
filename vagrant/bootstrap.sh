@@ -34,4 +34,4 @@ echo "Restarting PHP..."
 sudo systemctl restart php8.0-fpm
 # Restarting Nginx for config to take effect
 echo "Restarting Nginx..."
-sudo service nginx restart
+sudo systemctl restart nginx

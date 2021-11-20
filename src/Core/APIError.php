@@ -19,6 +19,7 @@ class APIError extends Exception
 		if ($this->getHttpCode() >= 500)
 		{
 			/**
+			 * TODO, we should probably move this to the exception handler. So we don't log errors that have been caught.
 			 * @see https://www.php.net/manual/en/function.error-log
 			 */
 			if (php_sapi_name() == 'cli')
