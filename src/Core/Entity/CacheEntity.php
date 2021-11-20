@@ -57,6 +57,13 @@ abstract class CacheEntity extends Entity implements EntityInterface
 		}
 
 		$model->setInitializedFlag(true);
+		$this->setModel($model);
+
+		if ($this->useRequestCache())
+		{
+			RequestCache::setCacheItem($this->getCacheKey(), $model);
+		}
+
 		return $model;
 	}
 
@@ -105,6 +112,12 @@ abstract class CacheEntity extends Entity implements EntityInterface
 		{
 			throw new EntityException(JSONWrapper::getLastError());
 		}
+
+		if ($this->useRequestCache())
+		{
+			RequestCache::setCacheItem($this->getCacheKey(), $model);
+		}
+
 		return $cache;
 	}
 
@@ -128,6 +141,11 @@ abstract class CacheEntity extends Entity implements EntityInterface
 
 		$this->resetModel();
 
+		if ($this->useRequestCache())
+		{
+			RequestCache::deleteCacheItem($this->getCacheKey());
+		}
+
 		return true;
 	}
 
@@ -137,6 +155,15 @@ abstract class CacheEntity extends Entity implements EntityInterface
 	*/
 	public function find($pk_value)
 	{
+		if ($this->useRequestCache())
+		{
+			$cache_item = RequestCache::getCacheItem($this->getCacheKey($pk_value));
+			if ($cache_item instanceof Model)
+			{
+				return $cache_item;
+			}
+		}
+
 		$record = Cache::getArray($this->getCacheKey($pk_value));
 
 		$this->resetModel();
@@ -148,7 +175,13 @@ abstract class CacheEntity extends Entity implements EntityInterface
 
 		$this->setModelProperties($record);
 
-		return $this->getModel();
+		$model = $this->getModel();
+		if ($this->useRequestCache())
+		{
+			RequestCache::setCacheItem($this->getCacheKey(), $model);
+		}
+
+		return $model;
 	}
 
 	protected function setModelProperties(array $record) : void

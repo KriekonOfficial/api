@@ -11,25 +11,6 @@ use Core\Model\Model;
 
 abstract class DBEntity extends Entity implements EntityInterface
 {
-	protected bool $request_cache = false;
-
-	/**
-	* Determine if we wanna look to see if the entity is cached in the request.
-	*/
-	final public function setRequestCache(bool $cachable) : void
-	{
-		$this->request_cache = $cachable;
-	}
-
-	/**
-	* When querying the database should we check to see if the entry exists in the request cache first?
-	* @return bool
-	*/
-	final public function useRequestCache() : bool
-	{
-		return $this->request_cache;
-	}
-
 	/**
 	* Houses the namespace path to the model for the entity
 	*/
