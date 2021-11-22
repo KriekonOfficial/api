@@ -101,7 +101,7 @@ class Status extends Controller
 			return new ErrorResponse(403, 'Invalid access.');
 		}
 
-		$model = $status->updateStatus($status, $status_content);
+		$model = $status->updateStatus($model, $status_content);
 		if ($model === null)
 		{
 			return new ErrorResponse($status->getHttpCode(), $status->getErrors());
