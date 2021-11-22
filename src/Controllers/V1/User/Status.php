@@ -145,7 +145,15 @@ class Status extends Controller
 
 	public function getComment(Request $request, int $comment_id)
 	{
+		$status = new StatusGateway();
+		$model = $status->getComment($comment_id);
 
+		if (!$model->isInitialized())
+		{
+			return new ErrorResponse(404, 'Comment does not exist.');
+		}
+
+		return new SuccessResponse(200, $model->toPublicArray());
 	}
 
 	public function createComment(Request $request, int $status_id)
@@ -162,11 +170,12 @@ class Status extends Controller
 
 		$status = $gate->getStatus($status_id);
 
-		if (!$gate->createComment($user, $status, $comment_content))
+		$comment = $gate->createComment($user, $status, $comment_content);
+		if ($comment === null)
 		{
 			return new ErrorResponse($gate->getHttpCode(), $gate->getErrors());
 		}
 
-		return new SuccessResponse(200, [], 'Comment created');
+		return new SuccessResponse(200, $comment->toPublicArray(), 'Comment created');
 	}
 }

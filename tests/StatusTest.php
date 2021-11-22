@@ -11,6 +11,7 @@ use Core\Store\Database\Util\DBWrapper;
 use Modules\Password\PasswordModel;
 use Modules\Status\StatusGateway;
 use Modules\Status\Models\StatusModel;
+use Modules\Status\StatusEntity;
 use Modules\User\Models\UserModel;
 
 class StatusTest extends TestCase
@@ -24,7 +25,7 @@ class StatusTest extends TestCase
 		$user->setUserID(6969);
 		$user->setFirstName('Tester');
 		$user->setLastName('McTester');
-		$user->setEmail('noreply@kriekon.com');
+		$user->setEmail('noreply+status_test@kriekon.com');
 		$user->setUsername('tmctester');
 		$user->setDateOfBirth('1996-04-12');
 		$user->setRegistrationTime(date(TimeUtils::DATEFORMAT_STANDARD));
@@ -49,7 +50,8 @@ class StatusTest extends TestCase
 
 	public static function tearDownAfterClass() : void
 	{
-		DBWrapper::PExecute('DELETE FROM user_status WHERE USERID = ?', [self::$user->getUserID()]);
+		$entity = new StatusEntity();
+		DBWrapper::PExecute('DELETE FROM '.$entity->getCollectionTable().' WHERE USERID = ?', [self::$user->getUserID()]);
 	}
 
 	public function testCreateStatus()
@@ -61,6 +63,8 @@ class StatusTest extends TestCase
 
 		$this->assertInstanceOf(StatusModel::class, $model);
 		$this->assertEquals($test_string, $model->getStatusContent());
+		$this->assertNotEquals(0, $model->getStatusID());
+		$this->assertEquals(TimeUtils::DATE_ZERO, $model->getStatusModifiedDate());
 		$this->assertTrue($model->isInitialized());
 		self::$status = $model;
 
@@ -94,7 +98,6 @@ class StatusTest extends TestCase
 	}
 
 	/**
-	 * @depends testCreateStatus
 	 * @depends testGetStatus
 	 */
 	public function testUpdateStatus()
@@ -127,8 +130,6 @@ class StatusTest extends TestCase
 	}
 
 	/**
-	 * @depends testCreateStatus
-	 * @depends testGetStatus
 	 * @depends testUpdateStatus
 	 */
 	public function testDeleteStatus()

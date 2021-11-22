@@ -43,9 +43,7 @@ class StatusGateway extends ErrorBase
 	public function getStatus(int $STATUSID) : StatusModel
 	{
 		$entity = new StatusEntity();
-		$model = $entity->find((int)$STATUSID);
-
-		return $model;
+		return $entity->find((int)$STATUSID);
 	}
 
 	public function deleteStatus(int $STATUSID) : bool
@@ -120,13 +118,13 @@ class StatusGateway extends ErrorBase
 		return $status;
 	}
 
-	public function createComment(UserModel $user, StatusModel $status, string $comment_content) : bool
+	public function createComment(UserModel $user, StatusModel $status, string $comment_content) : ?StatusCommentModel
 	{
 		if (!$status->isInitialized())
 		{
 			$this->setHttpCode(404);
 			$this->addError('Status does not exist.');
-			return false;
+			return null;
 		}
 
 		$comment = new StatusCommentModel();
@@ -137,13 +135,20 @@ class StatusGateway extends ErrorBase
 
 		if (!$this->validateComment($comment))
 		{
-			return false;
+			return null;
 		}
 
 		$entity = $comment->createEntity();
-		$entity->store();
+		$comment = $entity->store();
 
-		return true;
+		return $comment;
+	}
+
+	public function getComment(int $comment_id) : StatusCommentModel
+	{
+		$entity = new StatusCommentEntity();
+
+		return $entity->find($comment_id);
 	}
 
 	private function validateStatus(StatusModel $status) : bool
