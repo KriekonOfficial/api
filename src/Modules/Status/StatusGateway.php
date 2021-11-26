@@ -49,16 +49,15 @@ class StatusGateway extends ErrorBase
 
 	public function deleteStatus(int $STATUSID) : bool
 	{
-		$entity = new StatusEntity();
-		$model = $entity->find($STATUSID);
-
+		$model = $this->getStatus($STATUSID, true);
 		if (!$model->isInitialized())
 		{
 			$this->setHttpCode(404);
-			$this->addError('Status does not exist.');
+			$this->addError('Status has gone away.');
 			return false;
 		}
 
+		$entity = $model->createEntity();
 		if (!$entity->delete())
 		{
 			$this->setHttpCode(500);
@@ -146,16 +145,16 @@ class StatusGateway extends ErrorBase
 		return $comment;
 	}
 
-	public function getComment(int $comment_id, bool $request_cache = false) : StatusCommentModel
+	public function getComment(int $COMMENTID, bool $request_cache = false) : StatusCommentModel
 	{
 		$entity = new StatusCommentEntity();
 		$entity->useRequestCache($request_cache);
-		return $entity->find($comment_id);
+		return $entity->find($COMMENTID);
 	}
 
-	public function updateComment(int $comment_id, string $comment_content) : ?StatusCommentModel
+	public function updateComment(int $COMMENTID, string $comment_content) : ?StatusCommentModel
 	{
-		$comment = $this->getComment($comment_id, true);
+		$comment = $this->getComment($COMMENTID, true);
 		if (!$comment->isInitialized())
 		{
 			$this->setHttpCode(404);
@@ -180,6 +179,33 @@ class StatusGateway extends ErrorBase
 		}
 
 		return $comment;
+	}
+
+	public function deleteComment(int $COMMENTID) : bool
+	{
+		$model = $this->getComment($COMMENTID, true);
+
+		if (!$model->isInitialized())
+		{
+			$this->setHttpCode(404);
+			$this->addError('Comment has gone away.');
+			return false;
+		}
+
+		$entity = $model->createEntity();
+		if (!$entity->delete())
+		{
+			$this->setHttpCode(500);
+			$this->addError('Unable to delete status at this time please try again later.');
+			return false;
+		}
+
+		$log = new LogModel('Comment ID has been deleted: ' . $COMMENTID, LogLevel::LOG);
+		$log->setAssociation('USERID', $model->getUSERID());
+		$log->setLogType('comment_delete');
+		Logger::log($log);
+
+		return true;
 	}
 
 	private function validateStatus(StatusModel $status) : bool

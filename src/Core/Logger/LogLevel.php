@@ -16,18 +16,19 @@ class LogLevel
 	public const LOG = 9;
 
 	public const LOG_TYPES = [
-		'emergency'     => 1,
-		'alert'         => 2,
-		'critical'      => 3,
-		'error'         => 4,
-		'warning'       => 5,
-		'notice'        => 6,
-		'info'          => 7,
-		'debug'         => 8,
-		'log'           => 9,
-		'user_login'    => 10,
-		'user_logout'   => 11,
-		'status_delete' => 12
+		'emergency'      => 1,
+		'alert'          => 2,
+		'critical'       => 3,
+		'error'          => 4,
+		'warning'        => 5,
+		'notice'         => 6,
+		'info'           => 7,
+		'debug'          => 8,
+		'log'            => 9,
+		'user_login'     => 10,
+		'user_logout'    => 11,
+		'status_delete'  => 12,
+		'comment_delete' => 13,
 	];
 
 	public static function getLogLevelDescription(int $level) : string

@@ -118,18 +118,23 @@ class Status extends Controller
 	{
 		$status = new StatusGateway();
 
-		$model = $status->getStatus($status_id);
+		$model = $status->getStatus($status_id, true);
+		if (!$model->isInitialized())
+		{
+			return new ErrorResponse(404, 'Status does not exist.');
+		}
+
 		if ($model->getUserID() != $request->getAuth()->getUser()->getUserID())
 		{
 			return new ErrorResponse(403, 'Invalid access.');
 		}
 
-		if (!$status->deleteStatus((int)$status_id))
+		if (!$status->deleteStatus($model->getStatusID()))
 		{
 			return new ErrorResponse($status->getHttpCode(), $status->getErrors());
 		}
 
-		return new SuccessResponse(200, [], 'Status has been deleted');
+		return new SuccessResponse(200, [], 'Status deleted');
 	}
 
 	public function listComment(Request $request, int $status_id, array $get_params)
@@ -182,5 +187,57 @@ class Status extends Controller
 		}
 
 		return new SuccessResponse(200, $comment->toPublicArray(), 'Comment created');
+	}
+
+	public function updateComment(Request $request, int $comment_id)
+	{
+		$input = $request->getRequestInput();
+		$comment_content = $input->get('comment_content');
+		if ($comment_content === null)
+		{
+			return new ErrorResponse(400, 'Invalid parameter, missing comment.');
+		}
+
+		$gate = new StatusGateway();
+
+		$model = $gate->getComment($comment_id, true);
+		if (!$model->isInitialized())
+		{
+			return new ErrorResponse(404, 'Comment does not exist.');
+		}
+
+		if ($model->getUserID() != $request->getAuth()->getUser()->getUserID())
+		{
+			return new ErrorResponse(403, 'Invalid access.');
+		}
+
+		$model = $gate->updateComment($model->getCommentID(), $comment_content);
+		if ($model === null)
+		{
+			return new ErrorResponse($gate->getHttpCode(), $gate->getErrors());
+		}
+		return new SuccessResponse(200, $model->toPublicArray(), 'Status updated.');
+	}
+
+	public function deleteComment(Request $request, int $comment_id)
+	{
+		$gate = new StatusGateway();
+		$model = $gate->getComment($comment_id, true);
+		if (!$model->isInitialized())
+		{
+			return new ErrorResponse(404, 'Comment no longer exists.');
+		}
+
+		if ($model->getUserID() != $request->getAuth()->getUser()->getUserID())
+		{
+			return new ErrorResponse(403, 'Invalid access.');
+		}
+
+		if (!$gate->deleteComment($model->getCommentID()))
+		{
+			return new ErrorResponse($gate->getHttpCode(), $gate->getErrors());
+		}
+
+		return new SuccessResponse(200, [], 'Comment deleted.');
 	}
 }

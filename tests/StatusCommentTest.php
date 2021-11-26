@@ -150,5 +150,9 @@ class StatusCommentTest extends TestCase
 	public function testDeleteComment()
 	{
 		$this->assertInstanceOf(StatusCommentModel::class, self::$comment);
+
+		$gateway = new StatusGateway();
+		$this->assertTrue($gateway->deleteComment(self::$comment->getCommentID()));
+		$this->assertFalse($gateway->deleteStatus(self::$comment->getCommentID()));
 	}
 }
