@@ -40,9 +40,10 @@ class StatusGateway extends ErrorBase
 		return $list;
 	}
 
-	public function getStatus(int $STATUSID) : StatusModel
+	public function getStatus(int $STATUSID, bool $request_cache = false) : StatusModel
 	{
 		$entity = new StatusEntity();
+		$entity->setRequestCache($request_cache);
 		return $entity->find((int)$STATUSID);
 	}
 
@@ -91,12 +92,13 @@ class StatusGateway extends ErrorBase
 		return $status;
 	}
 
-	public function updateStatus(StatusModel $status, string $status_content) : ?StatusModel
+	public function updateStatus(int $STATUSID, string $status_content) : ?StatusModel
 	{
+		$status = $this->getStatus($STATUSID, true);
 		if (!$status->isInitialized())
 		{
 			$this->setHttpCode(404);
-			$this->addError('Status does not exist.');
+			$this->addError('Status has gone away.');
 			return null;
 		}
 
@@ -144,10 +146,10 @@ class StatusGateway extends ErrorBase
 		return $comment;
 	}
 
-	public function getComment(int $comment_id) : StatusCommentModel
+	public function getComment(int $comment_id, bool $request_cache = false) : StatusCommentModel
 	{
 		$entity = new StatusCommentEntity();
-
+		$entity->useRequestCache($request_cache);
 		return $entity->find($comment_id);
 	}
 

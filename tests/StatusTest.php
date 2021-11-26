@@ -107,7 +107,7 @@ class StatusTest extends TestCase
 		$gateway = new StatusGateway();
 		$test_string = 'This is an updated mctester status test.';
 		$test_model = clone self::$status;
-		$model = $gateway->updateStatus($test_model, $test_string);
+		$model = $gateway->updateStatus($test_model->getStatusID(), $test_string);
 		$this->assertInstanceOf(StatusModel::class, $model);
 		$this->assertTrue($model->isInitialized());
 		$this->assertEquals($test_string, $model->getStatusContent());
@@ -116,7 +116,7 @@ class StatusTest extends TestCase
 
 		$test_model = clone self::$status;
 		$test_string = KeyGenerator::generateToken(300);
-		$model = $gateway->updateStatus($test_model, $test_string);
+		$model = $gateway->updateStatus($test_model->getStatusID(), $test_string);
 		$this->assertInstanceOf(StatusModel::class, $model);
 		$this->assertTrue($model->isInitialized());
 		$this->assertEquals($test_string, $model->getStatusContent());
@@ -125,7 +125,7 @@ class StatusTest extends TestCase
 
 		$test_model = clone self::$status;
 		$test_string = KeyGenerator::generateToken(301);
-		$model = $gateway->updateStatus($test_model, $test_string);
+		$model = $gateway->updateStatus($test_model->getStatusID(), $test_string);
 		$this->assertNull($model);
 	}
 
