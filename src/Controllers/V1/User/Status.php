@@ -95,13 +95,18 @@ class Status extends Controller
 
 		$status = new StatusGateway();
 
-		$model = $status->getStatus($status_id);
+		$model = $status->getStatus($status_id, true);
+		if (!$model->isInitialized())
+		{
+			return new ErrorResponse(404, 'Status does not exist.');
+		}
+
 		if ($model->getUserID() != $request->getAuth()->getUser()->getUserID())
 		{
 			return new ErrorResponse(403, 'Invalid access.');
 		}
 
-		$model = $status->updateStatus($model, $status_content);
+		$model = $status->updateStatus($model->getStatusID(), $status_content);
 		if ($model === null)
 		{
 			return new ErrorResponse($status->getHttpCode(), $status->getErrors());

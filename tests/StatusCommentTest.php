@@ -118,6 +118,30 @@ class StatusCommentTest extends TestCase
 	public function testUpdateComment()
 	{
 		$this->assertInstanceOf(StatusCommentModel::class, self::$comment);
+
+		$gateway = new StatusGateway();
+		$test_string = 'This is an updated mctester status test.';
+		$test_model = clone self::$comment;
+		$model = $gateway->updateComment($test_model->getCommentID(), $test_string);
+		$this->assertInstanceOf(StatusCommentModel::class, $model);
+		$this->assertTrue($model->isInitialized());
+		$this->assertEquals($test_string, $model->getCommentContent());
+		$this->assertNotEquals(self::$comment->getCommentContent(), $model->getCommentContent());
+		$this->assertNotEquals(self::$comment->getCommentModifiedDate(), $model->getCommentModifiedDate());
+
+		$test_model = clone self::$comment;
+		$test_string = KeyGenerator::generateToken(300);
+		$model = $gateway->updateComment($test_model->getCommentID(), $test_string);
+		$this->assertInstanceOf(StatusCommentModel::class, $model);
+		$this->assertTrue($model->isInitialized());
+		$this->assertEquals($test_string, $model->getCommentContent());
+		$this->assertNotEquals(self::$comment->getCommentContent(), $model->getCommentContent());
+		$this->assertNotEquals(self::$comment->getCommentModifiedDate(), $model->getCommentModifiedDate());
+
+		$test_model = clone self::$comment;
+		$test_string = KeyGenerator::generateToken(301);
+		$model = $gateway->updateComment($test_model->getCommentID(), $test_string);
+		$this->assertNull($model);
 	}
 
 	/**

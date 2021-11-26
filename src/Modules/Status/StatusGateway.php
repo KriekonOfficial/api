@@ -153,6 +153,35 @@ class StatusGateway extends ErrorBase
 		return $entity->find($comment_id);
 	}
 
+	public function updateComment(int $comment_id, string $comment_content) : ?StatusCommentModel
+	{
+		$comment = $this->getComment($comment_id, true);
+		if (!$comment->isInitialized())
+		{
+			$this->setHttpCode(404);
+			$this->addError('Comment has gone away.');
+			return null;
+		}
+
+		$comment->setCommentContent($comment_content);
+		$comment->setCommentModifiedDate(date(TimeUtils::DATEFORMAT_STANDARD));
+
+		if (!$this->validateComment($comment))
+		{
+			return null;
+		}
+
+		$entity = $comment->createEntity();
+		if (!$entity->update(['comment_content', 'comment_modified_date']))
+		{
+			$this->setHttpCode(500);
+			$this->addError('Unable to update comment_content at this time. Please try again later.');
+			return null;
+		}
+
+		return $comment;
+	}
+
 	private function validateStatus(StatusModel $status) : bool
 	{
 		$validator = new BaseValidator($status);
