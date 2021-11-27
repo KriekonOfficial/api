@@ -13,14 +13,16 @@ use Core\Util\TimeUtils;
 use Modules\Status\Models\StatusModel;
 use Modules\Status\StatusEntity;
 use Modules\Status\Models\StatusList;
+
 use Modules\Status\Models\StatusCommentModel;
 use Modules\Status\StatusCommentEntity;
+use Modules\Status\Models\StatusCommentList;
 
 use Modules\User\Models\UserModel;
 
 class StatusGateway extends ErrorBase
 {
-	public function listStatus(UserModel $user, int $page = 1, int $per_page = 25, ?int &$total = 0) : StatusList
+	public function listStatus(UserModel $user, int $page = 1, int $per_page = 25, int &$total = 0) : StatusList
 	{
 		if ($per_page > 200)
 		{
@@ -40,39 +42,6 @@ class StatusGateway extends ErrorBase
 		return $list;
 	}
 
-	public function getStatus(int $STATUSID, bool $request_cache = false) : StatusModel
-	{
-		$entity = new StatusEntity();
-		$entity->setRequestCache($request_cache);
-		return $entity->find((int)$STATUSID);
-	}
-
-	public function deleteStatus(int $STATUSID) : bool
-	{
-		$model = $this->getStatus($STATUSID, true);
-		if (!$model->isInitialized())
-		{
-			$this->setHttpCode(404);
-			$this->addError('Status has gone away.');
-			return false;
-		}
-
-		$entity = $model->createEntity();
-		if (!$entity->delete())
-		{
-			$this->setHttpCode(500);
-			$this->addError('Unable to delete status at this time please try again later.');
-			return false;
-		}
-
-		$log = new LogModel('Status ID has been deleted: ' . $STATUSID, LogLevel::LOG);
-		$log->setAssociation('USERID', $model->getUSERID());
-		$log->setLogType('status_delete');
-		Logger::log($log);
-
-		return true;
-	}
-
 	public function createStatus(UserModel $user, string $status_content) : ?StatusModel
 	{
 		$status = new StatusModel();
@@ -89,6 +58,13 @@ class StatusGateway extends ErrorBase
 		$status = $entity->store();
 
 		return $status;
+	}
+
+	public function getStatus(int $STATUSID, bool $request_cache = false) : StatusModel
+	{
+		$entity = new StatusEntity();
+		$entity->setRequestCache($request_cache);
+		return $entity->find((int)$STATUSID);
 	}
 
 	public function updateStatus(int $STATUSID, string $status_content) : ?StatusModel
@@ -117,6 +93,52 @@ class StatusGateway extends ErrorBase
 			return null;
 		}
 		return $status;
+	}
+
+	public function deleteStatus(int $STATUSID) : bool
+	{
+		$model = $this->getStatus($STATUSID, true);
+		if (!$model->isInitialized())
+		{
+			$this->setHttpCode(404);
+			$this->addError('Status has gone away.');
+			return false;
+		}
+
+		$entity = $model->createEntity();
+		if (!$entity->delete())
+		{
+			$this->setHttpCode(500);
+			$this->addError('Unable to delete status at this time please try again later.');
+			return false;
+		}
+
+		$log = new LogModel('Status ID has been deleted: ' . $STATUSID, LogLevel::LOG);
+		$log->setAssociation('USERID', $model->getUSERID());
+		$log->setLogType('status_delete');
+		Logger::log($log);
+
+		return true;
+	}
+
+	public function listComment(StatusModel $status, int $page = 1, int $per_page = 25, ?int &$total = 0) : StatusCommentList
+	{
+		if ($per_page > 200)
+		{
+			$this->addError('Max comment threads per page is 200.');
+			return [];
+		}
+
+		$offset = 0;
+		if ($page > 1)
+		{
+			$offset = ($page - 1) * $per_page;
+		}
+
+		$list = new StatusCommentList($status, $offset, $per_page);
+		$total = $list->getTotalCount();
+
+		return $list;
 	}
 
 	public function createComment(UserModel $user, StatusModel $status, string $comment_content) : ?StatusCommentModel

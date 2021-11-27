@@ -26,6 +26,7 @@ class Status extends Controller
 		}
 
 		$gate = new StatusGateway();
+		$total = 0;
 		$list = $gate->listStatus($user, (int)$page, (int)$per_page, $total);
 
 		if ($gate->hasError())
@@ -139,18 +140,39 @@ class Status extends Controller
 
 	public function listComment(Request $request, int $status_id, array $get_params)
 	{
-		$USERID = $get_params['USERID'] ?? false;
 		$page = $get_params['page'] ?? 1;
 		$per_page = $get_params['per_page'] ?? 25;
 
-		$user = $request->getAuth()->getUser();
-		if ($USERID !== false)
+		$gate = new StatusGateway();
+		$status = $gate->getStatus($status_id);
+		if (!$status->isInitialized())
 		{
-			$user_entity = new User();
-			$user = $user_entity->find($USERID);
+			return new ErrorResponse(400, 'Status thread does not exist.');
 		}
 
-		$gate = new StatusGateway();
+		$total = 0;
+		$list = $gate->listComment($status, (int)$page, (int)$per_page, $total);
+
+		if ($gate->hasError())
+		{
+			return new ErrorResponse(400, $gate->getErrors());
+		}
+
+		$output = [];
+		foreach ($list as $comment)
+		{
+			$output[] = $comment->toPublicArray();
+		}
+
+		$response = new SuccessResponse(200, [
+			'threads' => $output
+		]);
+
+		$response->setMeta([
+			'total' => $total,
+			'page' => $page
+		]);
+		return $response;
 	}
 
 	public function getComment(Request $request, int $comment_id)
