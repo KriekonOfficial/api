@@ -40,7 +40,7 @@ class Dispatcher
 		{
 			$string = 'A parameter does not match the appropriate data type for this endpoint, please refer to documentation.';
 
-			preg_match('/Argument\s([0-9])/', $e->getMessage(), $matches);
+			preg_match('/Argument\s#([0-9])/', $e->getMessage(), $matches);
 			if (isset($matches[1]))
 			{
 				$argument = (int)$matches[1] - 1;
@@ -99,9 +99,12 @@ class Dispatcher
 			$arguments[$get_index] = $route->getRouterURI()->getAdditionalParams();
 		}
 
+		$counter = 0;
 		foreach ($route->getRouterURI()->getParams() as $param)
 		{
-			$arguments[] = $param;
+			while (in_array($counter, [$request_index, $get_index])) $counter++;
+
+			$arguments[$counter++] = $param;
 		}
 
 		ksort($arguments);
