@@ -10,14 +10,12 @@ use \ReflectionClass;
 
 class Router
 {
-	private static $uri = null;
 	private static $request = null;
 
 	private $route;
 
 	public function __construct(RouterURI $uri, AuthInterface $auth)
 	{
-		self::$uri = $uri;
 		$this->setRoute($this->checkRoute($uri, $auth));
 	}
 
@@ -30,16 +28,6 @@ class Router
 
 		$generate = new GenerateOutput($response);
 		echo $generate->output();
-	}
-
-	public static function getRouterURI() : RouterURI
-	{
-		if (self::$uri === null)
-		{
-			throw new RouterException('URI does not exist', 501);
-		}
-
-		return self::$uri;
 	}
 
 	public static function getRequest() : Request
