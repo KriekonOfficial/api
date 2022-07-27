@@ -25,16 +25,18 @@ class RequestCache
 	*/
 	public static function addCacheItemIfNotSet(string $key, $value) : void
 	{
-		if (!isset(self::$cache[$key]))
+		if (!static::hasCacheItem($key))
 		{
-			self::$cache[$key] = $value;
+			return;
 		}
+
+		static::setCacheItem($key, $value) ;
 	}
 
 	/**
-	* @return mixed|null on failure
+	* @return mixed on failure
 	*/
-	public static function getCacheItem(string $key)
+	public static function getCacheItem(string $key) : mixed
 	{
 		return self::$cache[$key] ?? null;
 	}
