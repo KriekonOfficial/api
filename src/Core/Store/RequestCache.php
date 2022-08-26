@@ -25,7 +25,7 @@ class RequestCache
 	*/
 	public static function addCacheItemIfNotSet(string $key, $value) : void
 	{
-		if (!static::hasCacheItem($key))
+		if (static::hasCacheItem($key))
 		{
 			return;
 		}

@@ -26,4 +26,3 @@ $generator->addConfigOption('api_url', 'http://local.api.kriekon.com');
 
 $generator->generate();
 
-
